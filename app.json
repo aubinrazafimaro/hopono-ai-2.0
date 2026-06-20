@@ -1,14 +1,35 @@
 {
   "expo": {
     "name": "hopono-ai-2.0",
-    "slug": "hopono-ai-2.0",
+    "slug": "hopono-ai-2-0",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "hoponoai20",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.hoponoai.appblocker",
+      "appleTeamId": "5FB7ZTLNNZ",
+      "entitlements": {
+        "com.apple.developer.family-controls": true,
+        "com.apple.security.application-groups": [
+          "group.com.hoponoai.appblocker"
+        ]
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          }
+        ]
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +38,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.hoponoai.appblocker"
     },
     "web": {
       "output": "static",
@@ -34,11 +56,80 @@
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "16.4"
+          }
+        }
+      ],
+      [
+        "expo-app-blocker",
+        {
+          "ios": {
+            "appGroup": "group.com.hoponoai.appblocker",
+            "shield": {
+              "title": "Breathe.",
+              "subtitle": "You promised yourself peace away from {appName}.",
+              "primaryButtonLabel": "Start Hopono Practice",
+              "primaryButtonColor": "#e86935",
+              "secondaryButtonLabel": null,
+              "backgroundColor": "#f6f6f6"
+            }
+          }
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "bundleIdentifier": "com.hoponoai.appblocker.ShieldConfiguration",
+                  "targetName": "ShieldConfiguration",
+                  "entitlements": {
+                    "com.apple.developer.family-controls": true,
+                    "com.apple.security.application-groups": [
+                      "group.com.hoponoai.appblocker"
+                    ]
+                  }
+                },
+                {
+                  "bundleIdentifier": "com.hoponoai.appblocker.ShieldAction",
+                  "targetName": "ShieldAction",
+                  "entitlements": {
+                    "com.apple.developer.family-controls": true,
+                    "com.apple.security.application-groups": [
+                      "group.com.hoponoai.appblocker"
+                    ]
+                  }
+                },
+                {
+                  "bundleIdentifier": "com.hoponoai.appblocker.DeviceActivityMonitor",
+                  "targetName": "DeviceActivityMonitor",
+                  "entitlements": {
+                    "com.apple.developer.family-controls": true,
+                    "com.apple.security.application-groups": [
+                      "group.com.hoponoai.appblocker"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "projectId": "144c74fa-b227-40e8-ae6f-350a6887678c"
+      }
     }
   }
 }
