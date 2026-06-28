@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function PlanScreen() {
   const router = useRouter();

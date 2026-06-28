@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function ReassuranceScreen() {
   const router = useRouter();
@@ -62,16 +62,9 @@ export default function ReassuranceScreen() {
           </Animated.Text>
 
         </ScrollView>
-        {showBtn && (
-          <Animated.View style={{ opacity: btnOpacity, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <ContinueButton 
-              onPress={() => router.push('/onboarding/final-recap')} 
-              color="#ffffff" 
-              textColor="#e86935" 
-              withGradient={false} 
-            />
-          </Animated.View>
-        )}
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <AlohaButton onPress={() => router.push('/onboarding/final-recap')} text="continue" variant="primary"  disabled={!showBtn} />
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );

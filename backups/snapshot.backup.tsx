@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { Ionicons } from '@expo/vector-icons';
+import ContinueButton from '@/components/ContinueButton';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
 import { LinearGradient } from 'expo-linear-gradient';
-import AlohaButton from '@/components/AlohaButton';
 
 export default function SnapshotScreen() {
   const router = useRouter();
@@ -31,120 +31,17 @@ export default function SnapshotScreen() {
   // Motivation level derived from guiltLevel (1-7)
   const getMotivationPercent = (guilt: number) => {
     switch(guilt) {
-      case 7: return 100;
-      case 6: return 85;
-      case 5: return 70;
-      case 4: return 55;
-      case 3: return 40;
-      case 2: return 25;
-      case 1: return 10;
-      default: return 50;
+      case 7: return 98;
+      case 6: return 92;
+      case 5: return 85;
+      case 4: return 75;
+      case 3: return 65;
+      case 2: return 50;
+      case 1: return 40;
+      default: return 90;
     }
   };
   const motivationLevel = getMotivationPercent(data.guiltLevel);
-
-  // Derive strength messages from collected data
-  const getStrengths = () => {
-    const strengths = [];
-    
-    // Always add this one — they made it this far
-    strengths.push({
-      title: 'you showed up',
-      desc: 'most people never get this far. you did.'
-    });
-
-    // Based on guilt level — high guilt = high motivation
-    if (data.guiltLevel >= 5) {
-      strengths.push({
-        title: 'you feel it deeply',
-        desc: 'that heaviness you carry? it means you care. and caring is where change begins.'
-      });
-    } else {
-      strengths.push({
-        title: 'you were honest',
-        desc: 'you named your pain. that alone is courage.'
-      });
-    }
-
-    // Based on deep pain — they identified something real
-    if (data.deepPain && data.deepPain.length > 0) {
-      strengths.push({
-        title: 'you know what hurts',
-        desc: 'naming your pain is the first act of healing. you\'ve already begun.'
-      });
-    } else {
-      strengths.push({
-        title: 'you want more',
-        desc: 'something in you knows life can feel lighter. trust that.'
-      });
-    }
-
-    return strengths.slice(0, 3);
-  };
-
-  // Derive work areas from deep pain and obstacles
-  const getWorkAreas = () => {
-    const areas = [];
-
-    if (data.deepPain && data.deepPain.includes("a heartbreak I haven't let go of")) {
-      areas.push({
-        title: 'releasing what you still hold',
-        desc: 'ho\'oponopono was built for exactly this — letting go of someone without losing yourself.'
-      });
-    }
-
-    if (data.deepPain && data.deepPain.includes("anxiety that never fully leaves")) {
-      areas.push({
-        title: 'quieting the anxious mind',
-        desc: 'the four phrases create a rhythm your nervous system can follow. repetition becomes calm.'
-      });
-    }
-
-    if (data.deepPain && data.deepPain.includes("guilt I carry alone")) {
-      areas.push({
-        title: 'forgiving yourself first',
-        desc: '"I am sorry. please forgive me." — said to yourself, these words change everything.'
-      });
-    }
-
-    if (data.deepPain && data.deepPain.includes("a loneliness I can't explain")) {
-      areas.push({
-        title: 'coming back to yourself',
-        desc: 'loneliness often means disconnection from within. ho\'oponopono brings you home.'
-      });
-    }
-
-    if (data.deepPain && data.deepPain.includes("anger toward someone I loved")) {
-      areas.push({
-        title: 'transforming anger into release',
-        desc: 'anger held too long becomes a prison. the practice gives you a way out.'
-      });
-    }
-
-    if (data.obstacles && data.obstacles.includes("I numb the pain instead of facing it")) {
-      areas.push({
-        title: 'meeting the pain directly',
-        desc: 'hopono intercepts the moment you reach for your phone — and offers something better.'
-      });
-    }
-
-    // Fallback if nothing matched
-    if (areas.length === 0) {
-      areas.push({
-        title: 'finding stillness again',
-        desc: 'not the absence of pain — but peace that coexists with it.'
-      });
-      areas.push({
-        title: 'coming back to yourself',
-        desc: 'the version of you that isn\'t running from anything.'
-      });
-    }
-
-    return areas.slice(0, 3);
-  };
-
-  const strengths = getStrengths();
-  const workAreas = getWorkAreas();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -193,7 +90,7 @@ export default function SnapshotScreen() {
               <Text style={styles.cardTitle}>hours spent escaping</Text>
             </View>
             <Text style={styles.cardSubtext}>that's {dailyHours} hours a day away from yourself</Text>
-            <Text style={styles.bigStat}>{monthlyHours} hours / month</Text>
+            <Text style={styles.bigStat}>{monthlyHours} hours</Text>
           </View>
 
           {/* Card 3 */}
@@ -220,22 +117,52 @@ export default function SnapshotScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>🌺 what makes you ready</Text>
-          {strengths.map((item, index) => (
-            <View key={index} style={styles.listItem}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text style={styles.itemDesc}>{item.desc}</Text>
-            </View>
-          ))}
+          
+          <View style={styles.listItem}>
+            <Text style={styles.itemTitle}>you're self-aware</Text>
+            <Text style={styles.itemDesc}>
+              you know what gets in the way. that honesty makes it easier to build a plan that actually works.
+            </Text>
+          </View>
+
+          <View style={styles.listItem}>
+            <Text style={styles.itemTitle}>you're highly motivated</Text>
+            <Text style={styles.itemDesc}>
+              your desire to change is high. we'll provide the structure to turn that motivation into a real habit.
+            </Text>
+          </View>
+
+          <View style={styles.listItem}>
+            <Text style={styles.itemTitle}>you're being real about it</Text>
+            <Text style={styles.itemDesc}>
+              it's normal to feel overwhelmed sometimes. having a structure helps bridge the gap on tough days.
+            </Text>
+          </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🌊 where hopono will take you</Text>
-          {workAreas.map((item, index) => (
-            <View key={index} style={styles.listItem}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text style={styles.itemDesc}>{item.desc}</Text>
-            </View>
-          ))}
+          <Text style={styles.sectionTitle}>🌊 what we'll work on</Text>
+
+          <View style={styles.listItem}>
+            <Text style={styles.itemTitle}>tackling phone distraction</Text>
+            <Text style={styles.itemDesc}>
+              practicing ho'oponopono creates a peaceful zone so you can actually focus on your well-being instead of scrolling.
+            </Text>
+          </View>
+
+          <View style={styles.listItem}>
+            <Text style={styles.itemTitle}>improving inner peace</Text>
+            <Text style={styles.itemDesc}>
+              short, guided mantras will help keep your mind from wandering and bring you back to the present moment.
+            </Text>
+          </View>
+
+          <View style={styles.listItem}>
+            <Text style={styles.itemTitle}>managing anxiety</Text>
+            <Text style={styles.itemDesc}>
+              the app includes deep breathing and ho'oponopono prompts to ground you whenever you feel anxious or overwhelmed.
+            </Text>
+          </View>
         </View>
 
         <View style={{ height: 40 }} />
@@ -243,7 +170,7 @@ export default function SnapshotScreen() {
 
       {/* Fixed Bottom CTA */}
       <View style={styles.bottomFixed}>
-        <AlohaButton onPress={handleContinue} text="continue" variant="primary" />
+        <ContinueButton onPress={handleContinue} text="continue" />
       </View>
       </AnimatedFadeIn>
     </SafeAreaView>

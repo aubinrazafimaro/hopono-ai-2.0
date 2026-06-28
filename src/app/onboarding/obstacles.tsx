@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 const OPTIONS = [
   { label: "I numb the pain instead of facing it", emoji: "📱" },
@@ -62,11 +62,9 @@ export default function ObstaclesScreen() {
             })}
           </View>
         </ScrollView>
-        {selected.length > 0 && (
-          <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <ContinueButton onPress={handleContinue} />
-          </Animated.View>
-        )}
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <AlohaButton onPress={handleContinue} text="continue" variant="primary"  disabled={selected.length === 0} />
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );

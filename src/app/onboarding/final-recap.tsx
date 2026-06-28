@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { useUser } from '@/context/UserContext';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function RecapScreen() {
   const router = useRouter();
@@ -102,12 +102,7 @@ export default function RecapScreen() {
         </ScrollView>
 
         <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <ContinueButton 
-            onPress={handleFinish} 
-            color="#ffffff" 
-            textColor="#e86935" 
-            withGradient={false} 
-          />
+          <AlohaButton onPress={handleFinish} text="continue" variant="secondary" />
         </View>
       </SafeAreaView>
     </View>

@@ -1,104 +1,129 @@
 import React, { useRef } from 'react';
-import {
-  TouchableWithoutFeedback,
-  Animated,
-  Text,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View, Animated, StyleProp, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { RADIUS, SPACING, TYPOGRAPHY } from '@/theme';
 
-type AlohaButtonProps = {
+type AlohaButtonVariant = 'primary' | 'secondary' | 'ghost';
+
+interface AlohaButtonProps {
   onPress: () => void;
-  label: string;
-  gradientColors?: readonly [string, string, string];
-  style?: ViewStyle;
-  textStyle?: TextStyle;
+  text: string;
+  variant?: AlohaButtonVariant;
   disabled?: boolean;
-};
+  style?: StyleProp<ViewStyle>;
+}
 
-/**
- * AlohaButton — The primary CTA of Hopono AI.
- *
- * Uses the Sunset gradient by default (#E86935 → #FF6B6B → #FF8E53).
- * Touch animation: scale 0.97 over 600ms ease-in-out. No bounce. Like a wave.
- */
 export default function AlohaButton({
   onPress,
-  label,
-  gradientColors = ['#E86935', '#FF6B6B', '#FF8E53'],
-  style,
-  textStyle,
+  text,
+  variant = 'primary',
   disabled = false,
+  style,
 }: AlohaButtonProps) {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
-    Animated.timing(scale, {
+    Animated.timing(scaleAnim, {
       toValue: 0.97,
-      duration: 600,
+      duration: 100,
       useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
-    Animated.timing(scale, {
+    Animated.timing(scaleAnim, {
       toValue: 1,
       duration: 600,
       useNativeDriver: true,
     }).start();
   };
 
-  return (
-    <TouchableWithoutFeedback
-      onPress={disabled ? undefined : onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-    >
-      <Animated.View
-        style={[
-          styles.wrapper,
-          { transform: [{ scale }], opacity: disabled ? 0.5 : 1 },
-          style,
-        ]}
-      >
+  const renderButton = () => {
+    if (variant === 'primary') {
+      return (
         <LinearGradient
-          colors={gradientColors}
+          colors={['#FF8C5A', '#e86935']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={styles.gradient}
+          style={styles.button}
         >
-          <Text style={[styles.label, textStyle]}>{label}</Text>
+          <Text style={[styles.text, styles.textWhite]}>{text}</Text>
         </LinearGradient>
+      );
+    }
+
+    if (variant === 'secondary') {
+      return (
+        <View style={[styles.button, styles.buttonSecondary]}>
+          <Text style={[styles.text, styles.textOrange]}>{text}</Text>
+        </View>
+      );
+    }
+
+    if (variant === 'ghost') {
+      return (
+        <View style={[styles.button, styles.buttonGhost]}>
+          <Text style={[styles.text, styles.textWhite]}>{text}</Text>
+        </View>
+      );
+    }
+  };
+
+  return (
+    <View style={[styles.wrapper, style]}>
+      <Animated.View style={[{ transform: [{ scale: scaleAnim }], width: '100%' }, disabled && { opacity: 0.4 }]}>
+        <TouchableOpacity
+          onPress={onPress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          activeOpacity={1}
+          disabled={disabled}
+        >
+          {renderButton()}
+        </TouchableOpacity>
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
-    borderRadius: RADIUS.button,
-    overflow: 'hidden',
-    shadowColor: '#E86935',
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+    width: '100%',
+  },
+  button: {
+    width: '100%',
+    paddingVertical: 18,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#e86935',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.35,
+    shadowOpacity: 0.3,
     shadowRadius: 16,
     elevation: 6,
   },
-  gradient: {
-    paddingVertical: 18,
-    paddingHorizontal: SPACING.card,
-    borderRadius: RADIUS.button,
-    alignItems: 'center',
-    justifyContent: 'center',
+  buttonSecondary: {
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
   },
-  label: {
-    ...(TYPOGRAPHY.body as object),
-    color: '#FFFFFF',
+  buttonGhost: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  text: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 17,
+    fontSize: 18,
     textTransform: 'lowercase',
+  },
+  textWhite: {
+    color: '#ffffff',
+  },
+  textOrange: {
+    color: '#e86935',
   },
 });

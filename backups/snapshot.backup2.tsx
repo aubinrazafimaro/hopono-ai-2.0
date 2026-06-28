@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { Ionicons } from '@expo/vector-icons';
+import ContinueButton from '@/components/ContinueButton';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
 import { LinearGradient } from 'expo-linear-gradient';
-import AlohaButton from '@/components/AlohaButton';
 
 export default function SnapshotScreen() {
   const router = useRouter();
@@ -31,14 +31,14 @@ export default function SnapshotScreen() {
   // Motivation level derived from guiltLevel (1-7)
   const getMotivationPercent = (guilt: number) => {
     switch(guilt) {
-      case 7: return 100;
-      case 6: return 85;
-      case 5: return 70;
-      case 4: return 55;
-      case 3: return 40;
-      case 2: return 25;
-      case 1: return 10;
-      default: return 50;
+      case 7: return 98;
+      case 6: return 92;
+      case 5: return 85;
+      case 4: return 75;
+      case 3: return 65;
+      case 2: return 50;
+      case 1: return 40;
+      default: return 90;
     }
   };
   const motivationLevel = getMotivationPercent(data.guiltLevel);
@@ -193,7 +193,7 @@ export default function SnapshotScreen() {
               <Text style={styles.cardTitle}>hours spent escaping</Text>
             </View>
             <Text style={styles.cardSubtext}>that's {dailyHours} hours a day away from yourself</Text>
-            <Text style={styles.bigStat}>{monthlyHours} hours / month</Text>
+            <Text style={styles.bigStat}>{monthlyHours} hours</Text>
           </View>
 
           {/* Card 3 */}
@@ -243,7 +243,7 @@ export default function SnapshotScreen() {
 
       {/* Fixed Bottom CTA */}
       <View style={styles.bottomFixed}>
-        <AlohaButton onPress={handleContinue} text="continue" variant="primary" />
+        <ContinueButton onPress={handleContinue} text="continue" />
       </View>
       </AnimatedFadeIn>
     </SafeAreaView>

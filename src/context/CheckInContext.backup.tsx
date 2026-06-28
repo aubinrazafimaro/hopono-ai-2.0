@@ -1,19 +1,19 @@
 import React, { createContext, useContext, useState } from 'react';
 
 export const peaceStates = [
-  { text: 'lost inside', emoji: '🌑', color: '#334155' },
-  { text: 'heavy', emoji: '🌊', color: '#475569' },
-  { text: 'finding ground', emoji: '🌿', color: '#94a3b8' },
-  { text: 'at ease', emoji: '🌺', color: '#fcd34d' },
-  { text: 'in full bloom', emoji: '✨', color: '#fbbf24' },
+  { text: 'clouded', emoji: '🌧️', color: '#334155' },
+  { text: 'restless', emoji: '🌩️', color: '#475569' },
+  { text: 'settling', emoji: '🍃', color: '#94a3b8' },
+  { text: 'clear', emoji: '☀️', color: '#fcd34d' },
+  { text: 'aligned', emoji: '✨', color: '#fbbf24' },
 ];
 
 export const moodStates = [
-  { text: 'carrying a lot', emoji: '🌋', color: '#7f1d1d' },
-  { text: 'struggling', emoji: '🌧️', color: '#9a3412' },
-  { text: 'holding on', emoji: '🍃', color: '#ca8a04' },
-  { text: 'breathing easier', emoji: '🌤️', color: '#0d9488' },
-  { text: 'at peace', emoji: '🌺', color: '#0891b2' },
+  { text: 'terrible', emoji: '😔', color: '#7f1d1d' },
+  { text: 'low', emoji: '😕', color: '#9a3412' },
+  { text: 'okay', emoji: '😐', color: '#ca8a04' },
+  { text: 'good', emoji: '😊', color: '#0d9488' },
+  { text: 'amazing', emoji: '😇', color: '#0891b2' },
 ];
 
 export type DailyCheckIn = {

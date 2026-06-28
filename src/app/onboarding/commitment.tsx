@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 const COMMITMENT_OPTIONS = [
   { id: '1', emoji: '🌺', label: 'fully. I need this.' },
@@ -54,11 +54,7 @@ export default function CommitmentScreen() {
 
       {/* Bottom Button */}
       <View style={styles.bottomContainer}>
-        <ContinueButton 
-          onPress={handleNext} 
-          text="this is my answer" 
-          disabled={!selectedId}
-        />
+        <AlohaButton onPress={handleNext} text="this is my answer" variant="primary" disabled={!selectedId} />
       </View>
     </SafeAreaView>
   );

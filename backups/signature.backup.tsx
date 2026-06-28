@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Dim
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import AlohaButton from '@/components/AlohaButton';
+import ContinueButton from '@/components/ContinueButton';
 
 export default function SignatureScreen() {
   const router = useRouter();
@@ -40,10 +39,8 @@ export default function SignatureScreen() {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack.Screen options={{ headerTintColor: '#ffffff' }} />
-      <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent} bounces={false} scrollEnabled={false} keyboardShouldPersistTaps="handled">
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
         <View style={styles.header}>
           <Text style={styles.mainTitle}>seal your intention.</Text>
           <Text style={styles.subTitle}>from this moment, i choose:</Text>
@@ -79,8 +76,6 @@ export default function SignatureScreen() {
           <View 
             style={styles.signaturePad}
             onStartShouldSetResponder={() => true}
-            onStartShouldSetResponderCapture={() => true}
-            onMoveShouldSetResponderCapture={() => true}
             onResponderGrant={handleResponderGrant}
             onResponderMove={handleResponderMove}
             onResponderRelease={handleResponderRelease}
@@ -124,10 +119,15 @@ export default function SignatureScreen() {
 
       {/* Bottom Button */}
       <View style={styles.bottomContainer}>
-        <AlohaButton onPress={handleNext} text="I commit" variant="ghost" disabled={!hasSigned} />
+        <ContinueButton 
+          onPress={handleNext} 
+          text="I commit" 
+          disabled={!hasSigned}
+          color="rgba(255, 255, 255, 0.3)"
+          textColor="#ffffff"
+        />
       </View>
     </SafeAreaView>
-    </GestureHandlerRootView>
   );
 }
 

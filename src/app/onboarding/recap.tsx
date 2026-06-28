@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function RecapScreen() {
   const router = useRouter();
@@ -77,11 +77,7 @@ export default function RecapScreen() {
         </ScrollView>
 
         <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <ContinueButton 
-            onPress={handleFinish} 
-            color="#ffffff" 
-            textColor="#e86935" 
-          />
+          <AlohaButton onPress={handleFinish} text="continue" variant="secondary" />
         </View>
       </SafeAreaView>
     </View>

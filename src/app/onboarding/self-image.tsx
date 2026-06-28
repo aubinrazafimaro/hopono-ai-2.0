@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 const OPTIONS = [
   { label: "empty. like I wasted something precious", emoji: "🌑" },
@@ -56,11 +56,9 @@ export default function SelfImageScreen() {
             })}
           </View>
         </ScrollView>
-        {selectedImpacts.length > 0 && (
-          <Animated.View style={{ position: 'absolute', bottom: 32, left: 32, right: 32 }}>
-            <ContinueButton onPress={() => router.push('/onboarding/obstacles')} />
-          </Animated.View>
-        )}
+        <View style={{ position: 'absolute', bottom: 32, left: 32, right: 32 }}>
+            <AlohaButton onPress={() => router.push('/onboarding/obstacles')} text="continue" variant="primary"  disabled={selectedImpacts.length === 0} />
+          </View>
       </SafeAreaView>
     </LinearGradient>
   );

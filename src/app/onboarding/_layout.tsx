@@ -6,7 +6,12 @@ export default function OnboardingLayout() {
     <OnboardingProvider>
       <Stack
         screenOptions={{
-          headerShown: false,
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: '',
+          headerBackTitleVisible: false,
+          headerTintColor: '#1f2937',
+          gestureEnabled: false,
           animation: 'fade', // Smooth transitions between questions
         }}
       >

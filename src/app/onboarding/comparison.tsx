@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Animated } from
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function ComparisonScreen() {
   const router = useRouter();
@@ -55,12 +55,7 @@ export default function ComparisonScreen() {
         </View>
 
         {/* Button */}
-        <ContinueButton 
-          onPress={() => router.push('/onboarding/commitment')}
-          text="I'm in 🌊"
-          color="#ffffff"
-          textColor="#e86935"
-        />
+        <AlohaButton onPress={() => router.push('/onboarding/commitment')} text="I'm in 🌊" variant="secondary" />
       </SafeAreaView>
     </View>
   );

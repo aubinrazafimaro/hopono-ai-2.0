@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useOnboarding } from '@/context/OnboardingContext';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 const AGE_GROUPS = ['15-20', '21-25', '26-30', '30-40', '40-50', '50+'];
 const GENDERS = ['male', 'female'];
@@ -67,16 +67,9 @@ export default function PresentationScreen() {
               aloha. 🌺
             </Animated.Text>
           </ScrollView>
-          {showTransitionBtn && (
-            <Animated.View style={{ opacity: btnOpacity, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <ContinueButton 
-                onPress={handleTransitionComplete} 
-                color="#ffffff" 
-                textColor="#e86935" 
-                withGradient={false} 
-              />
-            </Animated.View>
-          )}
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+              <AlohaButton onPress={handleTransitionComplete} text="I'm ready" variant="secondary"  disabled={!showTransitionBtn} />
+            </View>
         </SafeAreaView>
       </LinearGradient>
     );
@@ -140,20 +133,20 @@ export default function PresentationScreen() {
             </View>
           )}
           </ScrollView>
-          {(step === 0 && data.name.trim().length > 0) && (
-            <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <ContinueButton onPress={() => setStep(1)} />
-            </Animated.View>
+          {step === 0 && (
+            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+              <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={data.name.trim().length === 0} />
+            </View>
           )}
-          {(step === 2 && data.age) && (
-            <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <ContinueButton onPress={() => setStep(3)} />
-            </Animated.View>
+          {step === 2 && (
+            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+              <AlohaButton onPress={() => setStep(3)} text="continue" variant="primary"  disabled={!data.age} />
+            </View>
           )}
-          {(step === 3 && data.gender) && (
-            <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <ContinueButton onPress={() => router.push('/onboarding/screentime')} />
-            </Animated.View>
+          {step === 3 && (
+            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+              <AlohaButton onPress={() => router.push('/onboarding/screentime')} text="continue" variant="primary"  disabled={!data.gender} />
+            </View>
           )}
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -6,8 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Defs, RadialGradient, Stop, Circle } from 'react-native-svg';
 import { peaceStates, moodStates } from '@/context/CheckInContext';
 import { useOnboarding } from '@/context/OnboardingContext';
+import ContinueButton from '@/components/ContinueButton';
 import { Ionicons } from '@expo/vector-icons';
-import AlohaButton from '@/components/AlohaButton';
 
 // --- STEP 1: INNER PEACE ---
 const PeaceStep = ({ onNext }: { onNext: () => void }) => {
@@ -64,7 +64,11 @@ const PeaceStep = ({ onNext }: { onNext: () => void }) => {
           />
         </View>
 
-          <AlohaButton onPress={onNext} text="continue" variant="secondary" />
+          <ContinueButton 
+            onPress={onNext} 
+            color="#ffffff"
+            textColor="#e86935"
+          />
       </SafeAreaView>
     </Animated.View>
   );
@@ -125,7 +129,11 @@ const MoodStep = ({ onNext }: { onNext: () => void }) => {
           />
         </View>
 
-        <AlohaButton onPress={onNext} text="continue" variant="secondary" />
+        <ContinueButton 
+          onPress={onNext} 
+          color="#ffffff"
+          textColor="#e86935"
+        />
       </SafeAreaView>
     </Animated.View>
   );
@@ -140,7 +148,7 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
     "I love you"
   ];
   
-  const targetCount = 3;
+  const targetCount = 9;
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(-1);
   const countRef = useRef(1);
   const [currentCount, setCurrentCount] = useState(1);
@@ -306,7 +314,6 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
   const glowOpacity = useRef(new Animated.Value(0)).current;
   const flowerBreath = useRef(new Animated.Value(1)).current;
   const [weekDays] = useState(getWeekDays);
-  const [showBtn, setShowBtn] = useState(false);
 
   useEffect(() => {
     Animated.sequence([
@@ -325,7 +332,6 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
           Animated.timing(flowerBreath, { toValue: 1, duration: 2000, useNativeDriver: true }),
         ])
       ).start();
-      setShowBtn(true);
     });
   }, []);
 
@@ -383,9 +389,14 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
           </Animated.View>
         </View>
 
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={onNext} text="I felt it. what's next?" variant="ghost" disabled={!showBtn} />
-        </View>
+        <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, opacity: contentOpacity }}>
+          <ContinueButton 
+            onPress={onNext} 
+            text="I felt it. what's next?"
+            color="rgba(255, 255, 255, 0.25)"
+            textColor="#ffffff"
+          />
+        </Animated.View>
       </SafeAreaView>
     </View>
   );

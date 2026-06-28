@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePricing } from '@/hooks/usePricing';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function TrialReminderScreen() {
   const router = useRouter();

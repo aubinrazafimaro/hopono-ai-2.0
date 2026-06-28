@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 const RESOLUTION_OPTIONS = [
   { label: "free the mind from blockages, pain, and trauma", emoji: "🧠" },
@@ -104,16 +104,16 @@ export default function GoalsScreen() {
           </View>
         )}
         </ScrollView>
-        {step === 0 && selectedResolutions.length > 0 && (
-          <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <ContinueButton onPress={() => setStep(1)} />
-          </Animated.View>
+        {step === 0 && (
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={selectedResolutions.length === 0} />
+          </View>
         )}
 
-        {step === 1 && selectedLifeGoals.length > 0 && (
-          <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <ContinueButton onPress={handleFinishGoals} />
-          </Animated.View>
+        {step === 1 && (
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <AlohaButton onPress={handleFinishGoals} text="continue" variant="primary"  disabled={selectedLifeGoals.length === 0} />
+          </View>
         )}
       </SafeAreaView>
     </LinearGradient>

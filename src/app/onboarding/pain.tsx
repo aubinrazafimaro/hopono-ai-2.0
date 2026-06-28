@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated, TouchableOpacity, ScrollView } from '
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function PainScreen() {
   const router = useRouter();
@@ -57,11 +57,9 @@ export default function PainScreen() {
             what if today, something changed?
           </Animated.Text>
         </ScrollView>
-        {showBtn && (
-          <Animated.View style={{ opacity: btnOpacity, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <ContinueButton onPress={() => router.push('/onboarding/savior')} />
-          </Animated.View>
-        )}
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <AlohaButton onPress={() => router.push('/onboarding/savior')} text="continue" variant="primary"  disabled={!showBtn} />
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );

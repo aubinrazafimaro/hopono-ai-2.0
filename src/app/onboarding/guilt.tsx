@@ -4,21 +4,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function GuiltScreen() {
   const router = useRouter();
-  const { updateData } = useOnboarding();
+  const { data, updateData } = useOnboarding();
   
-  const [guiltLevel, setGuiltLevel] = useState(4);
+  const [guiltLevel, setGuiltLevel] = useState(data.guiltLevel || 4);
   
   const screenWidth = Dimensions.get('window').width;
   const sliderWidth = screenWidth - 64; // 32px padding on each side
   const thumbSize = 32;
   const trackWidth = sliderWidth - thumbSize;
   
-  // Initialize to value 4 (middle)
-  const initialPercent = (4 - 1) / 6;
+  // Initialize to current guiltLevel percentage
+  const initialPercent = (data.guiltLevel ? data.guiltLevel - 1 : 3) / 6;
   const fillAnim = useRef(new Animated.Value(initialPercent * trackWidth)).current;
 
   const updateLevelFromX = (x: number) => {
@@ -121,7 +121,7 @@ export default function GuiltScreen() {
           </View>
         </View>
         <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 32 }}>
-          <ContinueButton onPress={handleContinue} />
+          <AlohaButton onPress={handleContinue} text="continue" variant="primary" />
         </View>
       </SafeAreaView>
     </LinearGradient>

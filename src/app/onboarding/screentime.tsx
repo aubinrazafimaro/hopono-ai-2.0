@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import ContinueButton from '@/components/ContinueButton';
+import AlohaButton from '@/components/AlohaButton';
 
 const TIME_OPTIONS = [
   { label: 'less than 1h', emoji: '🌿' },
@@ -18,6 +18,7 @@ export default function ScreenTimeScreen() {
   const router = useRouter();
   const { data, updateData } = useOnboarding();
   const [step, setStep] = useState(0);
+  const [showBtn, setShowBtn] = useState(false);
 
   // Transition animations
   const t1 = useRef(new Animated.Value(0)).current;
@@ -40,6 +41,7 @@ export default function ScreenTimeScreen() {
         Animated.delay(1000),
         Animated.timing(r3, { toValue: 1, duration: 1000, useNativeDriver: true }),
       ]).start(() => {
+        setShowBtn(true);
         Animated.timing(btn, { toValue: 1, duration: 500, useNativeDriver: true }).start();
       });
     }
@@ -123,15 +125,15 @@ export default function ScreenTimeScreen() {
             </View>
           </ScrollView>
         )}
-        {step === 0 && data.screenTime && (
-          <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <ContinueButton onPress={() => setStep(1)} />
-          </Animated.View>
+        {step === 0 && (
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary" disabled={!data.screenTime} />
+          </View>
         )}
         {step === 1 && (
-          <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <ContinueButton onPress={() => router.push('/onboarding/goals')} />
-          </Animated.View>
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <AlohaButton onPress={() => router.push('/onboarding/goals')} text="continue" variant="primary" disabled={!showBtn} />
+          </View>
         )}
       </SafeAreaView>
     </LinearGradient>

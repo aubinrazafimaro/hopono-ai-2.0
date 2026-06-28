@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import ContinueButton from '@/components/ContinueButton';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function ReviewsScreen() {
   const router = useRouter();
@@ -90,10 +90,7 @@ export default function ReviewsScreen() {
 
       {/* Footer */}
       <View style={styles.bottomContainer}>
-        <ContinueButton 
-          onPress={handleNext} 
-          text="begin my healing 🌺"
-        />
+        <AlohaButton onPress={handleNext} text="begin my healing 🌺" variant="primary" />
       </View>
       </AnimatedFadeIn>
     </SafeAreaView>

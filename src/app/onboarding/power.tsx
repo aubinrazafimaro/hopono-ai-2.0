@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import Svg, { Path, Circle, Defs, LinearGradient as SvgLinearGradient, Stop, Text as SvgText, G } from 'react-native-svg';
 import { AntDesign, Feather } from '@expo/vector-icons';
+import AlohaButton from '@/components/AlohaButton';
 
 const { width } = Dimensions.get('window');
 const cardWidth = width - 48;

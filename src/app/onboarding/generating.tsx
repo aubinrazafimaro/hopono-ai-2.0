@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import Svg, { Circle } from 'react-native-svg';
 import { useOnboarding } from '@/context/OnboardingContext';
 import ConfettiCannon from 'react-native-confetti-cannon';
+import AlohaButton from '@/components/AlohaButton';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 

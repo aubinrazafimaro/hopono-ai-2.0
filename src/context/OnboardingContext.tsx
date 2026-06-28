@@ -25,7 +25,7 @@ const defaultState: OnboardingState = {
   screenTime: '',
   resolutionGoal: [],
   lifeGoals: [],
-  guiltLevel: 1,
+  guiltLevel: 4,
   selfImageImpact: [],
   obstacles: [],
   deepPain: [],
