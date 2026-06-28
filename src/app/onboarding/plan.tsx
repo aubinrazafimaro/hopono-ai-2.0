@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import AlohaButton from '@/components/AlohaButton';
+
+const { height } = Dimensions.get('window');
 
 export default function PlanScreen() {
   const router = useRouter();
@@ -20,9 +21,6 @@ export default function PlanScreen() {
   }).format(targetDate).toLowerCase();
 
   const name = data.name && data.name.trim() !== '' ? data.name.trim().toLowerCase() : 'friend';
-  const goal = data.resolutionGoal && data.resolutionGoal.length > 0 
-    ? data.resolutionGoal[0].toLowerCase() 
-    : (data.lifeGoals && data.lifeGoals.length > 0 ? data.lifeGoals[0].toLowerCase() : 'heal from your past');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,20 +36,23 @@ export default function PlanScreen() {
             <Text style={styles.dateText}>{formattedDate}</Text>
           </View>
 
-          <View style={styles.goalPill}>
+          {/* Goal 1 Card (Shape: Centered Goal Card) */}
+          <View style={styles.goalCard}>
             <Text style={styles.goalEmoji}>✨</Text>
             <Text style={styles.goalText}>free from what weighs you down</Text>
           </View>
 
-          <View style={styles.goalPill}>
-            <Text style={styles.goalEmoji}>🧘‍♀️</Text>
-            <Text style={styles.goalText}>lighter. clearer. finally yourself.</Text>
+          {/* Goal 2 Card (Shape: Row Metric Card) */}
+          <View style={styles.metricCard}>
+            <Text style={styles.metricEmoji}>🧘‍♀️</Text>
+            <Text style={styles.metricText}>lighter. clearer. finally yourself.</Text>
           </View>
         </View>
 
         {/* How we'll get there */}
         <Text style={styles.sectionTitle}>your path to get there:</Text>
 
+        {/* Feature 1 */}
         <View style={styles.featureCard}>
           <View style={styles.featureIconContainer}>
             <Text style={styles.featureEmoji}>🌺</Text>
@@ -64,6 +65,7 @@ export default function PlanScreen() {
           </View>
         </View>
 
+        {/* Feature 2 */}
         <View style={styles.featureCard}>
           <View style={styles.featureIconContainer}>
             <Text style={styles.featureEmoji}>🛡️</Text>
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 56, // Generous top padding to avoid touching the status bar/header
     paddingBottom: 120, // space for fixed button
   },
   commitmentCard: {
@@ -111,15 +113,21 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 24,
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 32,
+    backgroundColor: '#ffffff',
+    shadowColor: '#e86935',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.05,
+    shadowRadius: 16,
+    elevation: 3,
   },
   commitmentTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 22,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 20,
     color: '#1f2937',
     textAlign: 'center',
-    marginBottom: 16,
-    lineHeight: 30,
+    lineHeight: 28,
+    marginBottom: 12,
   },
   datePill: {
     borderWidth: 1.5,
@@ -127,42 +135,70 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 20,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   dateText: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#1f2937',
   },
-  goalPill: {
+  goalCard: {
     backgroundColor: '#ffffff',
-    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 16,
     width: '100%',
     marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
+    shadowRadius: 15,
+    elevation: 4,
   },
   goalEmoji: {
-    fontSize: 20,
-    marginRight: 12,
+    fontSize: 24,
+    marginBottom: 8,
   },
   goalText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 15,
     color: '#1f2937',
+    textAlign: 'center',
+    textTransform: 'lowercase',
+  },
+  metricCard: {
+    backgroundColor: '#ffffff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.08,
+    shadowRadius: 15,
+    elevation: 4,
+  },
+  metricEmoji: {
+    fontSize: 20,
+    marginRight: 10,
+  },
+  metricText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 14,
+    color: '#1f2937',
+    textAlign: 'center',
+    textTransform: 'lowercase',
   },
   sectionTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18,
     color: '#1f2937',
     marginBottom: 20,
+    textTransform: 'lowercase',
   },
   featureCard: {
     backgroundColor: '#ffffff',
@@ -171,14 +207,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.06,
     shadowRadius: 16,
-    elevation: 2,
+    elevation: 3,
   },
   featureIconContainer: {
-    width: 40,
-    alignItems: 'flex-start',
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: '#f3f4f6', // Light gray background in mockup
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
   },
   featureEmoji: {
     fontSize: 24,
@@ -187,16 +228,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   featureTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 16,
     color: '#1f2937',
     marginBottom: 6,
+    textTransform: 'lowercase',
   },
   featureDesc: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 14,
-    color: '#9ca3af', // Light gray
+    color: '#9ca3af',
     lineHeight: 22,
+    textTransform: 'lowercase',
   },
   bottomContainer: {
     position: 'absolute',
@@ -204,12 +247,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 24,
-    paddingTop: 32, // More padding to account for the gradient fade
+    paddingTop: 32,
     paddingBottom: 40,
   },
   transformButton: {
     backgroundColor: '#e86935',
-    borderRadius: 30,
+    borderRadius: 16, // rounded rectangle like mockup (slightly rounded, not pill)
     paddingVertical: 18,
     alignItems: 'center',
     justifyContent: 'center',
@@ -220,8 +263,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   transformButtonText: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#ffffff',
+    textTransform: 'lowercase',
   }
 });

@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePricing } from '@/hooks/usePricing';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
-import AlohaButton from '@/components/AlohaButton';
 
 export default function TrialReminderScreen() {
   const router = useRouter();
@@ -15,40 +14,38 @@ export default function TrialReminderScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <AnimatedFadeIn style={{ flex: 1 }}>
-      <View style={styles.content}>
-        
-        <Text style={styles.title}>
-          we'll remind you before anything changes.
-        </Text>
+        <View style={styles.content}>
+          <Text style={styles.title}>
+            we'll remind you before anything changes.
+          </Text>
 
-        <View style={styles.bellContainer}>
-          <Ionicons name="notifications" size={160} color="#e2e8f0" />
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>1</Text>
+          <View style={styles.bellContainer}>
+            <Ionicons name="notifications" size={160} color="#e2e8f0" />
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>1</Text>
+            </View>
           </View>
         </View>
 
-      </View>
+        {/* Fixed Bottom CTA: Positioned absolutely at the bottom to bypass Safe Area constraints */}
+        <View style={styles.bottomFixed}>
+          <View style={styles.paymentDueContainer}>
+            <Ionicons name="checkmark-sharp" size={18} color="#1f2937" style={{ marginRight: 6 }} />
+            <Text style={styles.paymentDueText}>nothing to pay today</Text>
+          </View>
 
-      {/* Fixed Bottom CTA */}
-      <View style={styles.bottomFixed}>
-        <View style={styles.paymentDueContainer}>
-          <Ionicons name="checkmark-sharp" size={18} color="#1f2937" style={{ marginRight: 6 }} />
-          <Text style={styles.paymentDueText}>nothing to pay today</Text>
+          <TouchableOpacity style={styles.ctaButton} onPress={handleNext}>
+            <Text style={styles.ctaButtonText}>begin my 7 days free 🌺</Text>
+          </TouchableOpacity>
+          
+          <Text style={styles.priceSubtext}>
+            then {pricing.weeklyEquivalent}/week — cancel anytime, no questions.
+          </Text>
         </View>
-
-        <TouchableOpacity style={styles.ctaButton} onPress={handleNext}>
-          <Text style={styles.ctaButtonText}>begin my 7 days free 🌺</Text>
-        </TouchableOpacity>
-        
-        <Text style={styles.priceSubtext}>
-          then {pricing.weeklyEquivalent}/week — cancel anytime, no questions.
-        </Text>
-      </View>
       </AnimatedFadeIn>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -61,15 +58,17 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 32,
     alignItems: 'center',
-    paddingTop: 80,
+    justifyContent: 'center', // Vertically center the title and bell
+    paddingBottom: 150, // Avoid overlapping the fixed bottom CTA
   },
   title: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold', // Uniform Nunito font family
     fontSize: 28,
     color: '#1f2937',
     textAlign: 'center',
-    marginBottom: 80,
+    marginBottom: 48,
     lineHeight: 36,
+    textTransform: 'lowercase',
   },
   bellContainer: {
     position: 'relative',
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
     borderColor: '#ffffff',
   },
   badgeText: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 24,
     color: '#ffffff',
   },
@@ -101,21 +100,20 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#ffffff',
     paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 32,
-    borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
+    paddingTop: 8, // Compact padding
+    paddingBottom: 20, // Sit lower on screen
   },
   paymentDueContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   paymentDueText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 16,
     color: '#1f2937',
+    textTransform: 'lowercase',
   },
   ctaButton: {
     backgroundColor: '#e86935',
@@ -131,14 +129,16 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   ctaButtonText: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18,
     color: '#ffffff',
+    textTransform: 'lowercase',
   },
   priceSubtext: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 13,
     color: '#94a3b8',
     textAlign: 'center',
+    textTransform: 'lowercase',
   },
 });

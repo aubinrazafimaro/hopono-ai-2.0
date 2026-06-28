@@ -32,9 +32,7 @@ export default function PowerScreen() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>your inner peace over time</Text>
-            <View style={styles.iconContainer}>
-              <Feather name="lock" size={16} color="#e86935" />
-            </View>
+            <Text style={{ fontSize: 16, marginLeft: 8 }}>🔒</Text>
           </View>
           
           <Text style={styles.cardSubtitle}><Text style={styles.redX}>✕</Text> — day you skipped</Text>
@@ -51,13 +49,13 @@ export default function PowerScreen() {
 
               {/* Red Area Fill */}
               <Path
-                d={`M 20 180 Q 50 160 80 170 T 140 180 Q 160 140 180 180 T 220 170 Q 240 150 260 180 T ${w-20} 180 L ${w-20} 190 L 20 190 Z`}
+                d={`M 20 180 C 50 160, 70 160, 100 170 C 130 180, 150 180, 180 172 C 210 164, 230 164, 260 176 C 290 182, ${w-50} 180, ${w-20} 180 L ${w-20} 194 L 20 194 Z`}
                 fill="url(#redGradient)"
               />
 
               {/* Red Line (Distractions) */}
               <Path
-                d={`M 20 180 Q 50 160 80 170 T 140 180 Q 160 140 180 180 T 220 170 Q 240 150 260 180 T ${w-20} 180`}
+                d={`M 20 180 C 50 160, 70 160, 100 170 C 130 180, 150 180, 180 172 C 210 164, 230 164, 260 176 C 290 182, ${w-50} 180, ${w-20} 180`}
                 fill="none"
                 stroke="#ef4444"
                 strokeWidth="2.5"
@@ -83,13 +81,13 @@ export default function PowerScreen() {
               {/* X Marks for skipped practice */}
               <G stroke="#ef4444" strokeWidth="2" strokeLinecap="round">
                 {/* X1 */}
-                <Path d="M 85 160 L 93 168 M 93 160 L 85 168" />
+                <Path d="M 81 162 L 89 170 M 89 162 L 81 170" />
                 {/* X2 */}
-                <Path d="M 130 175 L 138 183 M 138 175 L 130 183" />
+                <Path d="M 136 173 L 144 181 M 144 173 L 136 181" />
                 {/* X3 */}
-                <Path d="M 190 175 L 198 183 M 198 175 L 190 183" />
+                <Path d="M 191 164 L 199 172 M 199 164 L 191 172" />
                 {/* X4 */}
-                <Path d="M 215 170 L 223 178 M 223 170 L 215 178" />
+                <Path d="M 236 166 L 244 174 M 244 166 L 236 174" />
               </G>
 
               {/* Texts */}
@@ -145,9 +143,7 @@ export default function PowerScreen() {
                 <Feather name="x-circle" size={24} color="#9ca3af" />
               </TouchableOpacity>
               
-              <View style={styles.modalIconContainer}>
-                <Feather name="lock" size={24} color="#e86935" />
-              </View>
+              <Text style={{ fontSize: 32, marginBottom: 12 }}>🔒</Text>
 
               <Text style={styles.modalTitle}>three steps. that's it.</Text>
 
@@ -207,11 +203,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 28,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 26,
     color: '#ffffff',
     textAlign: 'center',
     marginBottom: 40,
+    textTransform: 'lowercase',
   },
   card: {
     backgroundColor: '#ffffff',
@@ -234,7 +231,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   cardTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#000000',
   },
@@ -251,7 +248,7 @@ const styles = StyleSheet.create({
   },
   redX: {
     color: '#ef4444',
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
   },
   chartContainer: {
     marginTop: 10,
@@ -293,80 +290,85 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   modalCard: {
-    backgroundColor: '#ffffff',
-    width: '100%',
-    borderRadius: 30,
-    padding: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    width: '90%',
+    maxWidth: 340,
+    borderRadius: 24,
+    padding: 24,
     alignItems: 'center',
   },
   closeBtn: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: 16,
+    right: 16,
     zIndex: 10,
   },
   modalIconContainer: {
     borderWidth: 2,
     borderColor: '#e86935',
     borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 12,
   },
   modalTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 22,
     color: '#000000',
-    marginBottom: 30,
+    marginBottom: 16,
+    textTransform: 'lowercase',
   },
   stepsContainer: {
     width: '100%',
-    marginBottom: 30,
+    marginBottom: 16,
     paddingLeft: 10,
   },
   stepRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 12,
   },
   stepNumberContainer: {
     backgroundColor: '#e86935',
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 12,
   },
   stepNumber: {
     color: '#ffffff',
     fontFamily: 'Nunito_700Bold',
-    fontSize: 14,
+    fontSize: 12,
   },
   stepText: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 16,
+    fontSize: 14,
     color: '#1f2937',
     flex: 1,
+    textTransform: 'lowercase',
   },
   modalSubtext: {
     fontFamily: 'Nunito_600SemiBold',
-    fontSize: 14,
+    fontSize: 13,
     color: '#9ca3af',
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: 16,
     paddingHorizontal: 10,
+    textTransform: 'lowercase',
   },
   getStartedBtn: {
     backgroundColor: '#e86935',
     width: '100%',
-    paddingVertical: 18,
-    borderRadius: 30,
+    paddingVertical: 14,
+    borderRadius: 24,
     alignItems: 'center',
   },
   getStartedText: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 16,
     color: '#ffffff',
+    textTransform: 'lowercase',
   },
 });

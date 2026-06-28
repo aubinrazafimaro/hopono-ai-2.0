@@ -28,11 +28,39 @@ export default function RecapScreen() {
 
   const getResolutionEmoji = (goal: string) => {
     switch (goal) {
-      case "free the mind from blockages, pain, and trauma": return "🌊";
+      // Resolutions
+      case "free the mind from blockages, pain, and trauma": return "🧠";
       case "overcome persistent emotional pain": return "❤️‍🩹";
-      case "resolve a conflict or restore broken harmony": return "🌺";
+      case "resolve a conflict or restore broken harmony": return "🤝";
       case "process the need for forgiveness": return "🕊️";
+      // Life Goals
+      case "find my other half, my soulmate": return "💍";
+      case "travel the world": return "✈️";
+      case "build my empire": return "👑";
+      case "build my dream body": return "💪";
+      case "launch my youtube channel": return "🎥";
       default: return "🌺";
+    }
+  };
+
+  const getSelfImageEmoji = (label: string) => {
+    switch (label) {
+      case "empty. like I wasted something precious": return "🌑";
+      case "ashamed. I know I was avoiding something": return "🌧️";
+      case "disconnected from who I want to be": return "🌊";
+      case "a little guilty, but I move on": return "🌤️";
+      default: return "🌤️";
+    }
+  };
+
+  const getObstacleEmoji = (label: string) => {
+    switch (label) {
+      case "I numb the pain instead of facing it": return "📱";
+      case "my mind won't stop overthinking": return "🌊";
+      case "I'm scared of what I might feel": return "🛡️";
+      case "I don't believe I can truly change": return "🌑";
+      case "I never have time for myself": return "⏱️";
+      default: return "📱";
     }
   };
 
@@ -68,9 +96,17 @@ export default function RecapScreen() {
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>where you stand today</Text>
               </View>
-              <Text style={styles.cardValue}>
-                {data.selfImageImpact && data.selfImageImpact.length > 0 ? data.selfImageImpact.join(', ') : "guilt level is at " + data.guiltLevel + "/7"}
-              </Text>
+              {data.selfImageImpact && data.selfImageImpact.length > 0 ? (
+                data.selfImageImpact.map((impact, idx) => (
+                  <Text key={idx} style={[styles.cardValue, { marginBottom: idx < data.selfImageImpact.length - 1 ? 8 : 0 }]}>
+                    {getSelfImageEmoji(impact)} {impact}
+                  </Text>
+                ))
+              ) : (
+                <Text style={styles.cardValue}>
+                  🌤️ guilt level is at {data.guiltLevel}/7
+                </Text>
+              )}
             </View>
 
             {/* Card 3: What's standing in the way */}
@@ -81,14 +117,14 @@ export default function RecapScreen() {
               {data.obstacles.length > 0 ? (
                 data.obstacles.map((obs, idx) => (
                   <View key={idx} style={styles.bulletRow}>
-                    <View style={styles.bulletPoint} />
+                    <Text style={styles.bulletEmoji}>{getObstacleEmoji(obs)}</Text>
                     <Text style={styles.bulletText}>{obs}</Text>
                   </View>
                 ))
               ) : (
                 <View style={styles.bulletRow}>
-                  <View style={styles.bulletPoint} />
-                  <Text style={styles.bulletText}>📱 phone & social media escapism</Text>
+                  <Text style={styles.bulletEmoji}>📱</Text>
+                  <Text style={styles.bulletText}>phone & social media escapism</Text>
                 </View>
               )}
             </View>
@@ -188,13 +224,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingRight: 10,
   },
-  bulletPoint: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#e86935',
+  bulletEmoji: {
+    fontSize: 18,
     marginRight: 12,
-    marginTop: 2,
   },
   bulletText: {
     fontFamily: 'Nunito_700Bold',

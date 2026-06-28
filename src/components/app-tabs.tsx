@@ -1,8 +1,9 @@
+import React from 'react';
 import { Tabs } from 'expo-router';
-import { Platform, Text } from 'react-native';
+import { Platform, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Light Hawaiian Sky tab bar
-const BG_COLOR   = '#FFFFFF';
 const ACCENT     = '#0ABFBC'; // Ocean turquoise accent
 const TEXT_MUTED = '#9CA3AF'; // Muted gray
 
@@ -13,13 +14,20 @@ export default function AppTabs() {
         tabBarActiveTintColor: ACCENT,
         tabBarInactiveTintColor: TEXT_MUTED,
         tabBarStyle: {
-          backgroundColor: BG_COLOR,
-          borderTopWidth: 1,
-          borderTopColor: '#E5E7EB',
+          position: 'absolute', // Absolute positioning so page gradients show through
+          borderTopWidth: 0, // Removed border line completely to avoid visual rupture
+          elevation: 0, // Removed Android shadow
+          shadowOpacity: 0, // Removed iOS shadow
           height: Platform.OS === 'ios' ? 72 : 54,
           paddingBottom: Platform.OS === 'ios' ? 28 : 8,
           paddingTop: 6,
         },
+        tabBarBackground: () => (
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0.8)', 'rgba(255, 255, 255, 0.98)']}
+            style={StyleSheet.absoluteFill}
+          />
+        ),
         tabBarLabelStyle: {
           fontFamily: 'Nunito_600SemiBold',
           textTransform: 'lowercase',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useOnboarding } from '@/context/OnboardingContext';
 import AlohaButton from '@/components/AlohaButton';
 
 const COMMITMENT_OPTIONS = [
@@ -13,9 +14,11 @@ const COMMITMENT_OPTIONS = [
 
 export default function CommitmentScreen() {
   const router = useRouter();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { data, updateData } = useOnboarding();
+  const [selectedId, setSelectedId] = useState<string | null>(data.commitmentLevel || null);
 
   const handleNext = () => {
+    updateData({ commitmentLevel: selectedId || '' });
     router.push('/onboarding/signature');
   };
 

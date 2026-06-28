@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Animated } from 'react-native';
+import { useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -12,6 +12,60 @@ export default function SignatureScreen() {
   const [paths, setPaths] = useState<string[]>([]);
   const [currentPath, setCurrentPath] = useState<string>('');
   const [hasSigned, setHasSigned] = useState(false);
+
+  // Staggered animations
+  const [showSignature, setShowSignature] = useState(false);
+  const bullet1Opacity = useRef(new Animated.Value(0)).current;
+  const bullet2Opacity = useRef(new Animated.Value(0)).current;
+  const bullet3Opacity = useRef(new Animated.Value(0)).current;
+  const bullet4Opacity = useRef(new Animated.Value(0)).current;
+  
+  const signatureOpacity = useRef(new Animated.Value(0)).current;
+  const signatureScale = useRef(new Animated.Value(0.9)).current;
+
+  const startAnimation = () => {
+    // Reset values
+    bullet1Opacity.setValue(0);
+    bullet2Opacity.setValue(0);
+    bullet3Opacity.setValue(0);
+    bullet4Opacity.setValue(0);
+    signatureOpacity.setValue(0);
+    signatureScale.setValue(0.9);
+    setShowSignature(false);
+
+    // Sequence for bullet fade-ins with gentle, slow delays matching the app's spirit
+    Animated.sequence([
+      Animated.timing(bullet1Opacity, { toValue: 1, duration: 1000, useNativeDriver: true }),
+      Animated.delay(1200),
+      Animated.timing(bullet2Opacity, { toValue: 1, duration: 1000, useNativeDriver: true }),
+      Animated.delay(1200),
+      Animated.timing(bullet3Opacity, { toValue: 1, duration: 1000, useNativeDriver: true }),
+      Animated.delay(1200),
+      Animated.timing(bullet4Opacity, { toValue: 1, duration: 1000, useNativeDriver: true }),
+      Animated.delay(1000),
+    ]).start(() => {
+      // Trigger signature section animation: very slow, dreamy fade-in
+      Animated.parallel([
+        Animated.timing(signatureOpacity, {
+          toValue: 1,
+          duration: 2500, // 2.5 seconds for a dreamy, gradual reveal
+          useNativeDriver: true,
+        }),
+        Animated.spring(signatureScale, {
+          toValue: 1,
+          friction: 8,
+          tension: 25,
+          useNativeDriver: true,
+        })
+      ]).start(() => {
+        setShowSignature(true);
+      });
+    });
+  };
+
+  useEffect(() => {
+    startAnimation();
+  }, []);
 
   const handleResponderGrant = (evt: any) => {
     const { locationX, locationY } = evt.nativeEvent;
@@ -43,90 +97,105 @@ export default function SignatureScreen() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack.Screen options={{ headerTintColor: '#ffffff' }} />
       <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent} bounces={false} scrollEnabled={false} keyboardShouldPersistTaps="handled">
-        <View style={styles.header}>
-          <Text style={styles.mainTitle}>seal your intention.</Text>
-          <Text style={styles.subTitle}>from this moment, i choose:</Text>
-          
-          <View style={styles.bulletsContainer}>
-            <View style={styles.bulletRow}>
-              <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>to heal, not to hide</Text>
-            </View>
-            <View style={styles.bulletRow}>
-              <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>to feel, not to flee</Text>
-            </View>
-            <View style={styles.bulletRow}>
-              <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>to show up for myself, daily</Text>
-            </View>
-            <View style={styles.bulletRow}>
-              <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>to give love — starting with myself</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.signatureSection}>
-          <View style={styles.signatureHeader}>
-            <View style={{ flex: 1 }} />
-            <TouchableOpacity onPress={handleClear} style={styles.resetButton}>
-              <Ionicons name="refresh" size={20} color="#ffffff" />
-            </TouchableOpacity>
-          </View>
-          
-          <View 
-            style={styles.signaturePad}
-            onStartShouldSetResponder={() => true}
-            onStartShouldSetResponderCapture={() => true}
-            onMoveShouldSetResponderCapture={() => true}
-            onResponderGrant={handleResponderGrant}
-            onResponderMove={handleResponderMove}
-            onResponderRelease={handleResponderRelease}
-          >
-            <Svg style={StyleSheet.absoluteFill}>
-              {paths.map((p, i) => (
-                <Path 
-                  key={i} 
-                  d={p} 
-                  stroke="#1f2937" 
-                  strokeWidth={3} 
-                  fill="none" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                />
-              ))}
-              {currentPath ? (
-                <Path 
-                  d={currentPath} 
-                  stroke="#1f2937" 
-                  strokeWidth={3} 
-                  fill="none" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                />
-              ) : null}
-            </Svg>
+        <ScrollView contentContainerStyle={styles.scrollContent} bounces={false} scrollEnabled={false} keyboardShouldPersistTaps="handled">
+          <View style={styles.header}>
+            <Text style={styles.mainTitle}>seal your intention.</Text>
+            <Text style={styles.subTitle}>from this moment, i choose:</Text>
             
-            {!hasSigned && (
-              <View style={styles.placeholderContainer} pointerEvents="none">
-                <Text style={styles.placeholderText}>your name, your promise</Text>
-              </View>
-            )}
+            <View style={styles.bulletsContainer}>
+              {/* Bullet 1 */}
+              <Animated.View style={[styles.bulletRow, { opacity: bullet1Opacity }]}>
+                <Text style={styles.bulletPoint}>•</Text>
+                <Text style={styles.bulletText}>to heal, not to hide</Text>
+              </Animated.View>
+              {/* Bullet 2 */}
+              <Animated.View style={[styles.bulletRow, { opacity: bullet2Opacity }]}>
+                <Text style={styles.bulletPoint}>•</Text>
+                <Text style={styles.bulletText}>to feel, not to flee</Text>
+              </Animated.View>
+              {/* Bullet 3 */}
+              <Animated.View style={[styles.bulletRow, { opacity: bullet3Opacity }]}>
+                <Text style={styles.bulletPoint}>•</Text>
+                <Text style={styles.bulletText}>to show up for myself, daily</Text>
+              </Animated.View>
+              {/* Bullet 4 */}
+              <Animated.View style={[styles.bulletRow, { opacity: bullet4Opacity }]}>
+                <Text style={styles.bulletPoint}>•</Text>
+                <Text style={styles.bulletText}>to give love — starting with myself</Text>
+              </Animated.View>
+            </View>
           </View>
-          
-          <Text style={styles.signatureFooter}>
-            this is between you and yourself. 🌺
-          </Text>
-        </View>
-      </ScrollView>
 
-      {/* Bottom Button */}
-      <View style={styles.bottomContainer}>
-        <AlohaButton onPress={handleNext} text="I commit" variant="ghost" disabled={!hasSigned} />
-      </View>
-    </SafeAreaView>
+          {/* Always rendered, starts invisible and fades in very gradually like a dream */}
+          <Animated.View 
+            pointerEvents={showSignature ? 'auto' : 'none'}
+            style={[
+              styles.signatureSection, 
+              { 
+                opacity: signatureOpacity, 
+                transform: [{ scale: signatureScale }] 
+              }
+            ]}
+          >
+            {/* Single reset button positioned elegantly just above the signature pad on the right */}
+            <View style={styles.signatureHeader}>
+              <View style={{ flex: 1 }} />
+              <TouchableOpacity onPress={handleClear} style={styles.resetButton}>
+                <Ionicons name="refresh" size={20} color="#ffffff" />
+              </TouchableOpacity>
+            </View>
+            
+            <View 
+              style={styles.signaturePad}
+              onStartShouldSetResponder={() => true}
+              onStartShouldSetResponderCapture={() => true}
+              onMoveShouldSetResponderCapture={() => true}
+              onResponderGrant={handleResponderGrant}
+              onResponderMove={handleResponderMove}
+              onResponderRelease={handleResponderRelease}
+            >
+              <Svg style={StyleSheet.absoluteFill}>
+                {paths.map((p, i) => (
+                  <Path 
+                    key={i} 
+                    d={p} 
+                    stroke="#1f2937" 
+                    strokeWidth={3} 
+                    fill="none" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                  />
+                ))}
+                {currentPath ? (
+                  <Path 
+                    d={currentPath} 
+                    stroke="#1f2937" 
+                    strokeWidth={3} 
+                    fill="none" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                  />
+                ) : null}
+              </Svg>
+              
+              {!hasSigned && (
+                <View style={styles.placeholderContainer} pointerEvents="none">
+                  <Text style={styles.placeholderText}>your name, your promise</Text>
+                </View>
+              )}
+            </View>
+            
+            <Text style={styles.signatureFooter}>
+              this is between you and yourself. 🌺
+            </Text>
+          </Animated.View>
+        </ScrollView>
+
+        {/* Bottom Button */}
+        <View style={styles.bottomContainer}>
+          <AlohaButton onPress={handleNext} text="I commit" variant="ghost" disabled={!hasSigned} />
+        </View>
+      </SafeAreaView>
     </GestureHandlerRootView>
   );
 }
@@ -142,10 +211,10 @@ const styles = StyleSheet.create({
     paddingBottom: 140, // Space for bottom button
   },
   header: {
-    marginBottom: 40,
+    marginBottom: 16,
   },
   mainTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 32,
     color: '#ffffff',
     marginBottom: 8,
@@ -165,7 +234,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   bulletPoint: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#ffffff',
     marginRight: 12,
@@ -180,12 +249,13 @@ const styles = StyleSheet.create({
   signatureSection: {
     width: '100%',
     alignItems: 'center',
+    marginTop: 36, // Lowered the pad to push it closer to the bottom section
   },
   signatureHeader: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: -15, // Overlap slightly
+    marginBottom: 8, // Elegant space above signature pad
     zIndex: 10,
   },
   resetButton: {

@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SimpleLineIcons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
+import { Share } from 'lucide-react-native'; // Import Share icon from lucide-react-native to maintain absolute consistency
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useCheckIn, peaceStates, moodStates } from '../context/CheckInContext';
+import { useAppTheme } from '@/context/AppThemeContext';
 
 const screenWidth = Dimensions.get('window').width;
 const chartWidth = screenWidth - 32; // 16px padding on both sides
 
 export default function Insights() {
   const { getAverages, selectedPeriod, setSelectedPeriod } = useCheckIn();
+  const { themeName, palette } = useAppTheme();
   const [currentChartIndex, setCurrentChartIndex] = useState(0);
 
   // Fetch data for the selected period
@@ -23,8 +26,11 @@ export default function Insights() {
   const currentPeaceState = peaceStates[roundedPeace];
   const currentMoodState = moodStates[roundedMood];
 
-  // Using 30 mins per session for the metric
+  // Time Saved calculation formatted as hours and minutes (consistent with settings screen)
   const totalHours = stats.totalSessions * 0.5;
+  const hoursVal = Math.floor(totalHours);
+  const minsVal = Math.round((totalHours % 1) * 60);
+  const timeSavedString = minsVal > 0 ? `${hoursVal}h ${minsVal}m` : `${hoursVal}h`;
 
   const periods = [
     { label: '7D', days: 7 },
@@ -41,24 +47,22 @@ export default function Insights() {
     }
   };
 
-  // Generate a psychologically rewarding "healing trend" for Mood and Peace
+  // Generate progress trend
   const generateHealingTrend = (finalValue: number) => {
     const data = [];
-    // Start slightly lower in the past to show a satisfying progression
     let current = Math.max(0, finalValue - 1.5); 
     const step = (finalValue - current) / 6;
     
     for (let i = 0; i < 6; i++) {
       data.push(current);
-      // Add very slight organic noise, but mostly keep it trending upwards
       const noise = (Math.random() * 0.4) - 0.1;
       current += step + noise;
     }
-    data.push(finalValue); // End exactly on the current average today
+    data.push(finalValue);
     return data;
   };
 
-  // Generate cumulative data for Time Saved (strictly increasing)
+  // Generate cumulative data for Time Saved
   const generateCumulativeData = (total: number) => {
     const data = [0];
     let current = 0;
@@ -68,7 +72,6 @@ export default function Insights() {
       data.push(current);
     }
     data.push(total);
-    // Sort to guarantee strictly increasing accumulation
     return data.sort((a, b) => a - b);
   };
 
@@ -82,48 +85,43 @@ export default function Insights() {
       borderRadius: 16,
     },
     propsForDots: {
-      r: '0', // Hide dots for a smooth pure curve
+      r: '0',
     },
     propsForBackgroundLines: {
-      strokeDasharray: '', // solid lines
+      strokeDasharray: '',
       stroke: 'rgba(0,0,0,0.03)',
     }
   };
 
-  // 3 Charts Config
+  // 3 Charts Config (Terminologies changed to 'harmony' and 'rhythm' to match check-ins)
   const charts = [
     {
-      title: 'inner peace evolution',
+      title: 'harmony evolution',
       data: generateHealingTrend(roundedPeace),
-      color: '#e86935', // Orange for Inner Peace
+      color: '#e86935',
     },
     {
-      title: 'mood progression',
+      title: 'rhythm progression',
       data: generateHealingTrend(roundedMood),
-      color: '#0891b2', // Cyan for Mood
+      color: '#0abfbc',
     },
     {
       title: 'time saved (hours)',
       data: generateCumulativeData(stats.totalSessions * 0.5),
-      color: '#eab308', // Yellow for Time Saved
+      color: '#eab308',
     }
   ];
 
-  // Generate dynamic X-axis labels based on period
   const getXLabels = (days: number) => {
     switch (days) {
       case 7:
-        // 7D -> Heures (e.g., progression in a typical day or segments of hours)
         return ['0h', '4h', '8h', '12h', '16h', '20h', '24h'];
       case 30:
-        // 30D -> Jours
         return ['1', '5', '10', '15', '20', '25', '30'];
       case 90:
-        // 3M -> Semaines (Weeks)
-        return ['W1', 'W3', 'W5', 'W7', 'W9', 'W11', 'W13'];
+        return ['w1', 'w3', 'w5', 'w7', 'w9', 'w11', 'w13'];
       case 365:
-        // 1Y -> Mois
-        return ['Jan', 'Mar', 'May', 'Jul', 'Sep', 'Nov', 'Dec'];
+        return ['jan', 'mar', 'may', 'jul', 'sep', 'nov', 'dec'];
       default:
         return ['1', '2', '3', '4', '5', '6', '7'];
     }
@@ -132,182 +130,199 @@ export default function Insights() {
   const chartLabels = getXLabels(selectedPeriod);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>your journey</Text>
-          <Text style={styles.headerSubtitle}>tracking your focus progress</Text>
-        </View>
-
-        {/* Time Selector */}
-        <View style={styles.timeSelector}>
-          {periods.map((period) => {
-            const isActive = period.days === selectedPeriod;
-            return (
-              <TouchableOpacity 
-                key={period.label} 
-                style={[styles.timeTab, isActive && styles.timeTabActive]}
-                onPress={() => setSelectedPeriod(period.days)}
-              >
-                <Text style={[styles.timeTabText, isActive && styles.timeTabTextActive]}>
-                  {period.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        {/* 2x2 Grid */}
-        <View style={styles.grid}>
+    <LinearGradient 
+      colors={[palette.gradientTop, palette.gradientMid, palette.gradientBot]} 
+      locations={[0, 0.4, 1]}
+      style={styles.container}
+    >
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
           
-          {/* Card 1: Streak */}
-          <View style={[styles.card, { backgroundColor: '#e86935' }]}>
-            <Text style={styles.cardEmoji}>🥳</Text>
-            <Text style={styles.cardNumber}>{stats.streak}</Text>
-            <Text style={styles.cardTitle}>current streak</Text>
-            <Text style={styles.cardSubtitle}>days</Text>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>your journey</Text>
+            <Text style={styles.headerSubtitle}>tracking your focus progress</Text>
           </View>
 
-          <View style={[styles.card, { backgroundColor: '#5ba4e6' }]}>
-            <Text style={styles.cardEmoji}>⏳</Text>
-            <Text style={styles.cardNumber}>{(stats.totalSessions * 0.5).toFixed(1)}</Text>
-            <Text style={styles.cardTitle}>time saved</Text>
-            <Text style={styles.cardSubtitle}>hours</Text>
+          {/* Time Selector */}
+          <View style={styles.timeSelector}>
+            {periods.map((period) => {
+              const isActive = period.days === selectedPeriod;
+              return (
+                <TouchableOpacity 
+                  key={period.label} 
+                  style={[styles.timeTab, isActive && styles.timeTabActive]}
+                  onPress={() => setSelectedPeriod(period.days)}
+                >
+                  <Text style={[styles.timeTabText, isActive && styles.timeTabTextActive]}>
+                    {period.label.toLowerCase()}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
 
-          {/* Card 3: Avg Inner Peace */}
-          <View style={[styles.card, { backgroundColor: currentPeaceState.color }]}>
-            <Text style={styles.cardEmoji}>{currentPeaceState.emoji}</Text>
-            <Text style={styles.cardNumber}>{stats.avgPeace.toFixed(1)}</Text>
-            <Text style={[styles.cardTitle, { textAlign: 'center' }]}>avg inner peace</Text>
-            <Text style={styles.cardSubtitle}>{currentPeaceState.text}</Text>
+          {/* 2x2 Grid (Translucent unified card blocks) */}
+          <View style={styles.grid}>
+            
+            {/* Card 1: Streak */}
+            <View style={[styles.card, { shadowColor: palette.primary }]}>
+              <Text style={styles.cardEmoji}>🥳</Text>
+              <Text style={[styles.cardNumber, { color: '#e86935' }]}>{stats.streak}</Text>
+              <Text style={styles.cardTitle}>current streak</Text>
+              <Text style={styles.cardSubtitle}>days</Text>
+            </View>
+
+            {/* Card 2: Time Saved (Properly formatted) */}
+            <View style={[styles.card, { shadowColor: palette.primary }]}>
+              <Text style={styles.cardEmoji}>⏳</Text>
+              <Text style={[styles.cardNumber, { color: '#0abfbc' }]}>{timeSavedString}</Text>
+              <Text style={styles.cardTitle}>time saved</Text>
+              <Text style={styles.cardSubtitle}>hours</Text>
+            </View>
+
+            {/* Card 3: Avg Harmony (Terminologies aligned to 'harmony' and dynamic color applied to numbers) */}
+            <View style={[styles.card, { shadowColor: palette.primary }]}>
+              <Text style={styles.cardEmoji}>{currentPeaceState.emoji}</Text>
+              <Text style={[styles.cardNumber, { color: currentPeaceState.color }]}>
+                {stats.avgPeace.toFixed(1)}
+              </Text>
+              <Text style={styles.cardTitle}>avg harmony</Text>
+              <Text style={[styles.cardSubtitle, { color: currentPeaceState.color }]}>
+                {currentPeaceState.text.toLowerCase()}
+              </Text>
+            </View>
+
+            {/* Card 4: Avg Rhythm (Terminologies aligned to 'rhythm' and dynamic color applied to numbers) */}
+            <View style={[styles.card, { shadowColor: palette.primary }]}>
+              <Text style={styles.cardEmoji}>{currentMoodState.emoji}</Text>
+              <Text style={[styles.cardNumber, { color: currentMoodState.color }]}>
+                {stats.avgMood.toFixed(1)}
+              </Text>
+              <Text style={styles.cardTitle}>avg rhythm</Text>
+              <Text style={[styles.cardSubtitle, { color: currentMoodState.color }]}>
+                {currentMoodState.text.toLowerCase()}
+              </Text>
+            </View>
+
           </View>
 
-          {/* Card 4: Avg Mood */}
-          <View style={[styles.card, { backgroundColor: currentMoodState.color }]}>
-            <Text style={styles.cardEmoji}>{currentMoodState.emoji}</Text>
-            <Text style={styles.cardNumber}>{stats.avgMood.toFixed(1)}</Text>
-            <Text style={styles.cardTitle}>avg mood</Text>
-            <Text style={styles.cardSubtitle}>{currentMoodState.text}</Text>
-          </View>
-
-        </View>
-
-        {/* CHART CAROUSEL */}
-        <View style={styles.chartSection}>
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          >
-            {charts.map((chart, index) => (
-              <View key={index} style={{ width: chartWidth }}>
-                <View style={styles.chartHeader}>
-                  <Text style={[styles.chartTitle, { color: chart.color }]}>{chart.title}</Text>
-                  <Text style={styles.chartSubtitle}>last {selectedPeriod} days</Text>
+          {/* CHART CAROUSEL (Translucent backdrop block) */}
+          <View style={[styles.chartSection, { shadowColor: palette.primary }]}>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+            >
+              {charts.map((chart, index) => (
+                <View key={index} style={{ width: chartWidth }}>
+                  <View style={styles.chartHeader}>
+                    <Text style={[styles.chartTitle, { color: chart.color }]}>{chart.title}</Text>
+                    <Text style={styles.chartSubtitle}>last {selectedPeriod} days</Text>
+                  </View>
+                  
+                  <LineChart
+                    data={{
+                      labels: chartLabels,
+                      datasets: [{ 
+                        data: chart.data,
+                        strokeWidth: 4
+                      }]
+                    }}
+                    width={screenWidth - 32}
+                    height={180}
+                    yAxisLabel=""
+                    yAxisSuffix=""
+                    segments={5}
+                    chartConfig={{
+                      ...chartConfig,
+                      color: (opacity = 1) => chart.color,
+                      fillShadowGradient: chart.color,
+                      fillShadowGradientOpacity: 0.3,
+                    }}
+                    bezier
+                    style={{
+                      paddingRight: 32,
+                      paddingLeft: 10,
+                      borderRadius: 16,
+                    }}
+                    withVerticalLines={false}
+                    withHorizontalLines={true}
+                    withInnerLines={true}
+                    withOuterLines={false}
+                    withVerticalLabels={true}
+                    withHorizontalLabels={true}
+                    withShadow={true}
+                    transparent={true}
+                  />
                 </View>
-                
-                <LineChart
-                  data={{
-                    labels: chartLabels,
-                    datasets: [{ 
-                      data: chart.data,
-                      strokeWidth: 4 // Thicker, more premium line
-                    }]
-                  }}
-                  width={screenWidth - 32} // Match container width
-                  height={180}
-                  yAxisLabel=""
-                  yAxisSuffix=""
-                  segments={5} // More segments for smaller steps
-                  chartConfig={{
-                    ...chartConfig,
-                    color: (opacity = 1) => chart.color, // Dynamically use the chart's theme color
-                    fillShadowGradient: chart.color, // Use theme color for the gradient under the curve
-                    fillShadowGradientOpacity: 0.3, // Soft gradient opacity
-                  }}
-                  bezier // Smooth curves!
-                  style={{
-                    paddingRight: 32, // Padding so the rightmost label doesn't get cut
-                    paddingLeft: 10, // Padding to prevent Y-axis from being cut off
-                    borderRadius: 16,
-                  }}
-                  withVerticalLines={false}
-                  withHorizontalLines={true}
-                  withInnerLines={true}
-                  withOuterLines={false}
-                  withVerticalLabels={true}
-                  withHorizontalLabels={true}
-                  withShadow={true}
-                  transparent={true}
+              ))}
+            </ScrollView>
+
+            {/* Pagination Dots */}
+            <View style={styles.pagination}>
+              {charts.map((_, i) => (
+                <View 
+                  key={i} 
+                  style={[styles.dot, currentChartIndex === i && styles.dotActive]} 
                 />
-              </View>
-            ))}
-          </ScrollView>
-
-          {/* Pagination Dots */}
-          <View style={styles.pagination}>
-            {charts.map((_, i) => (
-              <View 
-                key={i} 
-                style={[styles.dot, currentChartIndex === i && styles.dotActive]} 
-              />
-            ))}
+              ))}
+            </View>
           </View>
-        </View>
 
-        {/* SHARE BUTTON */}
-        <TouchableOpacity style={styles.shareButton}>
-          <SimpleLineIcons name="share" size={18} color="#ffffff" style={{ marginRight: 8 }} />
-          <Text style={styles.shareButtonText}>share your progress</Text>
-        </TouchableOpacity>
+          {/* SHARE BUTTON (Using lucide Share icon to ensure consistency) */}
+          <TouchableOpacity style={styles.shareButton}>
+            <Share size={18} color="#ffffff" style={{ marginRight: 8 }} />
+            <Text style={styles.shareButtonText}>share your progress</Text>
+          </TouchableOpacity>
 
-        <View style={{ height: 40 }} />
+          <View style={{ height: 40 }} />
 
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 24,
+    paddingTop: 10,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 20,
+    marginTop: 8,
   },
   headerTitle: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 24,
-    color: '#000000',
+    fontSize: 28,
+    color: '#334155',
     marginBottom: 4,
+    textTransform: 'lowercase',
   },
   headerSubtitle: {
-    fontFamily: 'Nunito_400Regular',
+    fontFamily: 'Nunito_600SemiBold',
     fontSize: 14,
-    color: '#6b7280',
+    color: '#64748b',
+    textTransform: 'lowercase',
   },
   timeSelector: {
     flexDirection: 'row',
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
     borderRadius: 16,
     padding: 4,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   timeTab: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 10,
     alignItems: 'center',
     borderRadius: 12,
   },
@@ -317,7 +332,7 @@ const styles = StyleSheet.create({
   timeTabText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 14,
-    color: '#9ca3af',
+    color: '#94a3b8',
   },
   timeTabTextActive: {
     color: '#ffffff',
@@ -326,55 +341,57 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 32,
+    marginBottom: 24,
   },
   card: {
     width: '48%',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
+    borderColor: 'rgba(255, 255, 255, 0.95)',
+    borderWidth: 1.5,
     borderRadius: 24,
-    padding: 20,
+    padding: 16,
     alignItems: 'center',
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.12,
+    shadowRadius: 20,
+    elevation: 4,
   },
   cardEmoji: {
     fontSize: 24,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   cardNumber: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 36,
-    color: '#ffffff',
+    fontSize: 32,
     marginBottom: 4,
   },
   cardTitle: {
     fontFamily: 'Nunito_600SemiBold',
-    color: 'rgba(255,255,255,0.9)',
-    fontSize: 14,
+    color: '#334155',
+    fontSize: 13,
+    textAlign: 'center',
+    textTransform: 'lowercase',
   },
   cardSubtitle: {
-    fontFamily: 'Nunito_400Regular',
-    color: 'rgba(255,255,255,0.7)',
-    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 11,
+    textTransform: 'lowercase',
   },
 
   // Chart
   chartSection: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
+    borderColor: 'rgba(255, 255, 255, 0.95)',
+    borderWidth: 1.5,
     borderRadius: 24,
     paddingTop: 20,
     paddingBottom: 10,
     marginBottom: 32,
-    borderWidth: 1,
-    borderColor: '#f1f5f9',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 4,
     overflow: 'hidden',
   },
   chartHeader: {
@@ -385,12 +402,14 @@ const styles = StyleSheet.create({
   },
   chartTitle: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 16,
+    fontSize: 15,
+    textTransform: 'lowercase',
   },
   chartSubtitle: {
-    fontFamily: 'Nunito_400Regular',
-    color: '#9ca3af',
-    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    color: '#94a3b8',
+    fontSize: 13,
+    textTransform: 'lowercase',
   },
   pagination: {
     flexDirection: 'row',
@@ -406,13 +425,13 @@ const styles = StyleSheet.create({
   },
   dotActive: {
     width: 12,
-    backgroundColor: '#e86935', // Accent color
+    backgroundColor: '#e86935',
   },
 
   // Share Button
   shareButton: {
     flexDirection: 'row',
-    backgroundColor: '#e86935', // Orange accent color
+    backgroundColor: '#e86935',
     paddingVertical: 16,
     borderRadius: 30,
     justifyContent: 'center',
@@ -427,5 +446,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 16,
     color: '#ffffff',
+    textTransform: 'lowercase',
   },
 });

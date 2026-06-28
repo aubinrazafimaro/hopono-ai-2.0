@@ -66,57 +66,59 @@ export default function GuiltScreen() {
             how heavy is the weight of what you keep postponing?
           </Text>
           
-          <View style={styles.valueContainer}>
-            <Text style={styles.valueNumber}>{guiltLevel}</Text>
-            <Text style={styles.valueText}> / 7</Text>
-          </View>
-
-          <View style={styles.sliderContainer}>
-            {/* The touchable area for the slider */}
-            <View style={styles.sliderTrackTouchable} {...panResponder.panHandlers}>
-              <View style={styles.sliderTrack}>
-                
-                {/* Tick marks */}
-                <View style={styles.ticksContainer} pointerEvents="none">
-                   {ticks.map((tick, index) => {
-                     // Don't show tick mark where the thumb is (roughly) or where filled
-                     const isFilled = index < guiltLevel;
-                     return (
-                       <View 
-                         key={tick} 
-                         style={[
-                           styles.tick, 
-                           { left: (index / 6) * trackWidth + thumbSize/2 - 4 },
-                           isFilled && { backgroundColor: 'transparent' } // hide if under the orange fill
-                         ]} 
-                       />
-                     );
-                   })}
-                </View>
-
-                {/* Orange filled portion */}
-                <Animated.View 
-                  style={[
-                    styles.sliderFill, 
-                    { width: Animated.add(fillAnim, thumbSize/2) }
-                  ]} 
-                  pointerEvents="none"
-                />
-                
-                {/* Thumb */}
-                <Animated.View 
-                  style={[
-                    styles.thumb,
-                    { transform: [{ translateX: fillAnim }] }
-                  ]}
-                  pointerEvents="none"
-                />
-              </View>
+          <View style={styles.sliderCenterContainer}>
+            <View style={styles.valueContainer}>
+              <Text style={styles.valueNumber}>{guiltLevel}</Text>
+              <Text style={styles.valueText}> / 7</Text>
             </View>
-            
-            <View style={styles.labelsContainer}>
-              <Text style={styles.labelText}>light</Text>
-              <Text style={styles.labelText}>crushing</Text>
+
+            <View style={styles.sliderContainer}>
+              {/* The touchable area for the slider */}
+              <View style={styles.sliderTrackTouchable} {...panResponder.panHandlers}>
+                <View style={styles.sliderTrack}>
+                  
+                  {/* Tick marks */}
+                  <View style={styles.ticksContainer} pointerEvents="none">
+                     {ticks.map((tick, index) => {
+                       // Don't show tick mark where the thumb is (roughly) or where filled
+                       const isFilled = index < guiltLevel;
+                       return (
+                         <View 
+                           key={tick} 
+                           style={[
+                             styles.tick, 
+                             { left: (index / 6) * trackWidth + thumbSize/2 - 4 },
+                             isFilled && { backgroundColor: 'transparent' } // hide if under the orange fill
+                           ]} 
+                         />
+                       );
+                     })}
+                  </View>
+
+                  {/* Orange filled portion */}
+                  <Animated.View 
+                    style={[
+                      styles.sliderFill, 
+                      { width: Animated.add(fillAnim, thumbSize/2) }
+                    ]} 
+                    pointerEvents="none"
+                  />
+                  
+                  {/* Thumb */}
+                  <Animated.View 
+                    style={[
+                      styles.thumb,
+                      { transform: [{ translateX: fillAnim }] }
+                    ]}
+                    pointerEvents="none"
+                  />
+                </View>
+              </View>
+              
+              <View style={styles.labelsContainer}>
+                <Text style={styles.labelText}>light</Text>
+                <Text style={styles.labelText}>crushing</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -133,11 +135,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flexGrow: 1,
+    flex: 1,
     paddingTop: 60,
     paddingHorizontal: 32,
-    alignItems: 'center',
     paddingBottom: 140,
+  },
+  sliderCenterContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: -40, // offset question slightly to stay balanced
   },
   question: {
     fontFamily: 'Nunito_700Bold',

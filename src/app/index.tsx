@@ -8,7 +8,7 @@ import {
   Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Droplet, Leaf, Infinity as InfinityIcon, Clock, Share } from 'lucide-react-native';
+import { Share2 } from 'lucide-react-native'; // Changed Share to Share2 for the 3-dots connected share icon
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCheckIn, peaceStates, moodStates } from '@/context/CheckInContext';
@@ -32,18 +32,74 @@ export default function Home() {
   const currentMood  = moodStates[moodIndex];
   const currentMonthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date()).toLowerCase();
 
-  // Calendar: Last 30 days (oldest → today)
-  const calendarDays = history.slice(0, 30).reverse().map((dayData, i) => {
-    const isToday = i === 29;
-    const dayNum  = new Date(dayData.date).getDate();
+  // ── Goal Rotation State (Interval: 15 seconds) ──
+  const [currentGoalIndex, setCurrentGoalIndex] = useState(0);
+
+  useEffect(() => {
+    if (userData?.lifeGoals && userData.lifeGoals.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentGoalIndex((prev) => (prev + 1) % userData.lifeGoals.length);
+      }, 15000); // Rotates every 15 seconds
+      return () => clearInterval(interval);
+    }
+  }, [userData?.lifeGoals]);
+
+  // ── Standard Calendar Layout Calculation ──
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const startWeekday = firstDay.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const startOffset = startWeekday === 0 ? 6 : startWeekday - 1; // Align Mon-Sun grid
+
+  const totalDays = new Date(year, month + 1, 0).getDate();
+
+  // Create standard calendar cells
+  const calendarCells = [];
+  // Empty offset days at start
+  for (let i = 0; i < startOffset; i++) {
+    calendarCells.push({ key: `empty-${i}`, type: 'empty' });
+  }
+
+  // Active days of the month
+  for (let day = 1; day <= totalDays; day++) {
+    const cellDate = new Date(year, month, day);
+    const dateStr = cellDate.toISOString().split('T')[0];
+    const isToday = day === now.getDate();
+    
+    // Find check-in data in history
+    const dayData = history.find((h) => h.date.startsWith(dateStr));
+    
     if (isToday) {
-      return { day: dayNum, past: true, moodEmoji: currentMood.emoji, peaceEmoji: currentPeace.emoji };
+      calendarCells.push({
+        key: `day-${day}`,
+        type: 'day',
+        dayNum: day,
+        hasCheckIn: true,
+        moodEmoji: currentMood.emoji,
+        peaceEmoji: currentPeace.emoji,
+        isToday: true
+      });
+    } else if (dayData && dayData.hasCheckIn) {
+      calendarCells.push({
+        key: `day-${day}`,
+        type: 'day',
+        dayNum: day,
+        hasCheckIn: true,
+        moodEmoji: moodStates[dayData.moodIndex].emoji,
+        peaceEmoji: peaceStates[dayData.peaceIndex].emoji,
+        isToday: false
+      });
+    } else {
+      calendarCells.push({
+        key: `day-${day}`,
+        type: 'day',
+        dayNum: day,
+        hasCheckIn: false,
+        isToday: false
+      });
     }
-    if (dayData.hasCheckIn) {
-      return { day: dayNum, past: true, moodEmoji: moodStates[dayData.moodIndex].emoji, peaceEmoji: peaceStates[dayData.peaceIndex].emoji };
-    }
-    return { day: dayNum, past: false };
-  });
+  }
 
   const [isMood, setIsMood] = useState(true);
   const moodOpacity  = useRef(new Animated.Value(1)).current;
@@ -75,16 +131,16 @@ export default function Home() {
           showsVerticalScrollIndicator={false}
         >
 
-          {/* ── HEADER ── */}
+          {/* ── HEADER (Enforced Nunito typography and aligned name text color) ── */}
           <View style={styles.header}>
             <View>
               <Text style={styles.headerGreeting}>aloha 🌺</Text>
-              <Text style={styles.headerName}>
+              <Text style={[styles.headerName, { color: palette.textPrimary }]}>
                 {userData?.name ? userData.name.toLowerCase() : 'friend'}
               </Text>
-              {userData?.lifeGoals?.[0] && (
+              {userData?.lifeGoals?.[currentGoalIndex] && (
                 <Text style={[styles.headerGoal, { color: palette.primary }]}>
-                  towards: {userData.lifeGoals[0]}
+                  towards: {userData.lifeGoals[currentGoalIndex].toLowerCase()}
                 </Text>
               )}
             </View>
@@ -143,7 +199,7 @@ export default function Home() {
             </View>
           </TouchableOpacity>
 
-          {/* ── MONTHLY CALENDAR ── */}
+          {/* ── MONTHLY CALENDAR (Aligned standard monthly calendar) ── */}
           <View style={styles.sectionHeader}>
             <View style={styles.titleRow}>
               <Animated.Text style={[styles.sectionTitle, { color: palette.textMuted, opacity: moodOpacity }]}>
@@ -157,6 +213,11 @@ export default function Home() {
               <Text style={[styles.viewCalendarText, { color: palette.primary }]}>view calendar</Text>
             </TouchableOpacity>
           </View>
+          
+          {/* Cute, tiny description sentence below calendar title to fill the gap */}
+          <Text style={[styles.calendarSubText, { color: palette.textMuted }]}>
+            every day is a new step towards your inner peace. 🌺
+          </Text>
 
           <View style={[styles.card, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder }]}>
             <View style={styles.calendarHeader}>
@@ -165,17 +226,26 @@ export default function Home() {
               ))}
             </View>
             <View style={styles.calendarGrid}>
-              {calendarDays.map((item, idx) => {
-                if (!item.past) {
+              {calendarCells.map((item) => {
+                if (item.type === 'empty') {
                   return (
-                    <View key={idx} style={styles.calCell}>
-                      <View style={[styles.emptyCircle, { backgroundColor: 'rgba(255,255,255,0.05)' }]} />
-                      <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.day}</Text>
+                    <View key={item.key} style={styles.calCell}>
+                      <View style={[styles.emptyCircle, { backgroundColor: 'transparent' }]} />
                     </View>
                   );
                 }
+                
+                if (!item.hasCheckIn) {
+                  return (
+                    <View key={item.key} style={styles.calCell}>
+                      <View style={[styles.emptyCircle, { backgroundColor: 'rgba(255,255,255,0.05)' }]} />
+                      <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.dayNum}</Text>
+                    </View>
+                  );
+                }
+                
                 return (
-                  <View key={idx} style={styles.calCell}>
+                  <View key={item.key} style={styles.calCell}>
                     <View style={[styles.emojiCircle, { backgroundColor: 'rgba(255,255,255,0.08)' }]}>
                       <Animated.Text style={[styles.smallEmoji, { opacity: moodOpacity }]}>
                         {item.moodEmoji}
@@ -184,7 +254,7 @@ export default function Home() {
                         {item.peaceEmoji}
                       </Animated.Text>
                     </View>
-                    <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.day}</Text>
+                    <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.dayNum}</Text>
                   </View>
                 );
               })}
@@ -226,11 +296,11 @@ export default function Home() {
             ))}
           </ScrollView>
 
-          {/* ── CTA SHARE ── */}
+          {/* ── CTA SHARE (Enforced Share2 3-dots icon) ── */}
           <AlohaButton
             onPress={() => {}}
             text="share"
-            icon={<Share size={20} color="#ffffff" />}
+            icon={<Share2 size={20} color="#ffffff" />}
             style={{ marginTop: SPACING.section }}
           />
 
@@ -267,18 +337,21 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.section,
   },
   headerGreeting: {
-    ...TYPOGRAPHY.label,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 14,
     color: COLORS.textSandMuted,
     marginBottom: 4,
+    textTransform: 'lowercase',
   },
   headerName: {
-    ...TYPOGRAPHY.h1,
-    color: COLORS.textSand,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 32,
   },
   headerGoal: {
-    fontFamily: 'Nunito_600SemiBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 13,
     marginTop: 4,
+    textTransform: 'lowercase',
   },
   profileBtn: {
     width: 46,
@@ -379,6 +452,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textTransform: 'lowercase',
     letterSpacing: 1.2,
+  },
+  calendarSubText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 12,
+    marginTop: -8,
+    marginBottom: 16,
+    textTransform: 'lowercase',
   },
   viewCalendarText: {
     fontFamily: 'Nunito_700Bold',

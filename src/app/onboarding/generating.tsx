@@ -92,11 +92,9 @@ export default function GeneratingScreen() {
         />
         <SafeAreaView style={styles.containerTransparent}>
           <Animated.View style={[styles.center, { opacity: fadeAnimFinal }]}>
-            <View style={styles.successIconContainer}>
-              <Ionicons name="checkmark-sharp" size={40} color="#e86935" />
-            </View>
+            <Text style={{ fontSize: 64, marginBottom: 40 }}>✅</Text>
             <Text style={styles.successTitle}>
-              {data.name && data.name.trim() !== '' ? `${data.name.trim()},` : ''} something beautiful{'\n'}was made for you. 🌺
+              {data.name && data.name.trim() !== '' ? `${data.name.trim()},` : ''} something beautiful{'\n'}was made for you.
             </Text>
           </Animated.View>
 

@@ -32,9 +32,6 @@ export default function TabLayout() {
   useEffect(() => {
     const checkOnboarding = async () => {
       try {
-        // TEMP: Force reset for testing so you can see it again
-        await AsyncStorage.removeItem('hasCompletedOnboarding');
-        
         const value = await AsyncStorage.getItem('hasCompletedOnboarding');
         const isCompleted = value === 'true';
         setHasCompletedOnboarding(isCompleted);

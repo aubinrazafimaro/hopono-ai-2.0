@@ -16,17 +16,16 @@ const affirmations = [
 
 const getWeekDays = () => {
   const today = new Date();
-  const currentDay = today.getDay(); // 0 is Sunday
   const days = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
   
   const week = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = -3; i <= 3; i++) {
     const date = new Date(today);
-    date.setDate(today.getDate() - currentDay + i);
+    date.setDate(today.getDate() + i);
     week.push({
-      dayName: days[i],
+      dayName: days[date.getDay()],
       dateNum: date.getDate(),
-      isToday: i === currentDay,
+      isToday: i === 0,
     });
   }
   return week;

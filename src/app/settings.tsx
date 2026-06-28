@@ -4,7 +4,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useCheckIn } from '@/context/CheckInContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppTheme } from '@/context/AppThemeContext';
 
 // Helper component for Settings Item
@@ -42,8 +42,7 @@ const SettingsItem = ({
 );
 
 export default function SettingsScreen() {
-  const { getAverages } = useCheckIn();
-  const { themeName, palette, setThemeName } = useAppTheme();
+  const { palette } = useAppTheme();
   const [hasPermissions, setHasPermissions] = useState(false);
   const [isBlockerActive, setIsBlockerActive] = useState(false);
   
@@ -68,15 +67,15 @@ export default function SettingsScreen() {
       console.warn("App Blocker is not available. Please compile the native app.", e);
     }
   };
-  
-  // Lifetime stats for settings overview
-  const lifetimeStats = getAverages(365);
-  
-  // Convert sessions to hours (0.5 hours per session for mockup)
-  const totalHours = lifetimeStats.totalSessions * 0.5;
-  const hours = Math.floor(totalHours);
-  const mins = (totalHours % 1) * 60;
-  const timeSavedString = mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+
+  const handleRestartOnboarding = async () => {
+    try {
+      await AsyncStorage.setItem('hasCompletedOnboarding', 'false');
+      router.replace('/onboarding');
+    } catch (e) {
+      console.warn('Failed to reset onboarding state:', e);
+    }
+  };
 
   return (
     <LinearGradient 
@@ -86,25 +85,11 @@ export default function SettingsScreen() {
     >
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       
-      {/* Removed Top Tabs as requested */}
-
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* HEADER */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>settings</Text>
-        </View>
-        
-        {/* STATS CARDS */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>time saved</Text>
-            <Text style={styles.statValue}>{timeSavedString}</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>best streak</Text>
-            <Text style={styles.statValue}>{lifetimeStats.bestStreak} days</Text>
-          </View>
         </View>
 
         <Text style={styles.sectionHeader}>app blocker</Text>
@@ -168,26 +153,14 @@ export default function SettingsScreen() {
             title="privacy & security" 
             iconBgColor={palette.cardBg} 
             iconColor={palette.primary}
-            isLast={true}
           />
-        </View>
-
-        {/* SECTION 4: APPEARANCE */}
-        <Text style={styles.sectionHeader}>appearance</Text>
-        <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
           <SettingsItem 
-            icon="drop" 
-            title="ocean theme" 
+            icon="refresh" 
+            title="restart onboarding" 
             iconBgColor={palette.cardBg} 
             iconColor={palette.primary}
             isLast={true}
-            rightElement={
-              <Switch
-                value={themeName === 'ocean'}
-                onValueChange={(val) => setThemeName(val ? 'ocean' : 'sunset')}
-                trackColor={{ false: 'rgba(255,255,255,0.1)', true: palette.primary }}
-              />
-            }
+            onPress={handleRestartOnboarding}
           />
         </View>
 
@@ -216,41 +189,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 28,
     color: '#334155',
-  },
-  
-  // Stats
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 32,
-    marginTop: 10,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
-    borderRadius: 24,
-    padding: 20,
-    alignItems: 'center',
-    marginHorizontal: 4,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.95)',
-    // shadowColor is overridden dynamically
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12,
-    shadowRadius: 20,
-    elevation: 4,
-  },
-  statLabel: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 10,
-    color: '#94a3b8',
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  statValue: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 22,
-    color: '#334155',
+    textTransform: 'lowercase',
   },
 
   // Sections
@@ -261,13 +200,13 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     marginBottom: 12,
     marginLeft: 8,
+    textTransform: 'lowercase',
   },
   cardBlock: {
     backgroundColor: 'rgba(255, 255, 255, 0.65)',
     borderRadius: 24,
     paddingHorizontal: 16,
     marginBottom: 32,
-    // shadowColor is overridden dynamically
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.12,
     shadowRadius: 24,
@@ -304,5 +243,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 16,
     color: '#334155',
+    textTransform: 'lowercase',
   },
 });

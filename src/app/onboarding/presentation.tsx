@@ -6,8 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useOnboarding } from '@/context/OnboardingContext';
 import AlohaButton from '@/components/AlohaButton';
 
-const AGE_GROUPS = ['15-20', '21-25', '26-30', '30-40', '40-50', '50+'];
-const GENDERS = ['male', 'female'];
+const AGE_GROUPS = ['15-20', '21-25', '26-30', '31-40', '41-50', '50+'];
+const GENDERS = ['female', 'male'];
 
 export default function PresentationScreen() {
   const router = useRouter();

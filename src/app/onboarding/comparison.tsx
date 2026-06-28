@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import AlohaButton from '@/components/AlohaButton';
 
 export default function ComparisonScreen() {
@@ -11,10 +10,16 @@ export default function ComparisonScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
+        
+        {/* Back Button */}
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="chevron-back" size={24} color="#ffffff" />
+        </TouchableOpacity>
+
         {/* Header Pill */}
         <View style={styles.headerContainer}>
           <View style={styles.pill}>
-            <Text style={styles.pillText}>🌺 7 days. on us.</Text>
+            <Text style={styles.pillText}>🎁 7 days. on us.</Text>
           </View>
         </View>
 
@@ -55,7 +60,7 @@ export default function ComparisonScreen() {
         </View>
 
         {/* Button */}
-        <AlohaButton onPress={() => router.push('/onboarding/commitment')} text="I'm in 🌊" variant="secondary" />
+        <AlohaButton onPress={() => router.push('/onboarding/commitment')} text="I'm in" variant="secondary" />
       </SafeAreaView>
     </View>
   );
@@ -70,10 +75,23 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     justifyContent: 'space-between',
+    paddingBottom: 24,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   headerContainer: {
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10, // Moved up to let the page breathe
   },
   pill: {
     backgroundColor: '#ffffff',
@@ -92,57 +110,54 @@ const styles = StyleSheet.create({
     color: '#e86935',
   },
   graphicContainer: {
-    flex: 1,
+    width: '100%',
+    height: 320,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    minHeight: 300,
+    marginTop: 10, // Moved up slightly
+    marginBottom: 10,
   },
   itemContainer: {
     position: 'absolute',
     alignItems: 'center',
   },
   itemLeft: {
-    top: '15%',
-    left: '5%',
+    top: 10,
+    left: 36, // Moved in to cluster centered, away from the screen edge
     transform: [{ rotate: '-8deg' }],
   },
   itemRight: {
-    bottom: '15%',
-    right: '5%',
+    bottom: 10,
+    right: 36, // Moved in to cluster centered, away from the screen edge
     transform: [{ rotate: '8deg' }],
   },
   iconWrapper: {
     marginVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 15,
-    elevation: 10,
   },
   hugeIcon: {
-    fontSize: 70,
+    fontSize: 100, // Premium large size matching the mockup proportions
   },
   labelPill: {
     backgroundColor: '#ffffff',
     paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
+    paddingHorizontal: 16,
+    borderRadius: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
     shadowRadius: 10,
-    elevation: 5,
+    elevation: 4,
   },
   labelText: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 11,
+    fontSize: 12,
     color: '#1f2937',
   },
   vsBadge: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -155,25 +170,29 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   vsText: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 14,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 16,
     color: '#e86935',
   },
   textContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
     paddingHorizontal: 16,
   },
   title: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold', // Keep original app typography
     fontSize: 22,
     color: '#ffffff',
     marginBottom: 12,
     lineHeight: 28,
+    textAlign: 'left', // Aligned to the left matching the mockup
+    textTransform: 'lowercase',
   },
   description: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 20,
+    textAlign: 'left', // Aligned to the left matching the mockup
+    textTransform: 'lowercase',
   },
 });

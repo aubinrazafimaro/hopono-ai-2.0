@@ -37,14 +37,14 @@ export default function ReassuranceScreen() {
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.iconTop}>🌺</Text>
-          <Text style={styles.title}>
-            it takes <Text style={styles.highlight}>courage</Text> to look inside, {data.name || 'friend'}.
-          </Text>
-        </View>
-
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <Text style={styles.iconTop}>🌺</Text>
+            <Text style={styles.title}>
+              it takes <Text style={styles.highlight}>courage</Text> to look inside, {data.name || 'friend'}.
+            </Text>
+          </View>
+
           <Animated.Text style={[styles.bodyText, { opacity: text1Opacity }]}>
             reaching for your phone when something hurts — that's not weakness. that's what we all do.
           </Animated.Text>

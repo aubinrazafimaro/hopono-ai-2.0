@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePricing } from '@/hooks/usePricing';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
 import AlohaButton from '@/components/AlohaButton';
+
+const { height } = Dimensions.get('window');
 
 export default function PaywallScreen() {
   const router = useRouter();
@@ -13,8 +15,6 @@ export default function PaywallScreen() {
 
   // Calculate dates
   const today = new Date();
-  const in4Days = new Date(today);
-  in4Days.setDate(today.getDate() + 4);
   const in7Days = new Date(today);
   in7Days.setDate(today.getDate() + 7);
 
@@ -23,149 +23,171 @@ export default function PaywallScreen() {
   };
 
   const handleStartTrial = () => {
-    // In a real app, call RevenueCat here
     router.replace('/');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <AnimatedFadeIn style={{ flex: 1 }}>
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.headerIcon}>
-          <Ionicons name="chevron-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        
-        <View style={styles.awardContainer}>
-          <Ionicons name="leaf" size={16} color="#f59e0b" style={styles.laurelLeft} />
-          <View style={styles.awardTextContainer}>
-            <Text style={styles.awardText}>the #1 emotional</Text>
-            <Text style={styles.awardText}>healing app</Text>
-            <View style={styles.starsContainer}>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Ionicons key={i} name="star" size={10} color="#f59e0b" />
-              ))}
-            </View>
-          </View>
-          <Ionicons name="leaf" size={16} color="#f59e0b" style={styles.laurelRight} />
-        </View>
-
-        <TouchableOpacity style={styles.headerIcon}>
-          <Ionicons name="refresh" size={24} color="#1f2937" />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
-        <Text style={styles.title}>
-          you deserve to feel free. try it for 7 days.
-        </Text>
-
-        {/* Timeline */}
-        <View style={styles.timeline}>
-          {/* Vertical Line */}
-          <View style={styles.timelineLine} />
-
-          {/* Today */}
-          <View style={styles.timelineItem}>
-            <View style={[styles.timelineIcon, styles.iconOrange]}>
-              <Ionicons name="lock-open" size={20} color="#ffffff" />
-            </View>
-            <View style={styles.timelineContent}>
-              <Text style={styles.timelineTitle}>today</Text>
-              <Text style={styles.timelineDesc}>
-                your healing begins. access your personalized practice, your AI companion, and everything hopono has for you.
-              </Text>
-            </View>
-          </View>
-
-          {/* In 4 Days */}
-          <View style={styles.timelineItem}>
-            <View style={[styles.timelineIcon, styles.iconOrange]}>
-              <Ionicons name="notifications" size={20} color="#ffffff" />
-            </View>
-            <View style={styles.timelineContent}>
-              <Text style={styles.timelineTitle}>day 4</Text>
-              <Text style={styles.timelineDesc}>
-                we'll gently remind you — so nothing catches you off guard.
-              </Text>
-            </View>
-          </View>
-
-          {/* In 7 Days */}
-          <View style={styles.timelineItem}>
-            <View style={[styles.timelineIcon, styles.iconOrange]}>
-              <Ionicons name="star" size={20} color="#ffffff" />
-            </View>
-            <View style={styles.timelineContent}>
-              <Text style={styles.timelineTitle}>day 7</Text>
-              <Text style={styles.timelineDesc}>
-                if hopono changed something in you, stay. if not, cancel — no questions, no friction. charged on {formatDate(in7Days)} only if you choose to continue.
-              </Text>
-            </View>
-          </View>
-        </View>
-
-      </ScrollView>
-
-      {/* Fixed Bottom Checkout */}
-      <View style={styles.bottomFixed}>
-        
-        {/* Toggles */}
-        <View style={styles.togglesContainer}>
+        {/* Header (No refresh button, only back button and central award) */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.headerIcon}>
+            <Ionicons name="chevron-back" size={24} color="#1f2937" />
+          </TouchableOpacity>
           
-          <TouchableOpacity 
-            style={[styles.toggleBtn, selectedPlan === 'monthly' && styles.toggleBtnActive]}
-            onPress={() => setSelectedPlan('monthly')}
-          >
-            <Text style={styles.toggleSubtitle}>monthly</Text>
-            <Text style={styles.toggleTitle}>{pricing.monthlyPrice}/month</Text>
-            <View style={[styles.radio, selectedPlan === 'monthly' && styles.radioActive]} />
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[styles.toggleBtn, styles.toggleBtnYearly, selectedPlan === 'yearly' && styles.toggleBtnActive]}
-            onPress={() => setSelectedPlan('yearly')}
-          >
-            <View style={styles.badgeFreeTrial}>
-              <Text style={styles.badgeFreeTrialText}>7-day free trial</Text>
+          <View style={styles.awardContainer}>
+            <Ionicons name="leaf" size={20} color="#e86935" style={styles.laurelLeft} />
+            <View style={styles.awardTextContainer}>
+              <Text style={styles.awardText}>the #1 emotional</Text>
+              <Text style={styles.awardText}>healing app</Text>
+              <View style={styles.starsContainer}>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Ionicons key={i} name="star" size={10} color="#e86935" />
+                ))}
+              </View>
             </View>
-            <Text style={styles.toggleSubtitle}>yearly</Text>
-            <Text style={styles.toggleTitle}>{pricing.weeklyEquivalent}/week</Text>
-            <View style={[styles.radio, selectedPlan === 'yearly' && styles.radioActive]}>
-              {selectedPlan === 'yearly' && <Ionicons name="checkmark" size={16} color="#ffffff" />}
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {selectedPlan === 'yearly' && (
-          <View style={styles.paymentDueContainer}>
-            <Ionicons name="checkmark-sharp" size={18} color="#16a34a" style={{ marginRight: 6 }} />
-            <Text style={styles.paymentDueText}>nothing to pay today</Text>
+            <Ionicons name="leaf" size={20} color="#e86935" style={styles.laurelRight} />
           </View>
-        )}
 
-        <TouchableOpacity style={styles.ctaButton} onPress={handleStartTrial}>
-          <Text style={styles.ctaButtonText}>
-            {selectedPlan === 'yearly' ? 'begin my healing — free' : 'continue'}
-          </Text>
-        </TouchableOpacity>
-        
-        <Text style={styles.priceSubtext}>
-          {selectedPlan === 'yearly' 
-            ? `7 days free. then ${pricing.weeklyEquivalent}/week — less than a coffee.`
-            : `${pricing.monthlyPrice}/month — cancel anytime, no questions.`}
-        </Text>
-
-        <View style={styles.footerLinks}>
-          <Text style={styles.footerLink}>privacy</Text>
-          <Text style={styles.footerLink}>terms</Text>
+          {/* Spacer to balance the back button */}
+          <View style={[styles.headerIcon, { opacity: 0 }]} pointerEvents="none">
+            <Ionicons name="chevron-back" size={24} color="#1f2937" />
+          </View>
         </View>
 
-      </View>
+        {/* Scrollable content fitted to one screen to let the page breathe without overflow */}
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          
+          <Text style={styles.title}>
+            you deserve to feel free. try it for 7 days.
+          </Text>
+
+          {/* Compact Timeline for 1-screen fit */}
+          <View style={styles.timeline}>
+            {/* Vertical Line */}
+            <View style={styles.timelineLine} />
+
+            {/* Today */}
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineIcon, styles.iconOrange]}>
+                <Ionicons name="lock-open" size={16} color="#ffffff" />
+              </View>
+              <View style={styles.timelineContent}>
+                <Text style={styles.timelineTitle}>today</Text>
+                <Text style={styles.timelineDesc}>
+                  your healing begins. access your personalized practice, your AI companion, and everything hopono has for you.
+                </Text>
+              </View>
+            </View>
+
+            {/* In 4 Days */}
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineIcon, styles.iconOrange]}>
+                <Ionicons name="notifications" size={16} color="#ffffff" />
+              </View>
+              <View style={styles.timelineContent}>
+                <Text style={styles.timelineTitle}>day 4</Text>
+                <Text style={styles.timelineDesc}>
+                  we'll gently remind you — so nothing catches you off guard.
+                </Text>
+              </View>
+            </View>
+
+            {/* In 7 Days */}
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineIcon, styles.iconOrange]}>
+                <Ionicons name="star" size={16} color="#ffffff" />
+              </View>
+              <View style={styles.timelineContent}>
+                <Text style={styles.timelineTitle}>day 7</Text>
+                <Text style={styles.timelineDesc}>
+                  if hopono changed something in you, stay. if not, cancel — no questions. charged on {formatDate(in7Days)} only if you choose to continue.
+                </Text>
+              </View>
+            </View>
+          </View>
+
+        </ScrollView>
+
+        {/* Fixed Bottom Checkout: Lowered to very bottom screen edge */}
+        <View style={styles.bottomFixed}>
+          
+          {/* Plan Toggles: Row layout with checkboxes on the right to prevent overlapping */}
+          <View style={styles.togglesContainer}>
+            
+            {/* Monthly Card */}
+            <TouchableOpacity 
+              style={[styles.toggleBtn, selectedPlan === 'monthly' && styles.toggleBtnActive]}
+              onPress={() => setSelectedPlan('monthly')}
+            >
+              <View style={styles.toggleRow}>
+                <View style={styles.toggleTextContainer}>
+                  <Text style={styles.toggleSubtitle}>monthly</Text>
+                  <Text style={styles.toggleTitle}>{pricing.monthlyPrice}</Text>
+                  <Text style={styles.togglePeriod}>/month</Text>
+                </View>
+                <View style={[styles.radio, selectedPlan === 'monthly' && styles.radioActive]}>
+                  {selectedPlan === 'monthly' && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            {/* Yearly Card */}
+            <TouchableOpacity 
+              style={[styles.toggleBtn, styles.toggleBtnYearly, selectedPlan === 'yearly' && styles.toggleBtnActive]}
+              onPress={() => setSelectedPlan('yearly')}
+            >
+              {/* Free Trial Badge positioned on top */}
+              <View style={styles.badgeFreeTrial}>
+                <Text style={styles.badgeFreeTrialText}>7-day free trial</Text>
+              </View>
+              
+              <View style={styles.toggleRow}>
+                <View style={styles.toggleTextContainer}>
+                  <Text style={styles.toggleSubtitle}>yearly</Text>
+                  <Text style={styles.toggleTitle}>{pricing.weeklyEquivalent}</Text>
+                  <Text style={styles.togglePeriod}>/week</Text>
+                </View>
+                <View style={[styles.radio, selectedPlan === 'yearly' && styles.radioActive]}>
+                  {selectedPlan === 'yearly' && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* Payment due spacer to completely prevent layout shifts when switching */}
+          <View style={styles.paymentDueContainer}>
+            {selectedPlan === 'yearly' ? (
+              <>
+                <Ionicons name="checkmark-sharp" size={18} color="#16a34a" style={{ marginRight: 6 }} />
+                <Text style={styles.paymentDueText}>nothing to pay today</Text>
+              </>
+            ) : (
+              <View style={styles.paymentDueSpacer} />
+            )}
+          </View>
+
+          <TouchableOpacity style={styles.ctaButton} onPress={handleStartTrial}>
+            <Text style={styles.ctaButtonText}>
+              {selectedPlan === 'yearly' ? 'begin my healing — free' : 'continue'}
+            </Text>
+          </TouchableOpacity>
+          
+          <Text style={styles.priceSubtext}>
+            {selectedPlan === 'yearly' 
+              ? `7 days free. then ${pricing.weeklyEquivalent}/week — less than a coffee.`
+              : `${pricing.monthlyPrice}/month — cancel anytime, no questions.`}
+          </Text>
+
+          <View style={styles.footerLinks}>
+            <Text style={styles.footerLink}>privacy</Text>
+            <Text style={styles.footerLink}>terms</Text>
+          </View>
+
+        </View>
       </AnimatedFadeIn>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -179,8 +201,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingTop: 54, // Adjusted for status bar height
+    paddingBottom: 16,
   },
   headerIcon: {
     padding: 8,
@@ -194,7 +216,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   awardText: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold', // Uniform typography (Nunito Bold)
     fontSize: 12,
     color: '#1f2937',
     textAlign: 'center',
@@ -212,37 +234,41 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 24,
-    paddingBottom: 280, // space for bottom fixed area
+    paddingBottom: 260, // Space for bottom fixed container
+    flexGrow: 1,
+    justifyContent: 'center', // Centers the content container vertically
   },
   title: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 26,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 24,
     color: '#1f2937',
     textAlign: 'center',
-    marginBottom: 40,
-    lineHeight: 34,
+    marginBottom: 24, // Balanced spacing
+    lineHeight: 32,
+    textTransform: 'lowercase',
   },
   timeline: {
     position: 'relative',
-    paddingLeft: 16,
+    paddingLeft: 12,
+    marginBottom: 20,
   },
   timelineLine: {
     position: 'absolute',
-    left: 36, // center of the icon
+    left: 28, // center of the icon
     top: 20,
-    bottom: 40,
+    bottom: 30,
     width: 6,
     backgroundColor: '#fed7aa',
     borderRadius: 3,
   },
   timelineItem: {
     flexDirection: 'row',
-    marginBottom: 32,
+    marginBottom: 20, // Compact margin to avoid scroll
   },
   timelineIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    width: 36, // Smaller size matching mockup details
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -253,19 +279,21 @@ const styles = StyleSheet.create({
   },
   timelineContent: {
     flex: 1,
-    paddingTop: 4,
+    paddingTop: 0,
   },
   timelineTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 16,
     color: '#1f2937',
-    marginBottom: 6,
+    marginBottom: 4,
+    textTransform: 'lowercase',
   },
   timelineDesc: {
     fontFamily: 'Nunito_600SemiBold',
-    fontSize: 15,
+    fontSize: 14,
     color: '#94a3b8',
-    lineHeight: 22,
+    lineHeight: 20,
+    textTransform: 'lowercase',
   },
   bottomFixed: {
     position: 'absolute',
@@ -274,21 +302,23 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#ffffff',
     paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 24,
+    paddingTop: 8,
+    paddingBottom: 20, // Lowered closer to bottom screen edge
   },
   togglesContainer: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 16,
+    marginBottom: 12,
   },
   toggleBtn: {
     flex: 1,
     borderWidth: 2,
     borderColor: '#e2e8f0',
-    borderRadius: 12,
-    padding: 16,
-    position: 'relative',
+    borderRadius: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    height: 96, // Increased height to hold the vertical stack beautifully
   },
   toggleBtnYearly: {
     borderColor: '#fdba74',
@@ -297,35 +327,50 @@ const styles = StyleSheet.create({
     borderColor: '#e86935',
     backgroundColor: '#fff7ed',
   },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  toggleTextContainer: {
+    flex: 1,
+  },
   badgeFreeTrial: {
     position: 'absolute',
     top: -12,
-    right: 12,
+    left: 12,
     backgroundColor: '#e86935',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
+    zIndex: 10,
   },
   badgeFreeTrialText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 11,
     color: '#ffffff',
+    textTransform: 'lowercase',
   },
   toggleSubtitle: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 13,
     color: '#94a3b8',
-    marginBottom: 4,
+    marginBottom: 2,
+    textTransform: 'lowercase',
   },
   toggleTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18, // Large price number to prevent any bad faith accusations
     color: '#1f2937',
   },
+  togglePeriod: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 12,
+    color: '#94a3b8',
+    marginTop: 2,
+    textTransform: 'lowercase',
+  },
   radio: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
     width: 24,
     height: 24,
     borderRadius: 12,
@@ -342,12 +387,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    height: 24, // Fixed height to prevent layout shifts when toggling plan
     marginBottom: 12,
   },
   paymentDueText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 15,
     color: '#1f2937',
+    textTransform: 'lowercase',
+  },
+  paymentDueSpacer: {
+    height: 24,
   },
   ctaButton: {
     backgroundColor: '#e86935',
@@ -363,9 +413,10 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   ctaButtonText: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18,
     color: '#ffffff',
+    textTransform: 'lowercase',
   },
   priceSubtext: {
     fontFamily: 'Nunito_600SemiBold',
@@ -373,6 +424,7 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     textAlign: 'center',
     marginBottom: 16,
+    textTransform: 'lowercase',
   },
   footerLinks: {
     flexDirection: 'row',
@@ -382,5 +434,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 13,
     color: '#cbd5e1',
+    textTransform: 'lowercase',
   },
 });

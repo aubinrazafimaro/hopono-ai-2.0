@@ -9,6 +9,8 @@ import { useOnboarding } from '@/context/OnboardingContext';
 import { Ionicons } from '@expo/vector-icons';
 import AlohaButton from '@/components/AlohaButton';
 
+const { height } = Dimensions.get('window');
+
 // --- STEP 1: INNER PEACE ---
 const PeaceStep = ({ onNext }: { onNext: () => void }) => {
   const [sliderValue, setSliderValue] = useState(2);
@@ -226,6 +228,7 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
     <View style={styles.practiceContainer}>
       <LinearGradient colors={['#ffffff', '#fff7ed']} style={StyleSheet.absoluteFill} />
 
+      {/* Orb centered vertically/horizontally */}
       <View style={styles.orbContainer}>
         <Animated.View style={[styles.orb, { transform: [{ scale: orbScale }], opacity: orbOpacity }]}>
           <Svg width="300" height="300" viewBox="0 0 300 300">
@@ -242,11 +245,10 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
         <View style={styles.orbCore} />
       </View>
 
-      <View style={[styles.practiceBottomContainer, !isStarted && { height: undefined, minHeight: 180, marginBottom: 50 }]}>
+      {/* Mantra / Phrase text at the top */}
+      <View style={styles.practiceTopContainer}>
         {!isStarted ? (
-          <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-            <Text style={styles.mantraText}>breathe. and repeat after me.</Text>
-          </View>
+          <Text style={styles.mantraText}>breathe. and repeat after me.</Text>
         ) : (
           currentPhraseIndex !== -1 ? (
             <Animated.Text style={[styles.mantraText, { opacity: textOpacity }]}>
@@ -257,7 +259,7 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
       </View>
 
       {!isStarted && (
-        <View style={{ position: 'absolute', bottom: 40, right: 24 }}>
+        <View style={{ position: 'absolute', bottom: 40, right: 24, zIndex: 10 }}>
           <TouchableOpacity 
             style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
             onPress={() => setIsStarted(true)}
@@ -283,17 +285,16 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
 
 const getWeekDays = () => {
   const today = new Date();
-  const currentDay = today.getDay(); // 0 is Sunday
   const days = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
   
   const week = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = -3; i <= 3; i++) {
     const date = new Date(today);
-    date.setDate(today.getDate() - currentDay + i);
+    date.setDate(today.getDate() + i);
     week.push({
-      dayName: days[i],
+      dayName: days[date.getDay()],
       dateNum: date.getDate(),
-      isToday: i === currentDay,
+      isToday: i === 0,
     });
   }
   return week;
@@ -441,7 +442,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   slider: {
-    width: '85%',
+    width: '78%',
     height: 40,
   },
   stateText: {
@@ -478,9 +479,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   orbContainer: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1,
   },
   orb: {
     width: 300,
@@ -501,11 +507,15 @@ const styles = StyleSheet.create({
     shadowRadius: 60,
     elevation: 20,
   },
-  practiceBottomContainer: {
-    marginBottom: 100,
-    height: 80,
+  practiceTopContainer: {
+    position: 'absolute',
+    top: height * 0.18,
+    left: 0,
+    right: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 10,
+    paddingHorizontal: 24,
   },
   mantraText: {
     fontFamily: 'Nunito_600SemiBold',

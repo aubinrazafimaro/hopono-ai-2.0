@@ -11,25 +11,25 @@ export default function CheckInStep2() {
 
   // Whenever the slider moves, animate the background color
   const handleValueChange = (val: number) => {
-    // Snap to nearest integer
     const index = Math.round(val);
     setSliderValue(index);
     
     Animated.timing(animatedValue, {
       toValue: val,
       duration: 100,
-      useNativeDriver: false, // Colors don't support native driver
+      useNativeDriver: false,
     }).start();
   };
 
+  // Aligned exactly to the moodStates colors defined in CheckInContext
   const backgroundColor = animatedValue.interpolate({
     inputRange: [0, 1, 2, 3, 4],
     outputRange: [
-      '#7f1d1d', // Deep red
-      '#c2410c', // Burnt orange
-      '#eab308', // Warm yellow
-      '#14b8a6', // Teal / soft cyan
-      '#06b6d4', // Bright cyan
+      '#7f1d1d', // carrying a lot
+      '#9a3412', // struggling
+      '#ca8a04', // holding on
+      '#0d9488', // breathing easier
+      '#0891b2', // at peace
     ],
   });
 
@@ -37,10 +37,10 @@ export default function CheckInStep2() {
     inputRange: [0, 1, 2, 3, 4],
     outputRange: [
       '#ffffff', // White on dark red
-      '#ffffff', // White on orange
-      '#333333', // Dark text on yellow
-      '#ffffff', // White on teal
-      '#ffffff', // White on bright cyan
+      '#ffffff', // White on burnt orange
+      '#333333', // Dark text on warm yellow (holding on)
+      '#ffffff', // White on teal (breathing easier)
+      '#ffffff', // White on cyan (at peace)
     ],
   });
 
@@ -69,8 +69,8 @@ export default function CheckInStep2() {
             style={styles.slider}
             minimumValue={0}
             maximumValue={4}
-            step={0.1} // Smooth sliding, we snap the state but slide smoothly
-            value={2} // Default middle
+            step={0.1}
+            value={2}
             onValueChange={handleValueChange}
             minimumTrackTintColor="#ffffff"
             maximumTrackTintColor="rgba(255,255,255,0.3)"
@@ -83,7 +83,6 @@ export default function CheckInStep2() {
           style={styles.button}
           onPress={() => {
             setMoodIndex(sliderValue);
-            // Check-in finished, go back to home!
             router.push('/');
           }}
         >
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   slider: {
-    width: '85%',
+    width: '78%',
     height: 40,
   },
   stateText: {

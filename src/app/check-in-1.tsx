@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { router } from 'expo-router';
@@ -11,36 +11,36 @@ export default function CheckInStep1() {
 
   // Whenever the slider moves, animate the background color
   const handleValueChange = (val: number) => {
-    // Snap to nearest integer
     const index = Math.round(val);
     setSliderValue(index);
     
     Animated.timing(animatedValue, {
       toValue: val,
       duration: 100,
-      useNativeDriver: false, // Colors don't support native driver
+      useNativeDriver: false,
     }).start();
   };
 
+  // Aligned exactly to the peaceStates colors defined in CheckInContext
   const backgroundColor = animatedValue.interpolate({
     inputRange: [0, 1, 2, 3, 4],
     outputRange: [
-      '#1e293b', // Heavy dark blue/slate
-      '#64748b', // Muted slate
-      '#e2e8f0', // Neutral light gray/beige
-      '#fdb878', // Warm peach
-      '#e86935', // Vibrant aligned orange
+      '#334155', // lost inside
+      '#475569', // heavy
+      '#94a3b8', // finding ground
+      '#fcd34d', // at ease
+      '#fbbf24', // in full bloom
     ],
   });
 
   const textColor = animatedValue.interpolate({
     inputRange: [0, 1, 2, 3, 4],
     outputRange: [
-      '#ffffff', // White on dark
+      '#ffffff', // White on dark slate
       '#ffffff', // White on slate
-      '#333333', // Dark text on light gray
-      '#ffffff', // White on peach
-      '#ffffff', // White on orange
+      '#ffffff', // White on finding ground
+      '#333333', // Dark text on light yellow (at ease)
+      '#333333', // Dark text on gold (in full bloom)
     ],
   });
 
@@ -69,8 +69,8 @@ export default function CheckInStep1() {
             style={styles.slider}
             minimumValue={0}
             maximumValue={4}
-            step={0.1} // Smooth sliding, we snap the state but slide smoothly
-            value={2} // Default middle
+            step={0.1}
+            value={2}
             onValueChange={handleValueChange}
             minimumTrackTintColor="#ffffff"
             maximumTrackTintColor="rgba(255,255,255,0.3)"
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   slider: {
-    width: '85%',
+    width: '78%',
     height: 40,
   },
   stateText: {

@@ -10,8 +10,8 @@ const TIME_OPTIONS = [
   { label: 'less than 1h', emoji: '🌿' },
   { label: '1-2h', emoji: '🌊' },
   { label: '3-4h', emoji: '🌑' },
-  { label: '5-6h', emoji: '🌋' },
-  { label: '6h+', emoji: '🔥' }
+  { label: '5-6h', emoji: '🔥' },
+  { label: '6h+', emoji: '🌋' }
 ];
 
 export default function ScreenTimeScreen() {
@@ -62,11 +62,12 @@ export default function ScreenTimeScreen() {
   };
 
   const getAgeLowerBound = (ageStr: string) => {
-    if (ageStr === 'under 18') return 18;
-    if (ageStr === '18-24') return 18;
-    if (ageStr === '25-34') return 25;
-    if (ageStr === '35-44') return 35;
-    if (ageStr === '45+') return 45;
+    if (ageStr === '15-20') return 15;
+    if (ageStr === '21-25') return 21;
+    if (ageStr === '26-30') return 26;
+    if (ageStr === '31-40') return 31;
+    if (ageStr === '41-50') return 41;
+    if (ageStr === '50+') return 50;
     return 25; // fallback
   };
 

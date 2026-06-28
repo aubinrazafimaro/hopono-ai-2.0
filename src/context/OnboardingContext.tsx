@@ -11,6 +11,7 @@ type OnboardingState = {
   selfImageImpact: string[];
   obstacles: string[];
   deepPain: string[];
+  commitmentLevel?: string;
 };
 
 type OnboardingContextType = {
@@ -29,6 +30,7 @@ const defaultState: OnboardingState = {
   selfImageImpact: [],
   obstacles: [],
   deepPain: [],
+  commitmentLevel: '',
 };
 
 const OnboardingContext = createContext<OnboardingContextType>({

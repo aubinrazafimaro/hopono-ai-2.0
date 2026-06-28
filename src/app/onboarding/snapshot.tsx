@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
-import { Ionicons } from '@expo/vector-icons';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
 import { LinearGradient } from 'expo-linear-gradient';
 import AlohaButton from '@/components/AlohaButton';
@@ -28,9 +27,19 @@ export default function SnapshotScreen() {
   // Calculate a "habit level" bar width
   const habitPercent = Math.min(100, Math.max(20, (dailyHours / 8) * 100));
 
-  // Motivation level derived from guiltLevel (1-7)
-  const getMotivationPercent = (guilt: number) => {
-    switch(guilt) {
+  // Motivation level derived from commitmentLevel (readiness to let go) or guiltLevel (1-7)
+  const getMotivationPercent = () => {
+    if (data.commitmentLevel) {
+      switch (data.commitmentLevel) {
+        case '1': return 100;
+        case '2': return 85;
+        case '3': return 65;
+        case '4': return 40;
+        case '5': return 15;
+        default: return 50;
+      }
+    }
+    switch(data.guiltLevel) {
       case 7: return 100;
       case 6: return 85;
       case 5: return 70;
@@ -41,7 +50,7 @@ export default function SnapshotScreen() {
       default: return 50;
     }
   };
-  const motivationLevel = getMotivationPercent(data.guiltLevel);
+  const motivationLevel = getMotivationPercent();
 
   // Derive strength messages from collected data
   const getStrengths = () => {
@@ -149,102 +158,104 @@ export default function SnapshotScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <AnimatedFadeIn style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
-        {/* Header Icon */}
-        <View style={styles.headerIconContainer}>
-          <View style={styles.appIconMock}>
-            <Text style={{ fontSize: 40 }}>🕊️</Text>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          
+          {/* Header Icon: Large hibiscus logo (no card container) */}
+          <View style={styles.headerIconContainer}>
+            <Text style={styles.largeLogo}>🌺</Text>
           </View>
-        </View>
 
-        <View style={styles.header}>
-          <Text style={styles.title}>🌺 here's what we see in you</Text>
-          <Text style={styles.subtitle}>you were honest. this is what that honesty reveals.</Text>
-          <Text style={styles.socialProof}>you're not alone. 50,000 people chose to heal.</Text>
-        </View>
+          {/* Title and Intro */}
+          <View style={styles.header}>
+            <Text style={styles.title}>here's what we see in you</Text>
+            <Text style={styles.subtitle}>you were honest. this is what that honesty reveals.</Text>
+            <Text style={styles.socialProof}>you're not alone. 50,000 people chose to heal.</Text>
+          </View>
 
-        <View style={styles.cardsContainer}>
-          {/* Card 1 */}
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardIcon}>🔄</Text>
-              <Text style={styles.cardTitle}>time lost to the pain</Text>
-            </View>
-            <View style={styles.barBackground}>
-              <LinearGradient
-                colors={['#fdba74', '#ea580c']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={[styles.barFill, { width: `${habitPercent}%` }]}
-              />
-              <View style={styles.barLabels}>
-                <Text style={styles.barLabelText}>low</Text>
-                <Text style={styles.barLabelText}>high</Text>
+          {/* Cards Block */}
+          <View style={styles.cardsContainer}>
+            {/* Card 1 */}
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardIcon}>🔄</Text>
+                <Text style={styles.cardTitle}>time lost to the pain</Text>
               </View>
-            </View>
-            <Text style={styles.cardFooterText}>{data.screenTime || '1-2h'} / day</Text>
-          </View>
-
-          {/* Card 2 */}
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardIcon}>⏳</Text>
-              <Text style={styles.cardTitle}>hours spent escaping</Text>
-            </View>
-            <Text style={styles.cardSubtext}>that's {dailyHours} hours a day away from yourself</Text>
-            <Text style={styles.bigStat}>{monthlyHours} hours / month</Text>
-          </View>
-
-          {/* Card 3 */}
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardIcon}>🔥</Text>
-              <Text style={styles.cardTitle}>your readiness to heal</Text>
-            </View>
-            <View style={styles.barBackground}>
-              <LinearGradient
-                colors={['#fca5a5', '#dc2626']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={[styles.barFill, { width: `${motivationLevel}%` }]}
-              />
-              <View style={styles.barLabels}>
-                <Text style={styles.barLabelTextWhite}>low</Text>
-                <Text style={styles.barLabelTextWhite}>high</Text>
+              <View style={styles.barBackground}>
+                <LinearGradient
+                  colors={['#fdba74', '#ea580c']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[styles.barFill, { width: `${habitPercent}%` }]}
+                />
+                <View style={styles.barLabels}>
+                  <Text style={styles.barLabelTextLeft}>low</Text>
+                  <Text style={styles.barLabelTextRight}>high</Text>
+                </View>
               </View>
+              <Text style={styles.cardFooterText}>{data.screenTime || '1-2h'} / day</Text>
             </View>
-            <Text style={styles.cardFooterText}>{motivationLevel}% — you're ready.</Text>
+
+            {/* Card 2 */}
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardIcon}>⏳</Text>
+                <Text style={styles.cardTitle}>hours spent escaping</Text>
+              </View>
+              <Text style={styles.cardSubtext}>that's {dailyHours} hours a day away from yourself</Text>
+              <Text style={styles.bigStat}>{monthlyHours} hours / month</Text>
+            </View>
+
+            {/* Card 3 */}
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardIcon}>🔥</Text>
+                <Text style={styles.cardTitle}>your readiness to heal</Text>
+              </View>
+              <View style={styles.barBackground}>
+                <LinearGradient
+                  colors={['#fca5a5', '#dc2626']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[styles.barFill, { width: `${motivationLevel}%` }]}
+                />
+                <View style={styles.barLabels}>
+                  <Text style={styles.barLabelTextLeft}>low</Text>
+                  <Text style={styles.barLabelTextRight}>high</Text>
+                </View>
+              </View>
+              <Text style={styles.cardFooterText}>{motivationLevel}% — you're ready.</Text>
+            </View>
           </View>
+
+          {/* Section: Strengths */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>❤️ what makes you ready</Text>
+            {strengths.map((item, index) => (
+              <View key={index} style={styles.listItemCard}>
+                <Text style={styles.itemTitle}>{item.title}</Text>
+                <Text style={styles.itemDesc}>{item.desc}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Section: Work Areas */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>🌱 where hopono will take you</Text>
+            {workAreas.map((item, index) => (
+              <View key={index} style={styles.listItemCard}>
+                <Text style={styles.itemTitle}>{item.title}</Text>
+                <Text style={styles.itemDesc}>{item.desc}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={{ height: 40 }} />
+        </ScrollView>
+
+        {/* Fixed Bottom CTA */}
+        <View style={styles.bottomFixed}>
+          <AlohaButton onPress={handleContinue} text="continue" variant="primary" />
         </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🌺 what makes you ready</Text>
-          {strengths.map((item, index) => (
-            <View key={index} style={styles.listItem}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text style={styles.itemDesc}>{item.desc}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🌊 where hopono will take you</Text>
-          {workAreas.map((item, index) => (
-            <View key={index} style={styles.listItem}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text style={styles.itemDesc}>{item.desc}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={{ height: 40 }} />
-      </ScrollView>
-
-      {/* Fixed Bottom CTA */}
-      <View style={styles.bottomFixed}>
-        <AlohaButton onPress={handleContinue} text="continue" variant="primary" />
-      </View>
       </AnimatedFadeIn>
     </SafeAreaView>
   );
@@ -262,39 +273,36 @@ const styles = StyleSheet.create({
   },
   headerIconContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
+    marginTop: 20,
   },
-  appIconMock: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#fff7ed',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#ffedd5',
+  largeLogo: {
+    fontSize: 72,
   },
   header: {
     marginBottom: 32,
   },
   title: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold', // Typography aligned to initial choice (Nunito Bold)
     fontSize: 32,
     color: '#1f2937',
     marginBottom: 16,
     lineHeight: 38,
+    textTransform: 'lowercase',
   },
   subtitle: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#94a3b8',
     marginBottom: 16,
+    textTransform: 'lowercase',
   },
   socialProof: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 16,
     color: '#475569',
     lineHeight: 22,
+    textTransform: 'lowercase',
   },
   cardsContainer: {
     gap: 16,
@@ -322,19 +330,21 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   cardTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#1f2937',
+    textTransform: 'lowercase',
   },
   cardSubtext: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 14,
     color: '#94a3b8',
     marginBottom: 8,
+    textTransform: 'lowercase',
   },
   bigStat: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 28,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 32, // Enlarged as requested
     color: '#1f2937',
   },
   barBackground: {
@@ -356,48 +366,62 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    position: 'absolute',
+    left: 0,
+    right: 0,
   },
-  barLabelText: {
+  barLabelTextLeft: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 14,
-    color: '#94a3b8',
+    color: '#ffffff', // Overlay text inside filled bar
   },
-  barLabelTextWhite: {
+  barLabelTextRight: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: '#94a3b8', // Gray text on unfilled area
   },
   cardFooterText: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 14,
-    color: '#64748b',
+    fontFamily: 'Nunito_700Bold', // Styled as bold & larger matching mockup
+    fontSize: 16,
+    color: '#1f2937',
+    marginTop: 4,
   },
   section: {
     marginBottom: 32,
   },
   sectionTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 24,
     color: '#1f2937',
     marginBottom: 20,
+    textTransform: 'lowercase',
   },
-  listItem: {
-    backgroundColor: '#f8fafc',
-    borderRadius: 16,
+  listItemCard: {
+    backgroundColor: '#ffffff', // White card matching mockup shapes
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
+    borderRadius: 20,
     padding: 20,
     marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 2,
   },
   itemTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#1f2937',
     marginBottom: 8,
+    textTransform: 'lowercase',
   },
   itemDesc: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 15,
     color: '#94a3b8',
     lineHeight: 22,
+    textTransform: 'lowercase',
   },
   bottomFixed: {
     position: 'absolute',

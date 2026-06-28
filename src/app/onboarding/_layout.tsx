@@ -6,12 +6,8 @@ export default function OnboardingLayout() {
     <OnboardingProvider>
       <Stack
         screenOptions={{
-          headerShown: true,
-          headerTransparent: true,
-          headerTitle: '',
-          headerBackTitleVisible: false,
-          headerTintColor: '#1f2937',
-          gestureEnabled: false,
+          headerShown: false, // Removed obtrusive default header back button
+          gestureEnabled: true, // Enable native swipe gesture to slide pages backward
           animation: 'fade', // Smooth transitions between questions
         }}
       >
