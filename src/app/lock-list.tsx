@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Switch, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { SimpleLineIcons, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -116,7 +116,7 @@ export default function LockList() {
         {/* Header (Cross Platform) */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="chevron-back" size={28} color="#000" />
+            <SimpleLineIcons name="arrow-left" size={24} color="#000" />
           </TouchableOpacity>
           <View style={styles.headerTextContainer}>
             <Text style={styles.headerTitle}>lock list</Text>
@@ -145,7 +145,7 @@ export default function LockList() {
           /* Android Custom Picker */
           <>
             <View style={styles.searchContainer}>
-              <Ionicons name="search" size={20} color="#94a3b8" style={styles.searchIcon} />
+              <SimpleLineIcons name="magnifier" size={20} color="#94a3b8" style={styles.searchIcon} />
               <TextInput
                 style={styles.searchInput}
                 placeholder="search applications..."
@@ -156,7 +156,7 @@ export default function LockList() {
               />
               {searchQuery.length > 0 && (
                 <TouchableOpacity onPress={() => setSearchQuery('')}>
-                  <Ionicons name="close-circle" size={20} color="#cbd5e1" />
+                  <SimpleLineIcons name="close" size={20} color="#cbd5e1" />
                 </TouchableOpacity>
               )}
             </View>
@@ -170,7 +170,7 @@ export default function LockList() {
                 contentContainerStyle={styles.listContent}
                 ListEmptyComponent={
                   <View style={styles.emptyContainer}>
-                    <Ionicons name="leaf" size={48} color="#cbd5e1" />
+                    <Ionicons name="leaf-outline" size={48} color="#cbd5e1" />
                     <Text style={styles.emptyText}>Loading applications...</Text>
                   </View>
                 }

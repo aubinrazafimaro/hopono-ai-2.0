@@ -6,251 +6,237 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated,
-  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { Droplet, Leaf, Infinity as InfinityIcon, Clock } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCheckIn, peaceStates, moodStates } from '@/context/CheckInContext';
-
-// --- MOCK DATA ---
-const currentMonth = 'june';
+import { useUser } from '@/context/UserContext';
+import { useAppTheme } from '@/context/AppThemeContext';
+import AlohaButton from '@/components/AlohaButton';
+import { SPACING, RADIUS, COLORS, TYPOGRAPHY } from '@/theme';
 
 const practices = [
-  { id: '21', title: '21 repetitions', desc: 'quick clearing', icon: 'water' },
-  { id: '99', title: '99 repetitions', desc: 'deep cleaning', icon: 'leaf' },
-  { id: '108', title: '108 repetitions', desc: 'sacred cycle', icon: 'infinite' },
-  { id: 'custom', title: 'custom timer', desc: 'free flow', icon: 'time' },
+  { id: '21',     label: '21 repetitions',  desc: 'quick clearing',  emoji: '🌺' },
+  { id: '99',     label: '99 repetitions',  desc: 'deep cleaning',   emoji: '🌊' },
+  { id: '108',    label: '108 repetitions', desc: 'sacred cycle',    emoji: '🐢' },
+  { id: 'custom', label: 'custom timer',    desc: 'free flow',       emoji: '🌿' },
 ];
 
 export default function Home() {
   const { peaceIndex, moodIndex, history } = useCheckIn();
+  const { userData } = useUser();
+  const { palette } = useAppTheme();
   const currentPeace = peaceStates[peaceIndex];
-  const currentMood = moodStates[moodIndex];
+  const currentMood  = moodStates[moodIndex];
+  const currentMonthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date()).toLowerCase();
 
-  // Calendar: Last 30 days including today. history is index 0 = today, index 1 = yesterday.
-  // We reverse to get chronological order (oldest first, today last).
+  // Calendar: Last 30 days (oldest → today)
   const calendarDays = history.slice(0, 30).reverse().map((dayData, i) => {
     const isToday = i === 29;
-    const dayNum = new Date(dayData.date).getDate();
-
-    // TODAY
+    const dayNum  = new Date(dayData.date).getDate();
     if (isToday) {
-      return {
-        day: dayNum,
-        past: true,
-        moodEmoji: currentMood.emoji,
-        peaceEmoji: currentPeace.emoji,
-      };
+      return { day: dayNum, past: true, moodEmoji: currentMood.emoji, peaceEmoji: currentPeace.emoji };
     }
-
-    // Past days from context
     if (dayData.hasCheckIn) {
-      return {
-        day: dayNum,
-        past: true,
-        moodEmoji: moodStates[dayData.moodIndex].emoji,
-        peaceEmoji: peaceStates[dayData.peaceIndex].emoji,
-      };
-    } else {
-      // Missed day
-      return {
-        day: dayNum,
-        past: false,
-      };
+      return { day: dayNum, past: true, moodEmoji: moodStates[dayData.moodIndex].emoji, peaceEmoji: peaceStates[dayData.peaceIndex].emoji };
     }
+    return { day: dayNum, past: false };
   });
 
-  // State to track if we are showing 'mood' (true) or 'peace' (false)
   const [isMood, setIsMood] = useState(true);
-
-  // Animation values
-  const moodOpacity = useRef(new Animated.Value(1)).current;
+  const moodOpacity  = useRef(new Animated.Value(1)).current;
   const peaceOpacity = useRef(new Animated.Value(0)).current;
-
-  // No more automatic interval, the user will toggle it manually
 
   useEffect(() => {
     if (isMood) {
-      Animated.timing(peaceOpacity, { toValue: 0, duration: 800, useNativeDriver: true }).start();
-      Animated.timing(moodOpacity, { toValue: 1, duration: 800, useNativeDriver: true }).start();
+      Animated.timing(peaceOpacity, { toValue: 0, duration: 600, useNativeDriver: true }).start();
+      Animated.timing(moodOpacity,  { toValue: 1, duration: 600, useNativeDriver: true }).start();
     } else {
-      Animated.timing(moodOpacity, { toValue: 0, duration: 800, useNativeDriver: true }).start();
-      Animated.timing(peaceOpacity, { toValue: 1, duration: 800, useNativeDriver: true }).start();
+      Animated.timing(moodOpacity,  { toValue: 0, duration: 600, useNativeDriver: true }).start();
+      Animated.timing(peaceOpacity, { toValue: 1, duration: 600, useNativeDriver: true }).start();
     }
   }, [isMood]);
 
   return (
-    <LinearGradient 
-      colors={['#ffd8c4', '#fff0e6', '#ffffff']} 
-      locations={[0, 0.4, 1]}
-      style={styles.container}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        
-        {/* HEADER */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>aloha aubin</Text>
-          <View style={styles.profilePlaceholder}>
-            <Ionicons name="person" size={20} color="#e86935" />
-          </View>
-        </View>
+    <View style={[styles.container, { backgroundColor: palette.background }]}>
+      {/* Subtle top glow from Sunset */}
+      <LinearGradient
+        colors={['rgba(232, 105, 53, 0.18)', 'transparent']}
+        style={styles.topGlow}
+        pointerEvents="none"
+      />
 
-
-
-        {/* TODAY CHECK-IN CARD */}
-        <TouchableOpacity 
-          activeOpacity={0.9} 
-          onPress={() => setIsMood(!isMood)}
-          style={styles.card}
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+        <ScrollView
+          style={styles.scrollContainer}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.cardContent}>
-            
-            {/* Animated Emoji Box */}
-            <View style={styles.emojiBox}>
-              <Animated.Text style={[styles.bigEmoji, { opacity: moodOpacity }]}>
-                {currentMood.emoji}
-              </Animated.Text>
-              <Animated.Text style={[styles.bigEmoji, styles.absoluteCenter, { opacity: peaceOpacity }]}>
-                {currentPeace.emoji}
-              </Animated.Text>
+
+          {/* ── HEADER ── */}
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.headerGreeting}>aloha 🌺</Text>
+              <Text style={styles.headerName}>
+                {userData?.name ? userData.name.toLowerCase() : 'friend'}
+              </Text>
+              {userData?.lifeGoals?.[0] && (
+                <Text style={[styles.headerGoal, { color: palette.primary }]}>
+                  towards: {userData.lifeGoals[0]}
+                </Text>
+              )}
             </View>
+            <TouchableOpacity
+              style={[styles.profileBtn, { borderColor: palette.cardBorder }]}
+              onPress={() => router.push('/settings')}
+            >
+              <Text style={{ fontSize: 20 }}>🌊</Text>
+            </TouchableOpacity>
+          </View>
 
-            {/* Animated Texts */}
-            <View style={styles.textContainer}>
-              <View style={styles.titleRow}>
-                {/* Mood Title */}
-                <Animated.Text style={[styles.cardTitle, { opacity: moodOpacity }]}>
-                  {currentMood.text}
+          {/* ── TODAY CHECK-IN CARD ── */}
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => setIsMood(!isMood)}
+            style={[styles.card, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder }]}
+          >
+            <View style={styles.cardContent}>
+              <View style={[styles.emojiBox, { backgroundColor: 'rgba(255,255,255,0.08)' }]}>
+                <Animated.Text style={[styles.bigEmoji, { opacity: moodOpacity }]}>
+                  {currentMood.emoji}
                 </Animated.Text>
-                {/* Peace Title */}
-                <Animated.Text style={[styles.cardTitle, styles.absoluteText, { opacity: peaceOpacity }]}>
-                  {currentPeace.text}
+                <Animated.Text style={[styles.bigEmoji, styles.absoluteCenter, { opacity: peaceOpacity }]}>
+                  {currentPeace.emoji}
                 </Animated.Text>
+              </View>
 
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>today</Text>
+              <View style={styles.textContainer}>
+                <View style={styles.titleRow}>
+                  <Animated.Text style={[styles.cardTitle, { color: palette.textPrimary, opacity: moodOpacity }]}>
+                    {currentMood.text}
+                  </Animated.Text>
+                  <Animated.Text style={[styles.cardTitle, styles.absoluteText, { color: palette.textPrimary, opacity: peaceOpacity }]}>
+                    {currentPeace.text}
+                  </Animated.Text>
+                  <View style={[styles.badge, { backgroundColor: 'rgba(255,255,255,0.08)' }]}>
+                    <Text style={[styles.badgeText, { color: palette.textMuted }]}>today</Text>
+                  </View>
                 </View>
-              </View>
 
-              {/* Descriptions */}
-              <View style={styles.descContainer}>
-                <Animated.Text style={[styles.cardDesc, { opacity: moodOpacity }]}>
-                  feeling {currentMood.text} today
-                </Animated.Text>
-                <Animated.Text style={[styles.cardDesc, styles.absoluteText, { opacity: peaceOpacity }]}>
-                  peace is {currentPeace.text}
-                </Animated.Text>
-              </View>
+                <View style={styles.descContainer}>
+                  <Animated.Text style={[styles.cardDesc, { color: palette.textMuted, opacity: moodOpacity }]}>
+                    feeling {currentMood.text} today
+                  </Animated.Text>
+                  <Animated.Text style={[styles.cardDesc, styles.absoluteText, { color: palette.textMuted, opacity: peaceOpacity }]}>
+                    peace is {currentPeace.text}
+                  </Animated.Text>
+                </View>
 
-              <TouchableOpacity 
-                style={styles.editLink}
-                onPress={() => router.push('/check-in-1')}
-              >
-                <Text style={styles.editLinkText}>edit check-in →</Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={styles.editLink} onPress={() => router.push('/check-in-1')}>
+                  <Text style={[styles.editLinkText, { color: palette.primary }]}>
+                    edit check-in →
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-          </View>
-        </TouchableOpacity>
-
-        {/* MONTHLY CALENDAR PATTERNS */}
-        <View style={styles.sectionHeader}>
-          <View style={styles.titleRow}>
-            <Animated.Text style={[styles.sectionTitle, { opacity: moodOpacity }]}>
-              {currentMonth} mood
-            </Animated.Text>
-            <Animated.Text style={[styles.sectionTitle, styles.absoluteText, { opacity: peaceOpacity }]}>
-              {currentMonth} peace
-            </Animated.Text>
-          </View>
-          <TouchableOpacity>
-            <Text style={styles.viewCalendarText}>view calendar</Text>
           </TouchableOpacity>
-        </View>
 
-        <View style={styles.card}>
-          {/* Days Header */}
-          <View style={styles.calendarHeader}>
-            {['m', 't', 'w', 't', 'f', 's', 's'].map((day, idx) => (
-              <Text key={idx} style={styles.dayText}>{day}</Text>
-            ))}
+          {/* ── MONTHLY CALENDAR ── */}
+          <View style={styles.sectionHeader}>
+            <View style={styles.titleRow}>
+              <Animated.Text style={[styles.sectionTitle, { color: palette.textMuted, opacity: moodOpacity }]}>
+                rhythm of {currentMonthName}
+              </Animated.Text>
+              <Animated.Text style={[styles.sectionTitle, styles.absoluteText, { color: palette.textMuted, opacity: peaceOpacity }]}>
+                harmony of {currentMonthName}
+              </Animated.Text>
+            </View>
+            <TouchableOpacity>
+              <Text style={[styles.viewCalendarText, { color: palette.primary }]}>view calendar</Text>
+            </TouchableOpacity>
           </View>
-          
-          {/* Calendar Grid */}
-          <View style={styles.calendarGrid}>
-            {calendarDays.map((item, idx) => {
-              if (!item.past) {
-                // Future day
+
+          <View style={[styles.card, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder }]}>
+            <View style={styles.calendarHeader}>
+              {['m','t','w','t','f','s','s'].map((day, idx) => (
+                <Text key={idx} style={[styles.dayText, { color: palette.textMuted }]}>{day}</Text>
+              ))}
+            </View>
+            <View style={styles.calendarGrid}>
+              {calendarDays.map((item, idx) => {
+                if (!item.past) {
+                  return (
+                    <View key={idx} style={styles.calCell}>
+                      <View style={[styles.emptyCircle, { backgroundColor: 'rgba(255,255,255,0.05)' }]} />
+                      <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.day}</Text>
+                    </View>
+                  );
+                }
                 return (
                   <View key={idx} style={styles.calCell}>
-                    <View style={styles.emptyCircle} />
-                    <Text style={styles.calDateText}>{item.day}</Text>
+                    <View style={[styles.emojiCircle, { backgroundColor: 'rgba(255,255,255,0.08)' }]}>
+                      <Animated.Text style={[styles.smallEmoji, { opacity: moodOpacity }]}>
+                        {item.moodEmoji}
+                      </Animated.Text>
+                      <Animated.Text style={[styles.smallEmoji, styles.absoluteCenter, { opacity: peaceOpacity }]}>
+                        {item.peaceEmoji}
+                      </Animated.Text>
+                    </View>
+                    <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.day}</Text>
                   </View>
                 );
-              }
-
-              // Past day with emoji
-              return (
-                <View key={idx} style={styles.calCell}>
-                  <View style={styles.emojiCircle}>
-                    <Animated.Text style={[styles.smallEmoji, { opacity: moodOpacity }]}>
-                      {item.moodEmoji}
-                    </Animated.Text>
-                    <Animated.Text style={[styles.smallEmoji, styles.absoluteCenter, { opacity: peaceOpacity }]}>
-                      {item.peaceEmoji}
-                    </Animated.Text>
-                  </View>
-                  <Text style={styles.calDateText}>{item.day}</Text>
-                </View>
-              );
-            })}
+              })}
+            </View>
           </View>
-        </View>
 
-        {/* PRACTICE CATALOG */}
-        <Text style={[styles.sectionTitle, { marginTop: 8 }]}>practices</Text>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          style={styles.horizontalScroll}
-          contentContainerStyle={{ paddingRight: 16 }}
-        >
-          {practices.map((item, index) => (
-            <TouchableOpacity 
-              key={index} 
-              style={styles.practiceCard}
-              onPress={() => {
-                if (item.id === 'custom') {
-                  router.push('/timer-setup');
-                } else {
-                  router.push(`/practice/${item.id}`);
-                }
-              }}
-            >
-              <View style={styles.practiceIconBox}>
-                <Ionicons name={item.icon as any} size={26} color="#e86935" />
-              </View>
-              <Text style={styles.practiceTitle}>{item.title}</Text>
-              <Text style={styles.practiceDesc}>{item.desc}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+          {/* ── YOUR DEVOTION (ex-streak) ── */}
+          <Text style={[styles.sectionTitle, { color: palette.textMuted, marginBottom: SPACING.md }]}>
+            your devotion 🌿
+          </Text>
 
-        {/* SHARE BUTTON */}
-        <TouchableOpacity style={styles.shareButton}>
-          <Ionicons name="share-outline" size={22} color="#ffffff" style={{ marginRight: 8 }} />
-          <Text style={styles.shareButtonText}>share with friends</Text>
-        </TouchableOpacity>
+          {/* ── PRACTICE CATALOG ── */}
+          <Text style={[styles.sectionTitle, { color: palette.textMuted, marginBottom: SPACING.md }]}>
+            begin your practice
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.horizontalScroll}
+            contentContainerStyle={{ paddingRight: SPACING.md }}
+          >
+            {practices.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.practiceCard, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder }]}
+                activeOpacity={0.85}
+                onPress={() => {
+                  if (item.id === 'custom') {
+                    router.push('/timer-setup');
+                  } else {
+                    router.push(`/practice/${item.id}`);
+                  }
+                }}
+              >
+                <Text style={styles.practiceEmoji}>{item.emoji}</Text>
+                <Text style={[styles.practiceTitle, { color: palette.textPrimary }]}>{item.label}</Text>
+                <Text style={[styles.practiceDesc, { color: palette.textMuted }]}>{item.desc}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
 
-        {/* Bottom padding */}
-        <View style={{ height: 40 }} />
+          {/* ── CTA SHARE ── */}
+          <AlohaButton
+            onPress={() => {}}
+            label="share with a friend · kākou 🤝"
+            style={{ marginTop: SPACING.section }}
+          />
 
+          <View style={{ height: 40 }} />
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -258,60 +244,77 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  topGlow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 220,
+    zIndex: 0,
+  },
   scrollContainer: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 10,
+  },
+  scrollContent: {
+    paddingHorizontal: SPACING.horizontal,
+    paddingTop: 12,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
+    alignItems: 'flex-start',
+    marginBottom: SPACING.section,
   },
-  headerTitle: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 32,
-    color: '#1e293b', // Deep warm slate instead of harsh black
+  headerGreeting: {
+    ...TYPOGRAPHY.label,
+    color: COLORS.textSandMuted,
+    marginBottom: 4,
   },
-  profilePlaceholder: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#fff1ec',
+  headerName: {
+    ...TYPOGRAPHY.h1,
+    color: COLORS.textSand,
+  },
+  headerGoal: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 13,
+    marginTop: 4,
+  },
+  profileBtn: {
+    width: 46,
+    height: 46,
+    borderRadius: RADIUS.pill,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6)', // More transparent glass
-    borderRadius: 28,
-    padding: 20,
-    marginBottom: 32,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.15, // Much more visible shadow
-    shadowRadius: 30,
-    elevation: 5,
+    borderRadius: RADIUS.card,
+    padding: SPACING.card,
+    marginBottom: SPACING.section,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.95)',
+    shadowColor: '#E86935',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.10,
+    shadowRadius: 20,
+    elevation: 4,
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   emojiBox: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255, 245, 240, 0.8)',
+    width: 76,
+    height: 76,
+    borderRadius: RADIUS.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 16,
+    marginRight: SPACING.md,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.6)',
+    borderColor: 'rgba(255,255,255,0.08)',
   },
   bigEmoji: {
-    fontSize: 48,
+    fontSize: 44,
   },
   absoluteCenter: {
     position: 'absolute',
@@ -327,8 +330,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 22, // Slightly larger
-    color: '#1e293b',
+    fontSize: 20,
   },
   absoluteText: {
     position: 'absolute',
@@ -336,27 +338,24 @@ const styles = StyleSheet.create({
     top: 0,
   },
   badge: {
-    backgroundColor: '#f3f4f6',
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 12,
-    marginLeft: 'auto', // pushes badge to right
+    borderRadius: RADIUS.pill,
+    marginLeft: 'auto',
   },
   badgeText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 10,
-    color: '#9ca3af',
     textTransform: 'lowercase',
   },
   descContainer: {
-    height: 40, // fixed height to accommodate two absolute lines wrapping
+    height: 40,
     justifyContent: 'flex-start',
     marginBottom: 8,
   },
   cardDesc: {
     fontFamily: 'Nunito_400Regular',
     fontSize: 14,
-    color: '#6b7280',
     lineHeight: 20,
   },
   editLink: {
@@ -365,39 +364,35 @@ const styles = StyleSheet.create({
   editLinkText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 12,
-    color: '#e86935',
     textTransform: 'lowercase',
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-    height: 24, // Keep height stable despite absolute title
+    marginBottom: SPACING.md,
+    height: 24,
   },
   sectionTitle: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 14,
-    color: '#6b7280',
+    fontSize: 13,
     textTransform: 'lowercase',
-    letterSpacing: 1,
+    letterSpacing: 1.2,
   },
   viewCalendarText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 12,
-    color: '#e86935',
     textTransform: 'lowercase',
   },
   calendarHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
-    paddingHorizontal: 8,
+    marginBottom: SPACING.md,
+    paddingHorizontal: 4,
   },
   dayText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 12,
-    color: '#9ca3af',
     width: 30,
     textAlign: 'center',
   },
@@ -406,18 +401,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   calCell: {
-    width: '14.28%', // 100/7
+    width: '14.28%',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: SPACING.md,
   },
   emojiCircle: {
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: '#fff5f0',
+    borderRadius: RADIUS.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   smallEmoji: {
     fontSize: 20,
@@ -425,75 +419,46 @@ const styles = StyleSheet.create({
   emptyCircle: {
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: '#f3f4f6',
-    marginBottom: 8,
+    borderRadius: RADIUS.pill,
+    marginBottom: 6,
   },
   calDateText: {
     fontFamily: 'Nunito_400Regular',
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: 11,
   },
   horizontalScroll: {
-    marginHorizontal: -20, // Negative margin to allow full bleed scroll
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    marginHorizontal: -SPACING.horizontal,
+    paddingHorizontal: SPACING.horizontal,
+    paddingVertical: SPACING.md,
+    marginBottom: SPACING.md,
   },
   practiceCard: {
-    width: 170, 
+    width: 168,
     height: 180,
-    backgroundColor: 'rgba(255, 255, 255, 0.65)', // Glassmorphism
-    borderRadius: 24,
-    padding: 16,
-    marginRight: 16,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12, // Visible shadow
-    shadowRadius: 20,
-    elevation: 4,
+    borderRadius: RADIUS.card,
+    padding: SPACING.md,
+    marginRight: SPACING.md,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.95)',
+    shadowColor: '#E86935',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.10,
+    shadowRadius: 16,
+    elevation: 3,
+    justifyContent: 'flex-end',
   },
-  practiceIconBox: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#fff5f0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
+  practiceEmoji: {
+    fontSize: 36,
+    marginBottom: 'auto',
   },
   practiceTitle: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 16,
-    color: '#1e293b',
+    fontSize: 15,
     marginBottom: 4,
     textTransform: 'lowercase',
   },
   practiceDesc: {
     fontFamily: 'Nunito_400Regular',
     fontSize: 12,
-    color: '#9ca3af',
-    textTransform: 'lowercase',
-  },
-  shareButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: '#e86935',
-    paddingVertical: 18,
-    borderRadius: 24,
-    alignItems: 'center',
-    marginTop: 20,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  shareButtonText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 16,
-    color: '#ffffff',
     textTransform: 'lowercase',
   },
 });

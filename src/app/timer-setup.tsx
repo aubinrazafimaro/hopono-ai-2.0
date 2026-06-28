@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TimerSetupScreen() {
@@ -37,7 +37,7 @@ export default function TimerSetupScreen() {
         {/* HEADER */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={28} color="#334155" />
+            <SimpleLineIcons name="arrow-left" size={24} color="#334155" />
           </TouchableOpacity>
           <Text style={styles.title}>set your time</Text>
           <View style={{ width: 28 }} /> {/* Spacer to center title */}

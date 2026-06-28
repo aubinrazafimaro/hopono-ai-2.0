@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCheckIn } from '@/context/CheckInContext';
+import { useAppTheme } from '@/context/AppThemeContext';
 
 // Helper component for Settings Item
 const SettingsItem = ({ 
@@ -32,16 +33,17 @@ const SettingsItem = ({
   >
     <View style={styles.itemLeft}>
       <View style={[styles.iconCircle, { backgroundColor: iconBgColor }]}>
-        <Ionicons name={icon as any} size={20} color={iconColor} />
+        <SimpleLineIcons name={icon as any} size={18} color={iconColor} />
       </View>
       <Text style={styles.itemTitle}>{title}</Text>
     </View>
-    {rightElement ? rightElement : <Ionicons name="chevron-forward" size={20} color="#cbd5e1" />}
+    {rightElement ? rightElement : <SimpleLineIcons name="arrow-right" size={16} color="#cbd5e1" />}
   </TouchableOpacity>
 );
 
 export default function SettingsScreen() {
   const { getAverages } = useCheckIn();
+  const { themeName, palette, setThemeName } = useAppTheme();
   const [hasPermissions, setHasPermissions] = useState(false);
   const [isBlockerActive, setIsBlockerActive] = useState(false);
   
@@ -78,59 +80,53 @@ export default function SettingsScreen() {
 
   return (
     <LinearGradient 
-      colors={['#ffd8c4', '#fff0e6', '#ffffff']} 
+      colors={[palette.gradientTop, palette.gradientMid, palette.gradientBot]} 
       locations={[0, 0.4, 1]}
       style={styles.safeArea}
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       
-      {/* TOP TABS (Segmented Control Placeholder) */}
-      <View style={styles.topTabsContainer}>
-        <View style={styles.segmentedControl}>
-          <TouchableOpacity style={styles.tabInactive}>
-            <Text style={styles.tabTextInactive}>ACTIVITY</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.tabActive}>
-            <Text style={styles.tabTextActive}>SETTINGS</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* Removed Top Tabs as requested */}
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        
+        {/* HEADER */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>settings</Text>
+        </View>
         
         {/* STATS CARDS */}
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
-            <Text style={styles.statLabel}>TIME SAVED</Text>
+            <Text style={styles.statLabel}>time saved</Text>
             <Text style={styles.statValue}>{timeSavedString}</Text>
           </View>
           <View style={styles.statCard}>
-            <Text style={styles.statLabel}>BEST STREAK</Text>
-            <Text style={styles.statValue}>{lifetimeStats.bestStreak} Days</Text>
+            <Text style={styles.statLabel}>best streak</Text>
+            <Text style={styles.statValue}>{lifetimeStats.bestStreak} days</Text>
           </View>
         </View>
 
-        {/* SECTION 1: APP BLOCKER */}
-        <Text style={styles.sectionHeader}>APP BLOCKER</Text>
-        <View style={styles.cardBlock}>
+        <Text style={styles.sectionHeader}>app blocker</Text>
+        <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
           <SettingsItem 
-            icon="shield-checkmark" 
-            title="Enable Blocker" 
-            iconBgColor="#dcfce7" 
-            iconColor="#22c55e" // Green for safe/enabled
+            icon="shield" 
+            title="enable blocker" 
+            iconBgColor={palette.cardBg} 
+            iconColor={palette.primary}
             rightElement={
               <Switch
                 value={isBlockerActive}
                 onValueChange={handleToggleBlocker}
-                trackColor={{ false: '#e2e8f0', true: '#f97316' }}
+                trackColor={{ false: '#e2e8f0', true: palette.primary }}
               />
             }
           />
           <SettingsItem 
-            icon="lock-closed" 
-            title="Lock List" 
-            iconBgColor="#ffedd5" 
-            iconColor="#f97316" // Orange
+            icon="lock" 
+            title="lock list" 
+            iconBgColor={palette.cardBg} 
+            iconColor={palette.primary}
             isLast={true}
             onPress={() => {
               if (hasPermissions || isBlockerActive) {
@@ -142,39 +138,56 @@ export default function SettingsScreen() {
           />
         </View>
 
-        {/* SECTION 2: PRACTICE EXPERIENCE */}
-        <Text style={styles.sectionHeader}>PRACTICE EXPERIENCE</Text>
-        <View style={styles.cardBlock}>
+        <Text style={styles.sectionHeader}>practice experience</Text>
+        <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
           <SettingsItem 
-            icon="options" 
-            title="Practice Mode" 
-            iconBgColor="#e0f2fe" 
-            iconColor="#0ea5e9" // Light Blue
+            icon="equalizer" 
+            title="practice mode" 
+            iconBgColor={palette.cardBg} 
+            iconColor={palette.primary}
           />
           <SettingsItem 
-            icon="language" 
-            title="Mantra Language" 
-            iconBgColor="#dcfce7" 
-            iconColor="#22c55e" // Green
+            icon="globe" 
+            title="mantra language" 
+            iconBgColor={palette.cardBg} 
+            iconColor={palette.primary}
             isLast={true}
           />
         </View>
 
-        {/* SECTION 3: ACCOUNT SETTINGS */}
-        <Text style={styles.sectionHeader}>ACCOUNT SETTINGS</Text>
-        <View style={styles.cardBlock}>
+        <Text style={styles.sectionHeader}>account settings</Text>
+        <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
           <SettingsItem 
-            icon="notifications" 
-            title="Notifications" 
-            iconBgColor="#fef08a" 
-            iconColor="#eab308" // Yellow
+            icon="bell" 
+            title="notifications" 
+            iconBgColor={palette.cardBg} 
+            iconColor={palette.primary}
           />
           <SettingsItem 
-            icon="shield-checkmark" 
-            title="Privacy & Security" 
-            iconBgColor="#fee2e2" 
-            iconColor="#ef4444" // Red
+            icon="shield" 
+            title="privacy & security" 
+            iconBgColor={palette.cardBg} 
+            iconColor={palette.primary}
             isLast={true}
+          />
+        </View>
+
+        {/* SECTION 4: APPEARANCE */}
+        <Text style={styles.sectionHeader}>appearance</Text>
+        <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
+          <SettingsItem 
+            icon="drop" 
+            title="ocean theme" 
+            iconBgColor={palette.cardBg} 
+            iconColor={palette.primary}
+            isLast={true}
+            rightElement={
+              <Switch
+                value={themeName === 'ocean'}
+                onValueChange={(val) => setThemeName(val ? 'ocean' : 'sunset')}
+                trackColor={{ false: 'rgba(255,255,255,0.1)', true: palette.primary }}
+              />
+            }
           />
         </View>
 
@@ -194,51 +207,17 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   
-  // Top Tabs
-  topTabsContainer: {
-    alignItems: 'center',
-    marginVertical: 16,
+  // Header
+  header: {
+    marginBottom: 16,
+    marginTop: 8,
   },
-  segmentedControl: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)', 
-    borderRadius: 30,
-    padding: 4,
-    width: '80%',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.8)',
-  },
-  tabActive: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    borderRadius: 26,
-    paddingVertical: 10,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  tabInactive: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabTextActive: {
+  headerTitle: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 12,
+    fontSize: 28,
     color: '#334155',
-    letterSpacing: 1,
   },
-  tabTextInactive: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 12,
-    color: '#94a3b8',
-    letterSpacing: 1,
-  },
-
+  
   // Stats
   statsContainer: {
     flexDirection: 'row',
@@ -255,7 +234,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.95)',
-    shadowColor: '#e86935',
+    // shadowColor is overridden dynamically
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.12,
     shadowRadius: 20,
@@ -288,7 +267,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     paddingHorizontal: 16,
     marginBottom: 32,
-    shadowColor: '#e86935',
+    // shadowColor is overridden dynamically
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.12,
     shadowRadius: 24,

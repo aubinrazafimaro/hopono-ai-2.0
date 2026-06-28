@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Feather } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
 import { router } from 'expo-router';
 import { useCheckIn, peaceStates, moodStates } from '../context/CheckInContext';
@@ -132,7 +132,7 @@ export default function Insights() {
   const chartLabels = getXLabels(selectedPeriod);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
         {/* Header */}
@@ -170,17 +170,12 @@ export default function Insights() {
             <Text style={styles.cardSubtitle}>days</Text>
           </View>
 
-          {/* Card 2: Time Saved (Total Focus) */}
-          <TouchableOpacity 
-            style={[styles.card, { backgroundColor: '#5ba4e6' }]}
-            onPress={() => router.push('/time-saved')}
-            activeOpacity={0.8}
-          >
+          <View style={[styles.card, { backgroundColor: '#5ba4e6' }]}>
             <Text style={styles.cardEmoji}>⏳</Text>
             <Text style={styles.cardNumber}>{(stats.totalSessions * 0.5).toFixed(1)}</Text>
             <Text style={styles.cardTitle}>time saved</Text>
             <Text style={styles.cardSubtitle}>hours</Text>
-          </TouchableOpacity>
+          </View>
 
           {/* Card 3: Avg Inner Peace */}
           <View style={[styles.card, { backgroundColor: currentPeaceState.color }]}>
@@ -267,7 +262,7 @@ export default function Insights() {
 
         {/* SHARE BUTTON */}
         <TouchableOpacity style={styles.shareButton}>
-          <Feather name="share" size={22} color="#ffffff" style={{ marginRight: 8 }} />
+          <SimpleLineIcons name="share" size={18} color="#ffffff" style={{ marginRight: 8 }} />
           <Text style={styles.shareButtonText}>share your progress</Text>
         </TouchableOpacity>
 

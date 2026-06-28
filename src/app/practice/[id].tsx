@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback, Animated } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 const phrases = [
   "Aubin, I am sorry",
@@ -148,7 +148,7 @@ export default function PracticeScreen() {
 
       {/* Back Button */}
       <View style={styles.backButton}>
-        <Ionicons name="close" size={32} color="#94a3b8" onPress={() => {
+        <SimpleLineIcons name="close" size={28} color="#94a3b8" onPress={() => {
           isFinishedRef.current = true;
           router.push('/');
         }} />
@@ -175,7 +175,7 @@ export default function PracticeScreen() {
           }
         ]}>
           <LinearGradient
-            colors={['#ffedd5', '#fed7aa', 'transparent']}
+            colors={['#ffedd5', '#fed7aa', 'rgba(254, 215, 170, 0)']}
             style={StyleSheet.absoluteFill}
             start={{ x: 0.5, y: 0.5 }}
             end={{ x: 1, y: 1 }}
@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 237, 213, 0.4)', // Pale orange glow
+    overflow: 'hidden',
   },
   orbCore: {
     position: 'absolute',

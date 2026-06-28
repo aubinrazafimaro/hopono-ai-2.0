@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity, Dimensions } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import Svg, { Defs, RadialGradient, Stop, Circle } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
 
@@ -40,6 +41,7 @@ export default function CompletionScreen() {
   const emojiScale = useRef(new Animated.Value(0)).current;
   const flowerBreath = useRef(new Animated.Value(1)).current;
   const contentOpacity = useRef(new Animated.Value(0)).current;
+  const glowOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     // Reward: Grant 15 minutes of unlock time for completing the practice
@@ -48,17 +50,31 @@ export default function CompletionScreen() {
       .catch(console.warn);
 
     Animated.sequence([
-      Animated.spring(emojiScale, { 
-        toValue: 1, 
-        friction: 5, 
-        tension: 40,
-        useNativeDriver: true 
-      }),
-      Animated.timing(contentOpacity, { 
-        toValue: 1, 
-        duration: 800, 
-        useNativeDriver: true 
-      })
+      Animated.parallel([
+        Animated.spring(emojiScale, { 
+          toValue: 1, 
+          friction: 5, 
+          tension: 40,
+          useNativeDriver: true 
+        }),
+        Animated.timing(glowOpacity, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true
+        })
+      ]),
+      Animated.parallel([
+        Animated.timing(contentOpacity, { 
+          toValue: 1, 
+          duration: 800, 
+          useNativeDriver: true 
+        }),
+        Animated.timing(glowOpacity, {
+          toValue: 0,
+          duration: 1200,
+          useNativeDriver: true
+        })
+      ])
     ]).start(() => {
       // Start breathing loop after initial bloom
       Animated.loop(
@@ -94,9 +110,24 @@ export default function CompletionScreen() {
       />
 
       <View style={styles.mainContent}>
-        <Animated.Text style={[styles.emoji, { transform: [{ scale: finalEmojiScale }] }]}>
-          🌺
-        </Animated.Text>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Animated.View style={[styles.emojiGlowContainer, { opacity: glowOpacity, transform: [{ scale: flowerBreath }] }]}>
+            <Svg width="400" height="400" viewBox="0 0 400 400">
+              <Defs>
+                <RadialGradient id="glow" cx="50%" cy="50%" rx="50%" ry="50%" fx="50%" fy="50%">
+                  <Stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+                  <Stop offset="20%" stopColor="#ffffff" stopOpacity="0.4" />
+                  <Stop offset="50%" stopColor="#ffffff" stopOpacity="0.1" />
+                  <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+                </RadialGradient>
+              </Defs>
+              <Circle cx="200" cy="200" r="200" fill="url(#glow)" />
+            </Svg>
+          </Animated.View>
+          <Animated.Text style={[styles.emoji, { transform: [{ scale: finalEmojiScale }] }]}>
+            🌺
+          </Animated.Text>
+        </View>
         
         <Animated.View style={[styles.textWrapper, { opacity: contentOpacity }]}>
           <Text style={styles.hugeWord}>hoʻomaikaʻi</Text>
@@ -151,6 +182,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
     paddingTop: height * 0.1,
+  },
+  emojiGlowContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   emoji: {
     fontSize: 80,

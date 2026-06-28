@@ -1,0 +1,243 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { useOnboarding } from '@/context/OnboardingContext';
+import { LinearGradient } from 'expo-linear-gradient';
+import ContinueButton from '@/components/ContinueButton';
+
+const TIME_OPTIONS = [
+  { label: 'less than 1h', emoji: '📱' },
+  { label: '1-2h', emoji: '🕰️' },
+  { label: '3-4h', emoji: '⏳' },
+  { label: '5-6h', emoji: '⚠️' },
+  { label: '6h+', emoji: '🚨' }
+];
+
+export default function ScreenTimeScreen() {
+  const router = useRouter();
+  const { data, updateData } = useOnboarding();
+  const [step, setStep] = useState(0);
+
+  // Transition animations
+  const t1 = useRef(new Animated.Value(0)).current;
+  const t2 = useRef(new Animated.Value(0)).current;
+  const r1 = useRef(new Animated.Value(0)).current;
+  const r2 = useRef(new Animated.Value(0)).current;
+  const r3 = useRef(new Animated.Value(0)).current;
+  const btn = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (step === 1) {
+      Animated.sequence([
+        Animated.timing(t1, { toValue: 1, duration: 1000, useNativeDriver: true }),
+        Animated.delay(800),
+        Animated.timing(t2, { toValue: 1, duration: 1500, useNativeDriver: true }),
+        Animated.delay(1500),
+        Animated.timing(r1, { toValue: 1, duration: 1000, useNativeDriver: true }),
+        Animated.delay(1000),
+        Animated.timing(r2, { toValue: 1, duration: 1000, useNativeDriver: true }),
+        Animated.delay(1000),
+        Animated.timing(r3, { toValue: 1, duration: 1000, useNativeDriver: true }),
+      ]).start(() => {
+        Animated.timing(btn, { toValue: 1, duration: 500, useNativeDriver: true }).start();
+      });
+    }
+  }, [step]);
+
+  const handleSelectTime = (time: string) => {
+    updateData({ screenTime: time });
+  };
+
+  // Calculations
+  const getDailyHours = (timeStr: string) => {
+    if (timeStr === 'less than 1h') return 1;
+    if (timeStr === '1-2h') return 2;
+    if (timeStr === '3-4h') return 4;
+    if (timeStr === '5-6h') return 6;
+    if (timeStr === '6h+') return 8;
+    return 2; // fallback
+  };
+
+  const getAgeLowerBound = (ageStr: string) => {
+    if (ageStr === 'under 18') return 18;
+    if (ageStr === '18-24') return 18;
+    if (ageStr === '25-34') return 25;
+    if (ageStr === '35-44') return 35;
+    if (ageStr === '45+') return 45;
+    return 25; // fallback
+  };
+
+  const dailyH = getDailyHours(data.screenTime);
+  const yearlyH = dailyH * 365;
+  const yearlyDays = Math.round(yearlyH / 24);
+  const ageBound = getAgeLowerBound(data.age);
+  const remainingYears = Math.max(0, 80 - ageBound); // assume 80y lifespan
+  const lifetimeMonths = Math.round((yearlyDays * remainingYears) / 30);
+
+  return (
+    <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
+      <SafeAreaView style={styles.containerTransparent}>
+        {step === 0 ? (
+          <ScrollView contentContainerStyle={styles.content}>
+            <View style={styles.header}>
+              <Text style={styles.title}>screen time</Text>
+              <Text style={styles.subtitle}>the time you spend on social media</Text>
+            </View>
+            
+            <Text style={styles.question}>be honest {data.name}, how much time a day do you spend on your phone?</Text>
+            
+            <View style={styles.optionsList}>
+              {TIME_OPTIONS.map((time) => (
+                <TouchableOpacity
+                  key={time.label}
+                  style={[styles.optionRow, data.screenTime === time.label && styles.optionRowActive]}
+                  onPress={() => handleSelectTime(time.label)}
+                >
+                  <Text style={[styles.optionText, data.screenTime === time.label && styles.optionTextActive]}>{time.emoji}  {time.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        ) : (
+          <ScrollView contentContainerStyle={[styles.content, { justifyContent: 'center' }]}>
+            <View style={styles.guiltSection}>
+              <Animated.Text style={[styles.bodyText, { opacity: t1 }]}>
+                alright, today you spend {data.screenTime} on your phone
+              </Animated.Text>
+              <Animated.Text style={[styles.bodyText, { opacity: t2, color: '#e86935', fontFamily: 'Nunito_600SemiBold' }]}>
+                at this rate, that represents {yearlyH} hours in a year, {yearlyDays} days in a year, {lifetimeMonths} months in a lifetime
+              </Animated.Text>
+            </View>
+
+            <View style={styles.reassureSection}>
+              <Animated.Text style={[styles.bodyText, { opacity: r1 }]}>
+                {data.name}, things shouldn't be like this
+              </Animated.Text>
+              <Animated.Text style={[styles.bodyText, { opacity: r2 }]}>
+                we are going to transform this time into healing time
+              </Animated.Text>
+              <Animated.Text style={[styles.bodyText, { opacity: r3 }]}>
+                i am here, hopono ai, to accompany you and transform this time into your healing
+              </Animated.Text>
+            </View>
+          </ScrollView>
+        )}
+        {step === 0 && data.screenTime && (
+          <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <ContinueButton onPress={() => setStep(1)} />
+          </Animated.View>
+        )}
+        {step === 1 && (
+          <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <ContinueButton onPress={() => router.push('/onboarding/goals')} />
+          </Animated.View>
+        )}
+      </SafeAreaView>
+    </LinearGradient>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  containerTransparent: {
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    paddingTop: 32,
+    paddingHorizontal: 32,
+    paddingBottom: 140,
+  },
+  header: {
+    marginTop: 40,
+    marginBottom: 40,
+  },
+  title: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 28,
+    color: '#e86935',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 18,
+    color: '#4b5563',
+  },
+  question: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 20,
+    color: '#1f2937',
+    marginBottom: 24,
+    lineHeight: 28,
+  },
+  optionsList: {
+    gap: 16,
+  },
+  optionRow: {
+    borderWidth: 1.5,
+    borderColor: 'transparent',
+    borderRadius: 20,
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  optionRowActive: {
+    backgroundColor: '#fff5f0',
+    borderColor: '#e86935',
+    shadowColor: '#e86935',
+    shadowOpacity: 0.15,
+  },
+  optionText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 16,
+    color: '#4b5563',
+  },
+  optionTextActive: {
+    color: '#e86935',
+  },
+  guiltSection: {
+    gap: 16,
+    marginBottom: 40,
+  },
+  reassureSection: {
+    gap: 16,
+  },
+  bodyText: {
+    fontFamily: 'Nunito_400Regular',
+    fontSize: 18,
+    color: '#1f2937',
+    lineHeight: 28,
+  },
+  bottomContainer: {
+    paddingBottom: 32,
+    paddingTop: 16,
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  continueButton: {
+    backgroundColor: '#e86935',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+    shadowColor: '#e86935',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  continueText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18,
+    color: '#ffffff',
+    textTransform: 'lowercase',
+  },
+});

@@ -1,44 +1,45 @@
 import { Tabs } from 'expo-router';
-import { useColorScheme, Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Platform, Text } from 'react-native';
 
-import { Colors } from '@/constants/theme';
+// Lava night tab bar — always dark, accent Sunset
+const LAVA_BG    = '#0F0A06';
+const SUNSET     = '#E86935';
+const SAND_MUTED = '#6B5A48';
 
 export default function AppTabs() {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.tint,
-        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarActiveTintColor: SUNSET,
+        tabBarInactiveTintColor: SAND_MUTED,
         tabBarStyle: {
-          backgroundColor: colors.background,
+          backgroundColor: LAVA_BG,
           borderTopWidth: 1,
-          borderTopColor: colors.backgroundElement,
-          height: Platform.OS === 'ios' ? 68 : 50, // Reduced height even more
-          paddingBottom: Platform.OS === 'ios' ? 28 : 6, // Pushed lower into safe area
-          paddingTop: 4,
+          borderTopColor: 'rgba(255,255,255,0.07)',
+          height: Platform.OS === 'ios' ? 72 : 54,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+          paddingTop: 6,
         },
         tabBarLabelStyle: {
           fontFamily: 'Nunito_600SemiBold',
           textTransform: 'lowercase',
+          fontSize: 11,
         },
         headerShown: false,
       }}>
+
       <Tabs.Screen
         name="index"
         options={{
           title: 'home',
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "home" : "home-outline"} size={24} color={color} />,
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🏠</Text>,
         }}
       />
       <Tabs.Screen
         name="insights"
         options={{
           title: 'insights',
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "stats-chart" : "stats-chart-outline"} size={24} color={color} />,
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🌊</Text>,
         }}
       />
       <Tabs.Screen
@@ -51,8 +52,8 @@ export default function AppTabs() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'settings',
-          tabBarIcon: ({ color, focused }) => <Ionicons name={focused ? "settings" : "settings-outline"} size={24} color={color} />,
+          title: 'mālama',
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🌺</Text>,
         }}
       />
       <Tabs.Screen
@@ -92,6 +93,13 @@ export default function AppTabs() {
       />
       <Tabs.Screen
         name="completion"
+        options={{
+          href: null,
+          tabBarStyle: { display: 'none' },
+        }}
+      />
+      <Tabs.Screen
+        name="onboarding"
         options={{
           href: null,
           tabBarStyle: { display: 'none' },
