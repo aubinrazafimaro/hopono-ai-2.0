@@ -346,7 +346,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   barFill: {
-    ...StyleSheet.absoluteFill,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
     borderRadius: 16,
   },
   barLabels: {

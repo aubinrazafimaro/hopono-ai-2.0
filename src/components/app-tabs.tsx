@@ -1,21 +1,21 @@
 import { Tabs } from 'expo-router';
 import { Platform, Text } from 'react-native';
 
-// Lava night tab bar — always dark, accent Sunset
-const LAVA_BG    = '#0F0A06';
-const SUNSET     = '#E86935';
-const SAND_MUTED = '#6B5A48';
+// Light Hawaiian Sky tab bar
+const BG_COLOR   = '#FFFFFF';
+const ACCENT     = '#0ABFBC'; // Ocean turquoise accent
+const TEXT_MUTED = '#9CA3AF'; // Muted gray
 
 export default function AppTabs() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: SUNSET,
-        tabBarInactiveTintColor: SAND_MUTED,
+        tabBarActiveTintColor: ACCENT,
+        tabBarInactiveTintColor: TEXT_MUTED,
         tabBarStyle: {
-          backgroundColor: LAVA_BG,
+          backgroundColor: BG_COLOR,
           borderTopWidth: 1,
-          borderTopColor: 'rgba(255,255,255,0.07)',
+          borderTopColor: '#E5E7EB',
           height: Platform.OS === 'ios' ? 72 : 54,
           paddingBottom: Platform.OS === 'ios' ? 28 : 8,
           paddingTop: 6,

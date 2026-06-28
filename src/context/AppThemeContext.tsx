@@ -44,31 +44,31 @@ const palettes: Record<ThemeType, ThemePalette> = {
   sunset: {
     primary: '#E86935',
     primaryLight: '#FF8E53',
-    background: '#0F0A06',
-    backgroundDeep: '#07040300',
-    cardBg: 'rgba(255, 255, 255, 0.06)',
-    cardBorder: 'rgba(255, 255, 255, 0.10)',
-    textPrimary: '#F5EED8',   // Warm sand
-    textMuted: '#A89070',     // Dimmed sand
+    background: '#F0F9FA',      // Blanc turquoise / light Hawaiian sky
+    backgroundDeep: '#E0F2F1',
+    cardBg: '#FFFFFF',          // Solid white card
+    cardBorder: '#D1D5DB',      // Light gray border
+    textPrimary: '#1F2937',     // Dark slate for contrast
+    textMuted: '#4B5563',       // Dimmed slate
     ...sharedGradients,
-    gradientTop: '#1A0A04',
-    gradientMid: '#0F0704',
-    gradientBot: '#0F0A06',
+    gradientTop: '#F0F9FA',
+    gradientMid: '#E6F8FA',
+    gradientBot: '#D4F1F4',
   },
   // Ocean: the calm restoration theme (evening, completion)
   ocean: {
     primary: '#0ABFBC',
     primaryLight: '#2ECC71',
-    background: '#030F0F',
-    backgroundDeep: '#020A0A',
-    cardBg: 'rgba(255, 255, 255, 0.06)',
-    cardBorder: 'rgba(255, 255, 255, 0.10)',
-    textPrimary: '#E8F5F5',   // Cool white-turquoise
-    textMuted: '#7AABAB',     // Dimmed teal
+    background: '#E0F7FA',      // Slightly deeper turquoise white
+    backgroundDeep: '#B2EBF2',
+    cardBg: '#FFFFFF',
+    cardBorder: '#CBD5E1',
+    textPrimary: '#0F172A',
+    textMuted: '#475569',
     ...sharedGradients,
-    gradientTop: '#030F0F',
-    gradientMid: '#041414',
-    gradientBot: '#030F0F',
+    gradientTop: '#E0F7FA',
+    gradientMid: '#B2EBF2',
+    gradientBot: '#80DEEA',
   },
 };
 

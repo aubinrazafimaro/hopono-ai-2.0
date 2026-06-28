@@ -10,6 +10,7 @@ interface AlohaButtonProps {
   variant?: AlohaButtonVariant;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
+  icon?: React.ReactNode;
 }
 
 export default function AlohaButton({
@@ -18,6 +19,7 @@ export default function AlohaButton({
   variant = 'primary',
   disabled = false,
   style,
+  icon,
 }: AlohaButtonProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -46,7 +48,10 @@ export default function AlohaButton({
           end={{ x: 1, y: 0 }}
           style={styles.button}
         >
-          <Text style={[styles.text, styles.textWhite]}>{text}</Text>
+          <View style={styles.contentRow}>
+            {icon && <View style={styles.iconContainer}>{icon}</View>}
+            <Text style={[styles.text, styles.textWhite]}>{text}</Text>
+          </View>
         </LinearGradient>
       );
     }
@@ -54,7 +59,10 @@ export default function AlohaButton({
     if (variant === 'secondary') {
       return (
         <View style={[styles.button, styles.buttonSecondary]}>
-          <Text style={[styles.text, styles.textOrange]}>{text}</Text>
+          <View style={styles.contentRow}>
+            {icon && <View style={styles.iconContainer}>{icon}</View>}
+            <Text style={[styles.text, styles.textOrange]}>{text}</Text>
+          </View>
         </View>
       );
     }
@@ -62,7 +70,10 @@ export default function AlohaButton({
     if (variant === 'ghost') {
       return (
         <View style={[styles.button, styles.buttonGhost]}>
-          <Text style={[styles.text, styles.textWhite]}>{text}</Text>
+          <View style={styles.contentRow}>
+            {icon && <View style={styles.iconContainer}>{icon}</View>}
+            <Text style={[styles.text, styles.textWhite]}>{text}</Text>
+          </View>
         </View>
       );
     }
@@ -114,6 +125,14 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.4)',
     shadowOpacity: 0,
     elevation: 0,
+  },
+  contentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconContainer: {
+    marginRight: 8,
   },
   text: {
     fontFamily: 'Nunito_700Bold',

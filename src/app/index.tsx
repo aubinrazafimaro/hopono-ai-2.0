@@ -8,7 +8,7 @@ import {
   Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Droplet, Leaf, Infinity as InfinityIcon, Clock } from 'lucide-react-native';
+import { Droplet, Leaf, Infinity as InfinityIcon, Clock, Share } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCheckIn, peaceStates, moodStates } from '@/context/CheckInContext';
@@ -229,7 +229,8 @@ export default function Home() {
           {/* ── CTA SHARE ── */}
           <AlohaButton
             onPress={() => {}}
-            label="share with a friend · kākou 🤝"
+            text="share"
+            icon={<Share size={20} color="#ffffff" />}
             style={{ marginTop: SPACING.section }}
           />
 
