@@ -25,18 +25,18 @@ export default function PowerScreen() {
       <SafeAreaView style={styles.safeArea}>
         
         {/* Title */}
-        <Text style={styles.mainTitle}>ho'oponopono is powerful</Text>
+        <Text style={styles.mainTitle}>show up every day. watch what happens.</Text>
 
         {/* Card containing the chart */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>inner peace</Text>
+            <Text style={styles.cardTitle}>your inner peace over time</Text>
             <View style={styles.iconContainer}>
               <Feather name="lock" size={16} color="#e86935" />
             </View>
           </View>
           
-          <Text style={styles.cardSubtitle}><Text style={styles.redX}>x</Text> - skipped practice</Text>
+          <Text style={styles.cardSubtitle}><Text style={styles.redX}>✕</Text> — day you skipped</Text>
 
           <View style={styles.chartContainer}>
             <Svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
@@ -92,22 +92,16 @@ export default function PowerScreen() {
               </G>
 
               {/* Texts */}
-              <SvgText x={w-25} y="60" fill="#f59e0b" fontSize="10" fontFamily="Nunito_700Bold" textAnchor="end">
-                ho'oponopono
-              </SvgText>
-              <SvgText x={w-25} y="72" fill="#f59e0b" fontSize="10" fontFamily="Nunito_700Bold" textAnchor="end">
-                journey
+              <SvgText x={w-25} y="66" fill="#f59e0b" fontSize="10" fontFamily="Nunito_700Bold" textAnchor="end">
+                with hopono
               </SvgText>
 
               <SvgText x="194" y="160" fill="#ef4444" fontSize="9" fontFamily="Nunito_600SemiBold" textAnchor="middle">
-                I'll practice later
+                I'll do it tomorrow
               </SvgText>
               
-              <SvgText x={w-25} y="155" fill="#ef4444" fontSize="10" fontFamily="Nunito_700Bold" textAnchor="end">
-                distractions
-              </SvgText>
-              <SvgText x={w-25} y="167" fill="#ef4444" fontSize="10" fontFamily="Nunito_700Bold" textAnchor="end">
-                won again
+              <SvgText x={w-25} y="161" fill="#ef4444" fontSize="10" fontFamily="Nunito_700Bold" textAnchor="end">
+                without it
               </SvgText>
 
               {/* Bottom Axis Line */}
@@ -129,12 +123,12 @@ export default function PowerScreen() {
 
         <View style={styles.bottomSection}>
           <Text style={styles.descriptionText}>
-            keep practicing, the more you show up, the more room you give peace to show up in your life
+            every session is a vote for the version of you that is free.
           </Text>
         </View>
 
         <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.learnMoreBtn}>
-          <Text style={styles.learnMoreText}>learn how hopono ai works <Feather name="arrow-right" size={14} /></Text>
+          <Text style={styles.learnMoreText}>see how it works <Feather name="arrow-right" size={14} /></Text>
         </TouchableOpacity>
 
         {/* MODAL */}
@@ -154,33 +148,33 @@ export default function PowerScreen() {
                 <Feather name="lock" size={24} color="#e86935" />
               </View>
 
-              <Text style={styles.modalTitle}>how it works</Text>
+              <Text style={styles.modalTitle}>three steps. that's it.</Text>
 
               <View style={styles.stepsContainer}>
                 <View style={styles.stepRow}>
                   <View style={styles.stepNumberContainer}>
                     <Text style={styles.stepNumber}>1</Text>
                   </View>
-                  <Text style={styles.stepText}>share how you're feeling today</Text>
+                  <Text style={styles.stepText}>name what you're carrying today</Text>
                 </View>
 
                 <View style={styles.stepRow}>
                   <View style={styles.stepNumberContainer}>
                     <Text style={styles.stepNumber}>2</Text>
                   </View>
-                  <Text style={styles.stepText}>practice</Text>
+                  <Text style={styles.stepText}>let ho'oponopono do its work</Text>
                 </View>
 
                 <View style={styles.stepRow}>
                   <View style={styles.stepNumberContainer}>
                     <Text style={styles.stepNumber}>3</Text>
                   </View>
-                  <Text style={styles.stepText}>unlock your apps</Text>
+                  <Text style={styles.stepText}>return to your day — lighter</Text>
                 </View>
               </View>
 
               <Text style={styles.modalSubtext}>
-                deepen your inner peace with just 5 minutes each day
+                five minutes. every day. everything shifts.
               </Text>
 
               <TouchableOpacity 
@@ -190,7 +184,7 @@ export default function PowerScreen() {
                   router.push('/onboarding/mini-practice');
                 }}
               >
-                <Text style={styles.getStartedText}>Get Started</Text>
+                <Text style={styles.getStartedText}>feel it for yourself 🌺</Text>
               </TouchableOpacity>
             </View>
           </View>

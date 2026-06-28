@@ -7,11 +7,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ContinueButton from '@/components/ContinueButton';
 
 const OPTIONS = [
-  { label: "constant worry, stress or anxiety", emoji: "🌪️" },
-  { label: "feelings of loneliness or emptiness", emoji: "🕳️" },
-  { label: "feeling like I'm never \"enough\"", emoji: "😔" },
-  { label: "unresolved conflict or heartbreak", emoji: "💔" },
-  { label: "lingering guilt or past regrets", emoji: "⚓" },
+  { label: "a heartbreak I haven't let go of", emoji: "💔" },
+  { label: "anxiety that never fully leaves", emoji: "🌊" },
+  { label: "guilt I carry alone", emoji: "⚓" },
+  { label: "a loneliness I can't explain", emoji: "🌑" },
+  { label: "the feeling of never being enough", emoji: "🕊️" },
+  { label: "anger toward someone I loved", emoji: "🌋" },
+  { label: "grief I haven't processed", emoji: "🌿" },
 ];
 
 export default function DeepPainScreen() {
@@ -39,9 +41,9 @@ export default function DeepPainScreen() {
       <SafeAreaView style={styles.containerTransparent}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.question}>
-            often, our habits are just a shield. what deeper pain are you trying to escape?
+            beneath the scrolling, something hurts. what is it?
           </Text>
-          <Text style={styles.subtitle}>(choose any that apply)</Text>
+          <Text style={styles.subtitle}>choose all that feel true</Text>
           
           <View style={styles.optionsList}>
             {OPTIONS.map((opt) => {

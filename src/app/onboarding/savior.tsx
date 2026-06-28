@@ -35,25 +35,25 @@ export default function SaviorScreen() {
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>don't worry</Text>
-          <Text style={styles.subtitle}>hopono ai helps you in this healing</Text>
+          <Text style={styles.title}>you found it.</Text>
+          <Text style={styles.subtitle}>this is where healing begins.</Text>
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Animated.Text style={[styles.bodyText, { opacity: text1Opacity }]}>
-            i understand that facing what hurts is unpleasant, especially when it weakens us. that is why i, hopono ai, am here to accompany you on this journey
+            facing pain takes courage. you don't have to do it alone.
           </Animated.Text>
           
           <Animated.Text style={[styles.bodyText, { opacity: text2Opacity }]}>
-            together, we will practice ho'oponopono - an ancestral hawaiian healing technique - to relieve what weighs you down
+            ho'oponopono is an ancient hawaiian practice. four phrases. infinite release.
           </Animated.Text>
 
           <Animated.Text style={[styles.bodyText, { opacity: text3Opacity }]}>
-            it won't take long and it's very simple to do
+            a few minutes a day. and something inside begins to shift.
           </Animated.Text>
 
           <Animated.Text style={[styles.bodyText, { opacity: text4Opacity, fontFamily: 'Nunito_700Bold', color: '#e86935', fontSize: 20 }]}>
-            are you tempted?
+            ready to let go?
           </Animated.Text>
 
         </ScrollView>

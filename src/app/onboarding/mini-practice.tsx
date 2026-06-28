@@ -39,7 +39,7 @@ const PeaceStep = ({ onNext }: { onNext: () => void }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.titleContainer}>
           <Animated.Text style={[styles.title, { color: textColor }]}>
-            how connected to your{'\n'}inner peace do you feel today?
+            how does your{'\n'}inner peace feel right now?
           </Animated.Text>
         </View>
 
@@ -104,7 +104,7 @@ const MoodStep = ({ onNext }: { onNext: () => void }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.titleContainer}>
           <Animated.Text style={[styles.title, { color: textColor }]}>
-            how are you{'\n'}feeling today?
+            what is your{'\n'}heart carrying today?
           </Animated.Text>
         </View>
 
@@ -253,7 +253,7 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
       <View style={[styles.practiceBottomContainer, !isStarted && { height: undefined, minHeight: 180, marginBottom: 50 }]}>
         {!isStarted ? (
           <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-            <Text style={styles.mantraText}>let's do 9 short repetitions.</Text>
+            <Text style={styles.mantraText}>breathe. and repeat after me.</Text>
           </View>
         ) : (
           currentPhraseIndex !== -1 ? (
@@ -271,7 +271,7 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
             onPress={() => setIsStarted(true)}
           >
             <Text style={{ fontFamily: 'Nunito_700Bold', fontSize: 18, color: '#e86935', textTransform: 'lowercase' }}>
-              i'm ready
+              begin 🌺
             </Text>
             <Ionicons name="arrow-forward" size={18} color="#e86935" style={{ marginLeft: 6, transform: [{ translateY: 1 }] }} />
           </TouchableOpacity>
@@ -364,7 +364,7 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
           <Animated.View style={[styles.congratsTextWrapper, { opacity: contentOpacity }]}>
             <Text style={styles.congratsHuge}>hoʻomaikaʻi</Text>
             <Text style={styles.congratsSub}>(congratulations)</Text>
-            <Text style={styles.congratsDesc}>you completed your first practice.</Text>
+            <Text style={styles.congratsDesc}>something just shifted in you.</Text>
           </Animated.View>
 
           <Animated.View style={[styles.calendarCard, { opacity: contentOpacity }]}>
@@ -392,7 +392,7 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
         <Animated.View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, opacity: contentOpacity }}>
           <ContinueButton 
             onPress={onNext} 
-            text="voir mon programme"
+            text="I felt it. what's next?"
             color="rgba(255, 255, 255, 0.25)"
             textColor="#ffffff"
           />

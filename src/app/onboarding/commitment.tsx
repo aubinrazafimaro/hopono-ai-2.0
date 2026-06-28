@@ -4,11 +4,11 @@ import { useRouter } from 'expo-router';
 import ContinueButton from '@/components/ContinueButton';
 
 const COMMITMENT_OPTIONS = [
-  { id: '1', emoji: '🔥', label: 'Extremely Committed' },
-  { id: '2', emoji: '💪', label: 'Very committed' },
-  { id: '3', emoji: '🤔', label: 'Somewhat committed' },
-  { id: '4', emoji: '🌱', label: 'A Little Committed' },
-  { id: '5', emoji: '🪄', label: 'Just trying it out' },
+  { id: '1', emoji: '🌺', label: 'fully. I need this.' },
+  { id: '2', emoji: '🌊', label: 'very. I\'m tired of carrying this.' },
+  { id: '3', emoji: '🌿', label: 'somewhat. I want to try.' },
+  { id: '4', emoji: '🌱', label: 'a little. I\'m not sure yet.' },
+  { id: '5', emoji: '🐢', label: 'just exploring for now.' },
 ];
 
 export default function CommitmentScreen() {
@@ -23,9 +23,9 @@ export default function CommitmentScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
         <View style={styles.header}>
-          <Text style={styles.smallTitle}>so,</Text>
+          <Text style={styles.smallTitle}>one last thing.</Text>
           <Text style={styles.mainTitle}>
-            how committed are you to making this future happen?
+            how ready are you to let go?
           </Text>
         </View>
 
@@ -56,7 +56,7 @@ export default function CommitmentScreen() {
       <View style={styles.bottomContainer}>
         <ContinueButton 
           onPress={handleNext} 
-          text="continue" 
+          text="this is my answer" 
           disabled={!selectedId}
         />
       </View>

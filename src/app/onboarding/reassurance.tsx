@@ -38,27 +38,27 @@ export default function ReassuranceScreen() {
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.iconTop}>🕊️</Text>
+          <Text style={styles.iconTop}>🌺</Text>
           <Text style={styles.title}>
-            thank you for your <Text style={styles.highlight}>honesty</Text>, {data.name || 'my friend'}.
+            it takes <Text style={styles.highlight}>courage</Text> to look inside, {data.name || 'friend'}.
           </Text>
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Animated.Text style={[styles.bodyText, { opacity: text1Opacity }]}>
-            using distractions to cope with these deep struggles is a completely human reaction in our fast-paced world.
+            reaching for your phone when something hurts — that's not weakness. that's what we all do.
           </Animated.Text>
           
           <Animated.Text style={[styles.bodyText, { opacity: text2Opacity }]}>
-            for centuries, ancient hawaiian wisdom has recognized that we all carry heavy memories and emotional blockages.
+            for over 2,000 years, hawaiian healers knew this truth: we all carry wounds that need tending.
           </Animated.Text>
 
           <Animated.Text style={[styles.bodyText, { opacity: text3Opacity }]}>
-            you are not alone in this.
+            you are not broken. you are human.
           </Animated.Text>
 
           <Animated.Text style={[styles.bodyText, { opacity: text4Opacity }]}>
-            the good news is that <Text style={styles.highlight}>ho'oponopono</Text> gives us a simple, powerful way to clear these weights and finally find true inner peace.
+            <Text style={styles.highlight}>ho'oponopono</Text> offers something rare — a way to release what you carry, not just manage it.
           </Animated.Text>
 
         </ScrollView>

@@ -18,23 +18,23 @@ export default function RecapScreen() {
   const getInterpretationText = (goal: string) => {
     switch (goal) {
       case "free the mind from blockages, pain, and trauma":
-        return "we will use a special ho'oponopono program designed to release mental blocks and cleanse deeply rooted trauma, making space for new, healthy thoughts.";
+        return "your practice will be designed to loosen what's stuck. four phrases, repeated with intention, until something releases.";
       case "overcome persistent emotional pain":
-        return "our guided ho'oponopono sessions will focus on emotional release, soothing your heart and gradually dissolving the pain holding you back.";
+        return "your sessions will meet the pain where it lives — and gently, daily, help it loosen its hold on you.";
       case "resolve a conflict or restore broken harmony":
-        return "through ho'oponopono's ancestral principles of reconciliation, we will work on restoring inner harmony and finding peace with the outside world.";
+        return "ho'oponopono was born for this. reconciliation starts inside. your practice will begin there.";
       case "process the need for forgiveness":
-        return "we will walk you through the powerful ho'oponopono forgiveness protocol, helping you let go of resentment and truly liberate yourself.";
+        return "forgiving doesn't mean forgetting. it means freeing yourself. your practice will guide you through that release.";
       default:
-        return "we will use a special ho'oponopono program to cleanse your mind and restore your inner balance.";
+        return "your practice will be shaped around what you carry. four phrases. your words. your release.";
     }
   };
 
   const getResolutionEmoji = (goal: string) => {
     switch (goal) {
-      case "free the mind from blockages, pain, and trauma": return "🧠";
+      case "free the mind from blockages, pain, and trauma": return "🌊";
       case "overcome persistent emotional pain": return "❤️‍🩹";
-      case "resolve a conflict or restore broken harmony": return "🤝";
+      case "resolve a conflict or restore broken harmony": return "🌺";
       case "process the need for forgiveness": return "🕊️";
       default: return "🤔";
     }
@@ -61,17 +61,17 @@ export default function RecapScreen() {
         </View>
 
         <View style={[styles.card, { transform: [{ rotate: '1deg' }] }]}>
-          <Text style={styles.cardTitle}>where you're headed</Text>
+          <Text style={styles.cardTitle}>what becomes possible</Text>
           <Text style={styles.destinationText}>🎯 {displayGoal}</Text>
           <Text style={styles.statText}>
-            over 82% of users who committed to this journey achieved their exact destination with hopono ai.
+            82% of people who showed up daily felt a real shift within 21 days.
           </Text>
         </View>
 
         <View style={styles.bottomSection}>
-          <Text style={styles.bottomTitle}>you're in the right place</Text>
+          <Text style={styles.bottomTitle}>mahalo for trusting us. 🌺</Text>
           <Text style={styles.bottomText}>
-            tens of thousands have started with the same goals, and hopono ai helped them get there.
+            thousands arrived here carrying exactly what you carry. they kept going. so can you.
           </Text>
         </View>
         </ScrollView>

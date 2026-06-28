@@ -63,7 +63,7 @@ export default function GuiltScreen() {
       <SafeAreaView style={styles.containerTransparent}>
         <View style={styles.content}>
           <Text style={styles.question}>
-            quand tu penses à tous les projets ou moments que tu repousses à cause de tes écrans, quel est ton niveau de culpabilité ?
+            how heavy is the weight of what you keep postponing?
           </Text>
           
           <View style={styles.valueContainer}>
@@ -115,8 +115,8 @@ export default function GuiltScreen() {
             </View>
             
             <View style={styles.labelsContainer}>
-              <Text style={styles.labelText}>1</Text>
-              <Text style={styles.labelText}>7</Text>
+              <Text style={styles.labelText}>light</Text>
+              <Text style={styles.labelText}>crushing</Text>
             </View>
           </View>
         </View>

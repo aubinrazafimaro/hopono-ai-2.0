@@ -65,8 +65,8 @@ export default function GoalsScreen() {
         
         {step === 0 ? (
           <View style={styles.stepContainer}>
-            <Text style={styles.question}>what do you want to resolve with hopono ai?</Text>
-            <Text style={styles.subtitle}>(select up to 3)</Text>
+            <Text style={styles.question}>what's weighing on your heart?</Text>
+            <Text style={styles.subtitle}>choose what feels true</Text>
             <View style={styles.optionsList}>
               {RESOLUTION_OPTIONS.map((res) => {
                 const isSelected = selectedResolutions.includes(res.label);
@@ -84,8 +84,8 @@ export default function GoalsScreen() {
           </View>
         ) : (
           <View style={styles.stepContainer}>
-            <Text style={styles.question}>think big, what do you truly intend to accomplish when you are healed?</Text>
-            <Text style={styles.subtitle}>(select up to 3)</Text>
+            <Text style={styles.question}>when you're free, what becomes possible?</Text>
+            <Text style={styles.subtitle}>choose your vision</Text>
             
             <View style={styles.optionsList}>
               {BIG_GOALS.map((goal) => {

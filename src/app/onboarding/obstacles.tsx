@@ -7,11 +7,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ContinueButton from '@/components/ContinueButton';
 
 const OPTIONS = [
-  { label: "phone & social media escapism", emoji: "📱" },
-  { label: "overthinking & anxious thoughts", emoji: "🧠" },
-  { label: "fear of facing my real emotions", emoji: "🛡️" },
-  { label: "lack of motivation or discipline", emoji: "😔" },
-  { label: "busyness and lack of time", emoji: "⏱️" },
+  { label: "I numb the pain instead of facing it", emoji: "📱" },
+  { label: "my mind won't stop overthinking", emoji: "🌊" },
+  { label: "I'm scared of what I might feel", emoji: "🛡️" },
+  { label: "I don't believe I can truly change", emoji: "🌑" },
+  { label: "I never have time for myself", emoji: "⏱️" },
 ];
 
 export default function ObstaclesScreen() {
@@ -24,7 +24,7 @@ export default function ObstaclesScreen() {
     if (newSelected.includes(opt)) {
       newSelected = newSelected.filter(item => item !== opt);
     } else {
-      if (newSelected.length < 2) {
+      if (newSelected.length < 3) {
         newSelected.push(opt);
       }
     }
@@ -41,9 +41,9 @@ export default function ObstaclesScreen() {
       <SafeAreaView style={styles.containerTransparent}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.question}>
-            what's the main thing that gets in the way of the inner peace you seek?
+            what keeps pulling you away from healing?
           </Text>
-          <Text style={styles.subtitle}>(choose up to 2)</Text>
+          <Text style={styles.subtitle}>choose up to 3</Text>
           
           <View style={styles.optionsList}>
             {OPTIONS.map((opt) => {

@@ -19,7 +19,7 @@ export default function TrialReminderScreen() {
       <View style={styles.content}>
         
         <Text style={styles.title}>
-          we'll send you a reminder before your free trial ends
+          we'll remind you before anything changes.
         </Text>
 
         <View style={styles.bellContainer}>
@@ -35,15 +35,15 @@ export default function TrialReminderScreen() {
       <View style={styles.bottomFixed}>
         <View style={styles.paymentDueContainer}>
           <Ionicons name="checkmark-sharp" size={18} color="#1f2937" style={{ marginRight: 6 }} />
-          <Text style={styles.paymentDueText}>No Payment Due Now</Text>
+          <Text style={styles.paymentDueText}>nothing to pay today</Text>
         </View>
 
         <TouchableOpacity style={styles.ctaButton} onPress={handleNext}>
-          <Text style={styles.ctaButtonText}>continue for FREE</Text>
+          <Text style={styles.ctaButtonText}>begin my 7 days free 🌺</Text>
         </TouchableOpacity>
         
         <Text style={styles.priceSubtext}>
-          just {pricing.yearlyPrice} per year ({pricing.weeklyEquivalent}/week)
+          then {pricing.weeklyEquivalent}/week — cancel anytime, no questions.
         </Text>
       </View>
       </AnimatedFadeIn>

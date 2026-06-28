@@ -19,16 +19,16 @@ export default function ReviewsScreen() {
         
         {/* Header */}
         <Text style={styles.title}>
-          hopono ai was designed for <Text style={styles.titleHighlight}>people like you.</Text>
+          they felt what you feel. <Text style={styles.titleHighlight}>then something shifted.</Text>
         </Text>
-        <Text style={styles.subtitle}>reviews from people using hopono ai.</Text>
+        <Text style={styles.subtitle}>real words from real healing.</Text>
 
         {/* Award Section */}
         <View style={styles.awardContainer}>
           <Ionicons name="leaf" size={24} color="#f59e0b" style={styles.laurelLeft} />
           <View style={styles.awardTextContainer}>
-            <Text style={styles.awardText}>the #1 mindfulness</Text>
-            <Text style={styles.awardText}>habit app</Text>
+            <Text style={styles.awardText}>the #1 emotional</Text>
+            <Text style={styles.awardText}>healing app</Text>
           </View>
           <Ionicons name="leaf" size={24} color="#f59e0b" style={styles.laurelRight} />
         </View>
@@ -40,7 +40,7 @@ export default function ReviewsScreen() {
               <Ionicons key={i} name="star" size={18} color="#f59e0b" />
             ))}
           </View>
-          <Text style={styles.peopleText}>🕊️ 🧘 ✨ + 50,000 people</Text>
+          <Text style={styles.peopleText}>🌺 50,000 people healing daily</Text>
         </View>
 
         {/* Reviews List */}
@@ -52,9 +52,9 @@ export default function ReviewsScreen() {
                 <Ionicons key={i} name="star" size={14} color="#f59e0b" />
               ))}
             </View>
-            <Text style={styles.reviewTitle}>GAME CHANGER.</Text>
+            <Text style={styles.reviewTitle}>I cried during my first session.</Text>
             <Text style={styles.reviewBody}>
-              no joke, this app is the only thing that's actually helped me find peace consistently. the guided mantras are genius.
+              I didn't expect to feel so much so fast. the mantras hit different when you actually mean them. something released in me.
             </Text>
           </View>
 
@@ -65,9 +65,9 @@ export default function ReviewsScreen() {
                 <Ionicons key={i} name="star" size={14} color="#f59e0b" />
               ))}
             </View>
-            <Text style={styles.reviewTitle}>FINALLY!!</Text>
+            <Text style={styles.reviewTitle}>I stopped thinking about my ex.</Text>
             <Text style={styles.reviewBody}>
-              finally an app that gets it. i was so sick of my phone owning my mind and my anxiety taking over. now inner peace gets the first word.
+              after 8 months of obsessing, I did 3 sessions in a row and something just... quieted. I don't know how to explain it but it worked.
             </Text>
           </View>
           
@@ -78,9 +78,9 @@ export default function ReviewsScreen() {
                 <Ionicons key={i} name="star" size={14} color="#f59e0b" />
               ))}
             </View>
-            <Text style={styles.reviewTitle}>JUST WOW.</Text>
+            <Text style={styles.reviewTitle}>My therapist noticed the difference.</Text>
             <Text style={styles.reviewBody}>
-              practicing ho'oponopono daily has literally shifted my entire day. i feel so much lighter and less stressed out.
+              she asked what I was doing differently. I told her about hopono. now she recommends it to her other clients.
             </Text>
           </View>
         </View>
@@ -92,7 +92,7 @@ export default function ReviewsScreen() {
       <View style={styles.bottomContainer}>
         <ContinueButton 
           onPress={handleNext} 
-          text="join hopono ai 🕊️"
+          text="begin my healing 🌺"
         />
       </View>
       </AnimatedFadeIn>

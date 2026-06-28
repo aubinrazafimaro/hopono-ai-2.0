@@ -28,11 +28,11 @@ export default function RecapScreen() {
 
   const getResolutionEmoji = (goal: string) => {
     switch (goal) {
-      case "free the mind from blockages, pain, and trauma": return "🧠";
+      case "free the mind from blockages, pain, and trauma": return "🌊";
       case "overcome persistent emotional pain": return "❤️‍🩹";
-      case "resolve a conflict or restore broken harmony": return "🤝";
+      case "resolve a conflict or restore broken harmony": return "🌺";
       case "process the need for forgiveness": return "🕊️";
-      default: return "🌟";
+      default: return "🌺";
     }
   };
 
@@ -46,17 +46,17 @@ export default function RecapScreen() {
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           
           <Text style={styles.mainTitle}>
-            thanks, {data.name || 'my friend'}.
+            we see you, {data.name || 'friend'}. 🌺
           </Text>
           <Text style={styles.subtitle}>
-            based on what you've shared, let's look at your journey together.
+            here's what you came with. here's where you're going.
           </Text>
 
           <View style={styles.cardsContainer}>
             {/* Card 1: Where you want to go */}
             <View style={styles.card}>
               <View style={styles.badge}>
-                <Text style={styles.badgeText}>where you want to go</Text>
+                <Text style={styles.badgeText}>your destination</Text>
               </View>
               <Text style={styles.cardValue}>
                 {getResolutionEmoji(displayGoal)} {displayGoal}
@@ -66,7 +66,7 @@ export default function RecapScreen() {
             {/* Card 2: Where you are now */}
             <View style={styles.card}>
               <View style={styles.badge}>
-                <Text style={styles.badgeText}>where you are now</Text>
+                <Text style={styles.badgeText}>where you stand today</Text>
               </View>
               <Text style={styles.cardValue}>
                 {data.selfImageImpact && data.selfImageImpact.length > 0 ? data.selfImageImpact.join(', ') : "guilt level is at " + data.guiltLevel + "/7"}
@@ -76,7 +76,7 @@ export default function RecapScreen() {
             {/* Card 3: What's standing in the way */}
             <View style={styles.card}>
               <View style={styles.badge}>
-                <Text style={styles.badgeText}>what's standing in the way</Text>
+                <Text style={styles.badgeText}>what we'll work through</Text>
               </View>
               {data.obstacles.length > 0 ? (
                 data.obstacles.map((obs, idx) => (
@@ -96,7 +96,7 @@ export default function RecapScreen() {
 
           <View style={styles.bottomSection}>
             <Text style={styles.bottomText}>
-              {data.name || 'my friend'}, we see where you are and where you want to go. together, we can build a personal plan that helps you grow stronger and find your inner peace every single day.
+              this is your starting point, {data.name || 'friend'}. not your identity. ho'oponopono will meet you exactly here — and walk with you forward.
             </Text>
           </View>
         </ScrollView>

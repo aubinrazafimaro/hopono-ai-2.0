@@ -7,11 +7,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ContinueButton from '@/components/ContinueButton';
 
 const TIME_OPTIONS = [
-  { label: 'less than 1h', emoji: '📱' },
-  { label: '1-2h', emoji: '🕰️' },
-  { label: '3-4h', emoji: '⏳' },
-  { label: '5-6h', emoji: '⚠️' },
-  { label: '6h+', emoji: '🚨' }
+  { label: 'less than 1h', emoji: '🌿' },
+  { label: '1-2h', emoji: '🌊' },
+  { label: '3-4h', emoji: '🌑' },
+  { label: '5-6h', emoji: '🌋' },
+  { label: '6h+', emoji: '🔥' }
 ];
 
 export default function ScreenTimeScreen() {
@@ -81,11 +81,11 @@ export default function ScreenTimeScreen() {
         {step === 0 ? (
           <ScrollView contentContainerStyle={styles.content}>
             <View style={styles.header}>
-              <Text style={styles.title}>screen time</Text>
-              <Text style={styles.subtitle}>the time you spend on social media</Text>
+              <Text style={styles.title}>let's be honest.</Text>
+              <Text style={styles.subtitle}>this is just between you and hopono.</Text>
             </View>
             
-            <Text style={styles.question}>be honest {data.name}, how much time a day do you spend on your phone?</Text>
+            <Text style={styles.question}>how many hours a day does your phone take from you?</Text>
             
             <View style={styles.optionsList}>
               {TIME_OPTIONS.map((time) => (
@@ -103,22 +103,22 @@ export default function ScreenTimeScreen() {
           <ScrollView contentContainerStyle={[styles.content, { justifyContent: 'center' }]}>
             <View style={styles.guiltSection}>
               <Animated.Text style={[styles.bodyText, { opacity: t1 }]}>
-                alright, today you spend {data.screenTime} on your phone
+                {data.screenTime} a day. that's {yearlyH} hours this year.
               </Animated.Text>
               <Animated.Text style={[styles.bodyText, { opacity: t2, color: '#e86935', fontFamily: 'Nunito_600SemiBold' }]}>
-                at this rate, that represents {yearlyH} hours in a year, {yearlyDays} days in a year, {lifetimeMonths} months in a lifetime
+                {yearlyDays} days. {lifetimeMonths} months of your life.
               </Animated.Text>
             </View>
 
             <View style={styles.reassureSection}>
               <Animated.Text style={[styles.bodyText, { opacity: r1 }]}>
-                {data.name}, things shouldn't be like this
+                that time belongs to you, {data.name}.
               </Animated.Text>
               <Animated.Text style={[styles.bodyText, { opacity: r2 }]}>
-                we are going to transform this time into healing time
+                hopono turns those moments into healing.
               </Animated.Text>
               <Animated.Text style={[styles.bodyText, { opacity: r3 }]}>
-                i am here, hopono ai, to accompany you and transform this time into your healing
+                every minute you reclaim is a minute you give back to yourself.
               </Animated.Text>
             </View>
           </ScrollView>

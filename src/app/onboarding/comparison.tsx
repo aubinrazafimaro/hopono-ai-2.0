@@ -14,7 +14,7 @@ export default function ComparisonScreen() {
         {/* Header Pill */}
         <View style={styles.headerContainer}>
           <View style={styles.pill}>
-            <Text style={styles.pillText}>🎁 fair trial policy</Text>
+            <Text style={styles.pillText}>🌺 7 days. on us.</Text>
           </View>
         </View>
 
@@ -23,7 +23,7 @@ export default function ComparisonScreen() {
           {/* Left Item: Inner Peace */}
           <View style={[styles.itemContainer, styles.itemLeft]}>
             <View style={styles.labelPill}>
-              <Text style={styles.labelText}>🙏 inner peace</Text>
+              <Text style={styles.labelText}>🌺 your healing</Text>
             </View>
             <View style={styles.iconWrapper}>
               <Text style={styles.hugeIcon}>🕊️</Text>
@@ -41,23 +41,23 @@ export default function ComparisonScreen() {
               <Text style={styles.hugeIcon}>☕</Text>
             </View>
             <View style={styles.labelPill}>
-              <Text style={styles.labelText}>☕ the cost of one coffee a month</Text>
+              <Text style={styles.labelText}>☕ less than a coffee a week</Text>
             </View>
           </View>
         </View>
 
         {/* Bottom Text */}
         <View style={styles.textContainer}>
-          <Text style={styles.title}>hopono ai is free for you to try.</Text>
+          <Text style={styles.title}>try it free for 7 days. feel the difference.</Text>
           <Text style={styles.description}>
-            we depend on support from users like you to keep building a tool that helps our generation find peace and stay mindful.
+            if it doesn't change something in you, cancel anytime. no questions asked.
           </Text>
         </View>
 
         {/* Button */}
         <ContinueButton 
           onPress={() => router.push('/onboarding/commitment')}
-          text="sounds good"
+          text="I'm in 🌊"
           color="#ffffff"
           textColor="#e86935"
         />

@@ -7,10 +7,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ContinueButton from '@/components/ContinueButton';
 
 const OPTIONS = [
-  { label: "it heavily damages my self-esteem", emoji: "💥" },
-  { label: "it brings me down and makes me feel guilty", emoji: "🌧️" },
-  { label: "it bothers me a bit, but i manage it", emoji: "🌤️" },
-  { label: "it has no impact on how i feel about myself", emoji: "☀️" },
+  { label: "empty. like I wasted something precious", emoji: "🌑" },
+  { label: "ashamed. I know I was avoiding something", emoji: "🌧️" },
+  { label: "disconnected from who I want to be", emoji: "🌊" },
+  { label: "a little guilty, but I move on", emoji: "🌤️" },
 ];
 
 export default function SelfImageScreen() {
@@ -37,9 +37,9 @@ export default function SelfImageScreen() {
       <SafeAreaView style={styles.containerTransparent}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.question}>
-            how does your screen time affect your self-image?
+            when you put your phone down, how do you feel about yourself?
           </Text>
-          <Text style={styles.subtitle}>(select up to 3)</Text>
+          <Text style={styles.subtitle}>choose what's true</Text>
           
           <View style={styles.optionsList}>
             {OPTIONS.map((opt) => {

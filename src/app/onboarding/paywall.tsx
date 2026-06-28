@@ -39,8 +39,8 @@ export default function PaywallScreen() {
         <View style={styles.awardContainer}>
           <Ionicons name="leaf" size={16} color="#f59e0b" style={styles.laurelLeft} />
           <View style={styles.awardTextContainer}>
-            <Text style={styles.awardText}>the #1 mindfulness</Text>
-            <Text style={styles.awardText}>habit app</Text>
+            <Text style={styles.awardText}>the #1 emotional</Text>
+            <Text style={styles.awardText}>healing app</Text>
             <View style={styles.starsContainer}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <Ionicons key={i} name="star" size={10} color="#f59e0b" />
@@ -58,7 +58,7 @@ export default function PaywallScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         <Text style={styles.title}>
-          start your 7-day FREE trial to continue
+          you deserve to feel free. try it for 7 days.
         </Text>
 
         {/* Timeline */}
@@ -74,7 +74,7 @@ export default function PaywallScreen() {
             <View style={styles.timelineContent}>
               <Text style={styles.timelineTitle}>today</Text>
               <Text style={styles.timelineDesc}>
-                unlock all the app's features like your personalized plan, streak tracking and more.
+                your healing begins. access your personalized practice, your AI companion, and everything hopono has for you.
               </Text>
             </View>
           </View>
@@ -85,9 +85,9 @@ export default function PaywallScreen() {
               <Ionicons name="notifications" size={20} color="#ffffff" />
             </View>
             <View style={styles.timelineContent}>
-              <Text style={styles.timelineTitle}>in 4 Days</Text>
+              <Text style={styles.timelineTitle}>day 4</Text>
               <Text style={styles.timelineDesc}>
-                we'll send you a reminder that your trial is ending soon.
+                we'll gently remind you — so nothing catches you off guard.
               </Text>
             </View>
           </View>
@@ -98,9 +98,9 @@ export default function PaywallScreen() {
               <Ionicons name="star" size={20} color="#ffffff" />
             </View>
             <View style={styles.timelineContent}>
-              <Text style={styles.timelineTitle}>in 7 Days</Text>
+              <Text style={styles.timelineTitle}>day 7</Text>
               <Text style={styles.timelineDesc}>
-                you'll be charged on {formatDate(in7Days)} unless you cancel anytime before.
+                if hopono changed something in you, stay. if not, cancel — no questions, no friction. charged on {formatDate(in7Days)} only if you choose to continue.
               </Text>
             </View>
           </View>
@@ -141,25 +141,25 @@ export default function PaywallScreen() {
         {selectedPlan === 'yearly' && (
           <View style={styles.paymentDueContainer}>
             <Ionicons name="checkmark-sharp" size={18} color="#16a34a" style={{ marginRight: 6 }} />
-            <Text style={styles.paymentDueText}>No Payment Due Now</Text>
+            <Text style={styles.paymentDueText}>nothing to pay today</Text>
           </View>
         )}
 
         <TouchableOpacity style={styles.ctaButton} onPress={handleStartTrial}>
           <Text style={styles.ctaButtonText}>
-            {selectedPlan === 'yearly' ? 'start my free trial' : 'continue'}
+            {selectedPlan === 'yearly' ? 'begin my healing — free' : 'continue'}
           </Text>
         </TouchableOpacity>
         
         <Text style={styles.priceSubtext}>
           {selectedPlan === 'yearly' 
-            ? `7 days free, then ${pricing.yearlyPrice}/year (${pricing.weeklyEquivalent}/week)`
-            : `${pricing.monthlyPrice}/month, cancel anytime`}
+            ? `7 days free. then ${pricing.weeklyEquivalent}/week — less than a coffee.`
+            : `${pricing.monthlyPrice}/month — cancel anytime, no questions.`}
         </Text>
 
         <View style={styles.footerLinks}>
-          <Text style={styles.footerLink}>Privacy</Text>
-          <Text style={styles.footerLink}>Terms</Text>
+          <Text style={styles.footerLink}>privacy</Text>
+          <Text style={styles.footerLink}>terms</Text>
         </View>
 
       </View>

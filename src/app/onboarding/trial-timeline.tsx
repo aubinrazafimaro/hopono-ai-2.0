@@ -26,14 +26,14 @@ export default function TrialTimelineScreen() {
         </View>
 
         {/* Titles */}
-        <Text style={styles.mainTitle}>it's not about more willpower</Text>
-        <Text style={styles.subtitle}>it's about building a real mindfulness habit</Text>
+        <Text style={styles.mainTitle}>healing is a practice, not a promise.</Text>
+        <Text style={styles.subtitle}>here's what your first 7 days look like.</Text>
         
         <Text style={styles.paragraph}>
-          the foundation for everything you want to achieve is built in a state of inner peace. this is your guide back to that place.
+          you don't need to be ready. you just need to begin.
         </Text>
         
-        <Text style={styles.weekIntro}>here's what your first 7 days look like:</Text>
+        <Text style={styles.weekIntro}>seven days. one shift at a time.</Text>
 
         {/* Timeline Items */}
         <View style={styles.timelineContainer}>
@@ -43,9 +43,9 @@ export default function TrialTimelineScreen() {
               <Text style={{ fontSize: 24 }}>🔑</Text>
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>day 1 - enter a peaceful state</Text>
+              <Text style={styles.cardTitle}>day 1 — your first breath of release</Text>
               <Text style={styles.cardDesc}>
-                complete your first ho'oponopono practice. feel the peace of putting your mind first, before the noise of the world.
+                four phrases. your voice. something shifts.
               </Text>
             </View>
           </View>
@@ -53,7 +53,7 @@ export default function TrialTimelineScreen() {
           {/* Chat Bubble */}
           <View style={styles.chatBubbleContainer}>
             <View style={styles.chatBubble}>
-              <Text style={styles.chatText}>the best treatment for the human mind is finding inner peace ❤️</Text>
+              <Text style={styles.chatText}>ho'oponopono has been healing hearts for over 2,000 years. 🌺</Text>
             </View>
           </View>
 
@@ -62,9 +62,9 @@ export default function TrialTimelineScreen() {
               <Text style={{ fontSize: 24 }}>🛡️</Text>
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>day 2 - overcome the resistance</Text>
+              <Text style={styles.cardTitle}>day 2 — the resistance shows up</Text>
               <Text style={styles.cardDesc}>
-                building the habit will feel like an obstacle. we will push through together.
+                your mind will want to skip. show up anyway. that's where the healing lives.
               </Text>
             </View>
           </View>
@@ -74,9 +74,9 @@ export default function TrialTimelineScreen() {
               <Text style={{ fontSize: 24 }}>🕊️</Text>
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>day 4 - feel the difference</Text>
+              <Text style={styles.cardTitle}>day 4 — something feels different</Text>
               <Text style={styles.cardDesc}>
-                start to feel the change: a calmer spirit, a clearer mind, and a real sense of peace.
+                you can't quite name it yet. but something is lighter.
               </Text>
             </View>
           </View>
@@ -86,9 +86,9 @@ export default function TrialTimelineScreen() {
               <Text style={{ fontSize: 24 }}>📖</Text>
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>day 5 - see your story unfold</Text>
+              <Text style={styles.cardTitle}>day 5 — you look back</Text>
               <Text style={styles.cardDesc}>
-                your journey isn't just a log, it's a testimony of your daily growth. look back and see how far you've come.
+                four days ago, you were just beginning. look at you now.
               </Text>
             </View>
           </View>
@@ -98,9 +98,9 @@ export default function TrialTimelineScreen() {
               <Text style={{ fontSize: 24 }}>🚀</Text>
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>day 6 - watch your mindfulness grow</Text>
+              <Text style={styles.cardTitle}>day 6 — it's becoming yours</Text>
               <Text style={styles.cardDesc}>
-                see your progress come to life. your stats are a powerful reminder of your consistency.
+                not a habit yet. but something you choose. every single day.
               </Text>
             </View>
           </View>
@@ -110,9 +110,9 @@ export default function TrialTimelineScreen() {
               <Text style={{ fontSize: 24 }}>😌</Text>
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>day 7 - walk in peace</Text>
+              <Text style={styles.cardTitle}>day 7 — a full week</Text>
               <Text style={styles.cardDesc}>
-                a full week of showing up. this is mindfulness in action. this is how you build a better life, one day at a time.
+                you showed up seven times. that's seven votes for yourself.
               </Text>
             </View>
           </View>
@@ -122,9 +122,9 @@ export default function TrialTimelineScreen() {
               <Text style={{ fontSize: 24 }}>🔥</Text>
             </View>
             <View style={styles.cardContent}>
-              <Text style={[styles.cardTitle, styles.textWhite]}>end of week one - the foundation is built</Text>
+              <Text style={[styles.cardTitle, styles.textWhite]}>week one complete — you're different now.</Text>
               <Text style={[styles.cardDesc, styles.textWhite]}>
-                you've built the foundation. now the real transformation begins: experiencing peace as a daily reality.
+                not completely healed. but no longer the same. keep going. 🌺
               </Text>
             </View>
           </View>
@@ -142,11 +142,11 @@ export default function TrialTimelineScreen() {
         </View>
 
         <TouchableOpacity style={styles.ctaButton} onPress={handleNext}>
-          <Text style={styles.ctaButtonText}>try for $0.00</Text>
+          <Text style={styles.ctaButtonText}>begin free — no card needed</Text>
         </TouchableOpacity>
         
         <Text style={styles.priceSubtext}>
-          just {pricing.yearlyPrice} per year ({pricing.weeklyEquivalent}/week)
+          then just {pricing.weeklyEquivalent}/week after your free trial
         </Text>
       </View>
       </AnimatedFadeIn>

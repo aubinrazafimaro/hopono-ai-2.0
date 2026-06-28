@@ -83,7 +83,7 @@ export default function HookScreen() {
             disabled={!continueShown}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.continueText}>continuer</Text>
+              <Text style={styles.continueText}>begin</Text>
               <Ionicons name="arrow-forward" size={18} color="#ffffff" style={{ marginLeft: 6, transform: [{ translateY: 2 }] }} />
             </View>
           </TouchableOpacity>

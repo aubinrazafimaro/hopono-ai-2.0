@@ -30,7 +30,7 @@ export default function PlanScreen() {
         {/* Main Commitment Card */}
         <View style={styles.commitmentCard}>
           <Text style={styles.commitmentTitle}>
-            {name}, you will find deep inner peace by
+            {name}, imagine waking up on
           </Text>
           
           <View style={styles.datePill}>
@@ -39,26 +39,26 @@ export default function PlanScreen() {
 
           <View style={styles.goalPill}>
             <Text style={styles.goalEmoji}>✨</Text>
-            <Text style={styles.goalText}>{goal}</Text>
+            <Text style={styles.goalText}>free from what weighs you down</Text>
           </View>
 
           <View style={styles.goalPill}>
             <Text style={styles.goalEmoji}>🧘‍♀️</Text>
-            <Text style={styles.goalText}>10+ minutes a day of pure peace</Text>
+            <Text style={styles.goalText}>lighter. clearer. finally yourself.</Text>
           </View>
         </View>
 
         {/* How we'll get there */}
-        <Text style={styles.sectionTitle}>how we'll get you there:</Text>
+        <Text style={styles.sectionTitle}>your path to get there:</Text>
 
         <View style={styles.featureCard}>
           <View style={styles.featureIconContainer}>
             <Text style={styles.featureEmoji}>🌺</Text>
           </View>
           <View style={styles.featureTextContainer}>
-            <Text style={styles.featureTitle}>a daily ho'oponopono practice.</Text>
+            <Text style={styles.featureTitle}>a daily practice made for you.</Text>
             <Text style={styles.featureDesc}>
-              no more carrying heavy emotional baggage. you'll receive a unique practice tailored for you to forgive, love, and let go.
+              each session is tailored to what you're carrying. four phrases. your pain. your release.
             </Text>
           </View>
         </View>
@@ -68,9 +68,9 @@ export default function PlanScreen() {
             <Text style={styles.featureEmoji}>🛡️</Text>
           </View>
           <View style={styles.featureTextContainer}>
-            <Text style={styles.featureTitle}>structure that works.</Text>
+            <Text style={styles.featureTitle}>a ritual, not a chore.</Text>
             <Text style={styles.featureDesc}>
-              hopono ai creates a sanctuary of peace by temporarily locking your distractions. it's a proven way to force you to pause and prioritize your mental health.
+              hopono meets you where you are — even when life is loud. a few minutes a day is all it takes to begin shifting what you feel.
             </Text>
           </View>
         </View>
@@ -87,7 +87,7 @@ export default function PlanScreen() {
           style={styles.transformButton}
           onPress={() => router.push('/onboarding/comparison')}
         >
-          <Text style={styles.transformButtonText}>begin my transformation</Text>
+          <Text style={styles.transformButtonText}>this is my moment 🌺</Text>
         </TouchableOpacity>
       </LinearGradient>
     </SafeAreaView>

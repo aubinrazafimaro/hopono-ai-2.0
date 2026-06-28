@@ -42,25 +42,25 @@ export default function SignatureScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
         <View style={styles.header}>
-          <Text style={styles.mainTitle}>make your commitment</Text>
-          <Text style={styles.subTitle}>from today forward, i choose to:</Text>
+          <Text style={styles.mainTitle}>seal your intention.</Text>
+          <Text style={styles.subTitle}>from this moment, i choose:</Text>
           
           <View style={styles.bulletsContainer}>
             <View style={styles.bulletRow}>
               <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>seek peace before my phone</Text>
+              <Text style={styles.bulletText}>to heal, not to hide</Text>
             </View>
             <View style={styles.bulletRow}>
               <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>practice mindfulness before scrolling</Text>
+              <Text style={styles.bulletText}>to feel, not to flee</Text>
             </View>
             <View style={styles.bulletRow}>
               <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>be intentional with my screen time</Text>
+              <Text style={styles.bulletText}>to show up for myself, daily</Text>
             </View>
             <View style={styles.bulletRow}>
               <Text style={styles.bulletPoint}>•</Text>
-              <Text style={styles.bulletText}>guard my heart and my mind</Text>
+              <Text style={styles.bulletText}>to give love — starting with myself</Text>
             </View>
           </View>
         </View>
@@ -106,13 +106,13 @@ export default function SignatureScreen() {
             
             {!hasSigned && (
               <View style={styles.placeholderContainer} pointerEvents="none">
-                <Text style={styles.placeholderText}>sign here</Text>
+                <Text style={styles.placeholderText}>your name, your promise</Text>
               </View>
             )}
           </View>
           
           <Text style={styles.signatureFooter}>
-            sign as a reminder of the promise you're making.
+            this is between you and yourself. 🌺
           </Text>
         </View>
       </ScrollView>
@@ -121,7 +121,7 @@ export default function SignatureScreen() {
       <View style={styles.bottomContainer}>
         <ContinueButton 
           onPress={handleNext} 
-          text="continue" 
+          text="I commit" 
           disabled={!hasSigned}
           color="rgba(255, 255, 255, 0.3)"
           textColor="#ffffff"

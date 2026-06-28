@@ -10,12 +10,12 @@ import ConfettiCannon from 'react-native-confetti-cannon';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const LOADING_STEPS = [
-  "analyzing your emotional patterns...",
-  "identifying your core blockages...",
-  "designing custom ho'oponopono mantras...",
-  "scheduling your 21-day healing journey...",
-  "making sure this is tailored to you...",
-  "good news, your program is ready."
+  "listening to what you shared...",
+  "sensing where the pain lives...",
+  "crafting your personal mantras...",
+  "preparing your 21-day healing path...",
+  "adding the final touches, just for you...",
+  "your healing begins now. 🌺"
 ];
 
 export default function GeneratingScreen() {
@@ -95,7 +95,7 @@ export default function GeneratingScreen() {
               <Ionicons name="checkmark-sharp" size={40} color="#e86935" />
             </View>
             <Text style={styles.successTitle}>
-              alright{data.name && data.name.trim() !== '' ? ` ${data.name.trim()}` : ''}, your{'\n'}personal plan is ready.
+              {data.name && data.name.trim() !== '' ? `${data.name.trim()},` : ''} something beautiful{'\n'}was made for you. 🌺
             </Text>
           </Animated.View>
 
@@ -104,7 +104,7 @@ export default function GeneratingScreen() {
               style={styles.whiteButton}
               onPress={() => router.push('/onboarding/power')}
             >
-              <Text style={styles.whiteButtonText}>continue</Text>
+              <Text style={styles.whiteButtonText}>I'm ready</Text>
             </TouchableOpacity>
           </Animated.View>
         </SafeAreaView>

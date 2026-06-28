@@ -36,25 +36,25 @@ export default function PainScreen() {
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>you are not the only one</Text>
-          <Text style={styles.subtitle}>many are like you</Text>
+          <Text style={styles.title}>you are not alone</Text>
+          <Text style={styles.subtitle}>many carry what you carry</Text>
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Animated.Text style={[styles.bodyText, { opacity: text1Opacity }]}>
-            don't you feel like your phone gets more attention than your inner well-being? or that you use your phone as an escape from what really hurts? like a shield against that thing that truly scares you? that responsibility you must face? or that business you need to launch?
+            you pick up your phone. not because you want to. because something inside hurts, and scrolling makes it quiet — just for a moment.
           </Animated.Text>
           
           <Animated.Text style={[styles.bodyText, { opacity: text2Opacity }]}>
-            know that you are not alone in this situation. thousands of people carry hidden pain or a massive responsibility they dare not assume, using social media as a refuge to numb the pain, hoping it passes with time
+            millions do the same. the pain doesn't leave. it waits.
           </Animated.Text>
 
           <Animated.Text style={[styles.bodyText, { opacity: text3Opacity }]}>
-            except that with time, these pains only accumulate and add to the remorse of having done nothing, and they will never disappear
+            with time, it grows heavier. and the weight of not healing adds to the weight of the pain itself.
           </Animated.Text>
 
           <Animated.Text style={[styles.bodyText, { opacity: text4Opacity, fontFamily: 'Nunito_700Bold', color: '#e86935', fontSize: 20 }]}>
-            don't you think it's time to put an end to all this?
+            what if today, something changed?
           </Animated.Text>
         </ScrollView>
         {showBtn && (

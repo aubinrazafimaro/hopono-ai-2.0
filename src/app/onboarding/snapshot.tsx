@@ -56,9 +56,9 @@ export default function SnapshotScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.title}>🕊️ your personalized mindfulness snapshot</Text>
-          <Text style={styles.subtitle}>based on your answers, here's where you're at:</Text>
-          <Text style={styles.socialProof}>you're now part of 50,000 users putting mindfulness over their phones</Text>
+          <Text style={styles.title}>🌺 here's what we see in you</Text>
+          <Text style={styles.subtitle}>you were honest. this is what that honesty reveals.</Text>
+          <Text style={styles.socialProof}>you're not alone. 50,000 people chose to heal.</Text>
         </View>
 
         <View style={styles.cardsContainer}>
@@ -66,7 +66,7 @@ export default function SnapshotScreen() {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardIcon}>🔄</Text>
-              <Text style={styles.cardTitle}>current phone habit</Text>
+              <Text style={styles.cardTitle}>time lost to the pain</Text>
             </View>
             <View style={styles.barBackground}>
               <LinearGradient
@@ -87,9 +87,9 @@ export default function SnapshotScreen() {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardIcon}>⏳</Text>
-              <Text style={styles.cardTitle}>monthly time on phone</Text>
+              <Text style={styles.cardTitle}>hours spent escaping</Text>
             </View>
-            <Text style={styles.cardSubtext}>estimated from {dailyHours} hrs/day</Text>
+            <Text style={styles.cardSubtext}>that's {dailyHours} hours a day away from yourself</Text>
             <Text style={styles.bigStat}>{monthlyHours} hours</Text>
           </View>
 
@@ -97,7 +97,7 @@ export default function SnapshotScreen() {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardIcon}>🔥</Text>
-              <Text style={styles.cardTitle}>motivation level</Text>
+              <Text style={styles.cardTitle}>your readiness to heal</Text>
             </View>
             <View style={styles.barBackground}>
               <LinearGradient
@@ -111,12 +111,12 @@ export default function SnapshotScreen() {
                 <Text style={styles.barLabelTextWhite}>high</Text>
               </View>
             </View>
-            <Text style={styles.cardFooterText}>{motivationLevel}% (ready to change)</Text>
+            <Text style={styles.cardFooterText}>{motivationLevel}% — you're ready.</Text>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>❤️ strengths</Text>
+          <Text style={styles.sectionTitle}>🌺 what makes you ready</Text>
           
           <View style={styles.listItem}>
             <Text style={styles.itemTitle}>you're self-aware</Text>
@@ -141,7 +141,7 @@ export default function SnapshotScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>🌱 areas for exploration</Text>
+          <Text style={styles.sectionTitle}>🌊 what we'll work on</Text>
 
           <View style={styles.listItem}>
             <Text style={styles.itemTitle}>tackling phone distraction</Text>

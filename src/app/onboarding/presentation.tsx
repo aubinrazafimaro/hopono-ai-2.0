@@ -58,13 +58,13 @@ export default function PresentationScreen() {
         <SafeAreaView style={styles.containerTransparent}>
           <ScrollView contentContainerStyle={styles.transitionContent}>
             <Animated.Text style={[styles.transitionText, { opacity: text1Opacity }]}>
-              alright {data.name}, together we will dive deep into what holds you back today and get rid of it once and for all
+              {data.name}, what you carry ends here.
             </Animated.Text>
             <Animated.Text style={[styles.transitionText, { opacity: text2Opacity }]}>
-              consider this your fresh start, your rebirth
+              this is your fresh start.
             </Animated.Text>
             <Animated.Text style={[styles.transitionText, { opacity: text3Opacity, fontFamily: 'Nunito_700Bold' }]}>
-              are you ready for the journey?
+              aloha. 🌺
             </Animated.Text>
           </ScrollView>
           {showTransitionBtn && (
@@ -92,10 +92,10 @@ export default function PresentationScreen() {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {step === 0 && (
             <View style={styles.stepContainer}>
-              <Text style={styles.question}>first of all, what should i call you?</Text>
+              <Text style={styles.question}>what's your name?</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="your name..."
+                placeholder="your name"
                 placeholderTextColor="#9ca3af"
                 value={data.name}
                 onChangeText={(text) => updateData({ name: text })}
@@ -124,8 +124,8 @@ export default function PresentationScreen() {
 
           {step === 3 && (
             <View style={styles.stepContainer}>
-              <Text style={styles.subtitle}>just to give you the best</Text>
-              <Text style={styles.question}>what is your sex?</Text>
+              <Text style={styles.subtitle}>this helps us personalize your practice</Text>
+              <Text style={styles.question}>how do you identify?</Text>
               <View style={styles.optionsList}>
                 {GENDERS.map((gender) => (
                   <TouchableOpacity
