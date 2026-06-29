@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { TouchableOpacity, Text, StyleSheet, View, Animated, StyleProp, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type AlohaButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -22,6 +23,7 @@ export default function AlohaButton({
   icon,
 }: AlohaButtonProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const insets = useSafeAreaInsets();
 
   const handlePressIn = () => {
     Animated.timing(scaleAnim, {
@@ -79,8 +81,10 @@ export default function AlohaButton({
     }
   };
 
+  const bottomPadding = insets.bottom > 0 ? insets.bottom + 10 : 20;
+
   return (
-    <View style={[styles.wrapper, style]}>
+    <View style={[styles.wrapper, { paddingBottom: bottomPadding }, style]}>
       <Animated.View style={[{ transform: [{ scale: scaleAnim }], width: '100%' }, disabled && { opacity: 0.4 }]}>
         <TouchableOpacity
           onPress={onPress}
@@ -99,7 +103,6 @@ export default function AlohaButton({
 const styles = StyleSheet.create({
   wrapper: {
     paddingHorizontal: 24,
-    paddingBottom: 40,
     width: '100%',
   },
   button: {

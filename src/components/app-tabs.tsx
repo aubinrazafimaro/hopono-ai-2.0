@@ -37,17 +37,17 @@ export default function AppTabs() {
       }}>
 
       <Tabs.Screen
-        name="index"
-        options={{
-          title: 'home',
-          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🏠</Text>,
-        }}
-      />
-      <Tabs.Screen
         name="insights"
         options={{
           title: 'insights',
           tabBarIcon: () => <Text style={{ fontSize: 20 }}>🌊</Text>,
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'home',
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🏠</Text>,
         }}
       />
       <Tabs.Screen
@@ -60,8 +60,8 @@ export default function AppTabs() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'mālama',
-          tabBarIcon: () => <Text style={{ fontSize: 20 }}>🌺</Text>,
+          title: 'settings',
+          tabBarIcon: () => <Text style={{ fontSize: 20 }}>⚙️</Text>,
         }}
       />
       <Tabs.Screen

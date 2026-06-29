@@ -45,28 +45,28 @@ const PeaceStep = ({ onNext }: { onNext: () => void }) => {
           </Animated.Text>
         </View>
 
-        <View style={styles.emojiContainer}>
+        <View style={styles.centerContent}>
           <Text style={styles.emoji}>{peaceStates[sliderValue].emoji}</Text>
           <Animated.Text style={[styles.stateText, { color: textColor }]}>
             {peaceStates[sliderValue].text}
           </Animated.Text>
+
+          <View style={styles.sliderContainerCentered}>
+            <Slider
+              style={styles.slider}
+              minimumValue={0}
+              maximumValue={4}
+              step={0.1}
+              value={2}
+              onValueChange={handleValueChange}
+              minimumTrackTintColor="#ffffff"
+              maximumTrackTintColor="rgba(255,255,255,0.3)"
+              thumbTintColor="#ffffff"
+            />
+          </View>
         </View>
 
-        <View style={styles.sliderContainer}>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={4}
-            step={0.1}
-            value={2}
-            onValueChange={handleValueChange}
-            minimumTrackTintColor="#ffffff"
-            maximumTrackTintColor="rgba(255,255,255,0.3)"
-            thumbTintColor="#ffffff"
-          />
-        </View>
-
-          <AlohaButton onPress={onNext} text="continue" variant="secondary" />
+        <AlohaButton onPress={onNext} text="continue" variant="secondary" style={{ paddingBottom: 0 }} />
       </SafeAreaView>
     </Animated.View>
   );
@@ -106,28 +106,28 @@ const MoodStep = ({ onNext }: { onNext: () => void }) => {
           </Animated.Text>
         </View>
 
-        <View style={styles.emojiContainer}>
+        <View style={styles.centerContent}>
           <Text style={styles.emoji}>{moodStates[sliderValue].emoji}</Text>
           <Animated.Text style={[styles.stateText, { color: textColor }]}>
             {moodStates[sliderValue].text}
           </Animated.Text>
+
+          <View style={styles.sliderContainerCentered}>
+            <Slider
+              style={styles.slider}
+              minimumValue={0}
+              maximumValue={4}
+              step={0.1}
+              value={2}
+              onValueChange={handleValueChange}
+              minimumTrackTintColor="#ffffff"
+              maximumTrackTintColor="rgba(255,255,255,0.3)"
+              thumbTintColor="#ffffff"
+            />
+          </View>
         </View>
 
-        <View style={styles.sliderContainer}>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={4}
-            step={0.1}
-            value={2}
-            onValueChange={handleValueChange}
-            minimumTrackTintColor="#ffffff"
-            maximumTrackTintColor="rgba(255,255,255,0.3)"
-            thumbTintColor="#ffffff"
-          />
-        </View>
-
-        <AlohaButton onPress={onNext} text="continue" variant="secondary" />
+        <AlohaButton onPress={onNext} text="continue" variant="secondary" style={{ paddingBottom: 0 }} />
       </SafeAreaView>
     </Animated.View>
   );
@@ -259,16 +259,12 @@ const PracticeStep = ({ name, onNext }: { name: string, onNext: () => void }) =>
       </View>
 
       {!isStarted && (
-        <View style={{ position: 'absolute', bottom: 40, right: 24, zIndex: 10 }}>
-          <TouchableOpacity 
-            style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10 }}>
+          <AlohaButton
             onPress={() => setIsStarted(true)}
-          >
-            <Text style={{ fontFamily: 'Nunito_700Bold', fontSize: 18, color: '#e86935', textTransform: 'lowercase' }}>
-              begin 🌺
-            </Text>
-            <Ionicons name="arrow-forward" size={18} color="#e86935" style={{ marginLeft: 6, transform: [{ translateY: 1 }] }} />
-          </TouchableOpacity>
+            text="begin 🌺"
+            variant="primary"
+          />
         </View>
       )}
       
@@ -383,11 +379,12 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
             </View>
           </Animated.View>
         </View>
-
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={onNext} text="I felt it. what's next?" variant="ghost" disabled={!showBtn} />
-        </View>
       </SafeAreaView>
+      {showBtn && (
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingBottom: 0 }}>
+          <AlohaButton onPress={onNext} text="i felt it. what's next?" variant="secondary" />
+        </View>
+      )}
     </View>
   );
 };
@@ -428,17 +425,18 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     textTransform: 'lowercase',
   },
-  emojiContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  centerContent: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   emoji: {
     fontSize: 100,
   },
-  sliderContainer: {
+  sliderContainerCentered: {
     alignItems: 'center',
-    marginBottom: 60,
+    marginTop: 40,
     width: '100%',
   },
   slider: {
@@ -449,26 +447,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     marginTop: 16,
-    textTransform: 'lowercase',
-  },
-  buttonWhite: {
-    backgroundColor: '#ffffff',
-    paddingVertical: 18,
-    borderRadius: 30,
-    width: '85%',
-    alignSelf: 'center',
-    alignItems: 'center',
-    marginBottom: 40,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 6,
-  },
-  buttonTextOrange: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#e86935',
     textTransform: 'lowercase',
   },
   // Practice
@@ -641,20 +619,4 @@ const styles = StyleSheet.create({
   bottomContainer: {
     paddingBottom: 40,
   },
-  buttonTranslucent: {
-    width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    paddingVertical: 18,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-  },
-  buttonTextWhite: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#ffffff',
-    textTransform: 'lowercase',
-  }
 });

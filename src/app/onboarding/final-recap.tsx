@@ -1,17 +1,21 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { useUser } from '@/context/UserContext';
-import { SimpleLineIcons } from '@expo/vector-icons';
-import AlohaButton from '@/components/AlohaButton';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function RecapScreen() {
   const router = useRouter();
   const { data } = useOnboarding();
   const { refreshUserData } = useUser();
+  const [showBtn, setShowBtn] = useState(false);
+
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
 
   const handleFinish = async () => {
     try {
@@ -69,9 +73,16 @@ export default function RecapScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.containerTransparent}>
-
-
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          contentContainerStyle={styles.content} 
+          showsVerticalScrollIndicator={false}
+          onScroll={({ nativeEvent }) => {
+            if (isCloseToBottom(nativeEvent)) {
+              setShowBtn(true);
+            }
+          }}
+          scrollEventThrottle={400}
+        >
           
           <Text style={styles.mainTitle}>
             we see you, {data.name || 'friend'}. 🌺
@@ -136,10 +147,19 @@ export default function RecapScreen() {
             </Text>
           </View>
         </ScrollView>
-
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={handleFinish} text="continue" variant="secondary" />
-        </View>
+        {showBtn && (
+          <View style={styles.bottomContainerLink}>
+            <TouchableOpacity 
+              style={styles.linkButton}
+              onPress={handleFinish}
+            >
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.linkButtonText}>continue</Text>
+                <Ionicons name="arrow-forward" size={18} color="#ffffff" style={{ marginLeft: 6, transform: [{ translateY: 2 }] }} />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </View>
   );
@@ -262,5 +282,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#e86935',
+  },
+  bottomContainerLink: {
+    position: 'absolute',
+    bottom: 28,
+    right: 32,
+  },
+  linkButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  linkButtonText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 18,
+    color: '#ffffff',
   },
 });

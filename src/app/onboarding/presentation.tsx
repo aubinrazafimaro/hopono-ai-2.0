@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Animated, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useOnboarding } from '@/context/OnboardingContext';
@@ -67,9 +68,19 @@ export default function PresentationScreen() {
               aloha. 🌺
             </Animated.Text>
           </ScrollView>
-          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <AlohaButton onPress={handleTransitionComplete} text="I'm ready" variant="secondary"  disabled={!showTransitionBtn} />
+          {showTransitionBtn && (
+            <View style={styles.bottomContainerLink}>
+              <TouchableOpacity 
+                style={styles.linkButton}
+                onPress={handleTransitionComplete}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.linkButtonText}>i'm ready</Text>
+                  <Ionicons name="arrow-forward" size={18} color="#ffffff" style={{ marginLeft: 6, transform: [{ translateY: 2 }] }} />
+                </View>
+              </TouchableOpacity>
             </View>
+          )}
         </SafeAreaView>
       </LinearGradient>
     );
@@ -77,84 +88,84 @@ export default function PresentationScreen() {
 
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
-      <SafeAreaView style={styles.containerTransparent}>
       <KeyboardAvoidingView 
         style={{ flex: 1 }} 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {step === 0 && (
-            <View style={styles.stepContainer}>
-              <Text style={styles.question}>what's your name?</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="your name"
-                placeholderTextColor="#9ca3af"
-                value={data.name}
-                onChangeText={(text) => updateData({ name: text })}
-                autoCorrect={false}
-                returnKeyType="done"
-              />
-            </View>
-          )}
-
-          {step === 2 && (
-            <View style={styles.stepContainer}>
-              <Text style={styles.question}>how old are you?</Text>
-              <View style={styles.optionsList}>
-                {AGE_GROUPS.map((age) => (
-                  <TouchableOpacity
-                    key={age}
-                    style={[styles.optionRow, data.age === age && styles.optionRowActive]}
-                    onPress={() => handleAgeSelect(age)}
-                  >
-                    <Text style={[styles.optionText, data.age === age && styles.optionTextActive]}>{age}</Text>
-                  </TouchableOpacity>
-                ))}
+        <SafeAreaView style={styles.containerTransparent}>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            {step === 0 && (
+              <View style={styles.stepContainer}>
+                <Text style={styles.question}>what's your name?</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="your name"
+                  placeholderTextColor="#9ca3af"
+                  value={data.name}
+                  onChangeText={(text) => updateData({ name: text })}
+                  autoCorrect={false}
+                  returnKeyType="done"
+                />
               </View>
-            </View>
-          )}
+            )}
 
-          {step === 3 && (
-            <View style={styles.stepContainer}>
-              <Text style={styles.subtitle}>this helps us personalize your practice</Text>
-              <Text style={styles.question}>how do you identify?</Text>
-              <View style={styles.optionsList}>
-                {GENDERS.map((gender) => (
-                  <TouchableOpacity
-                    key={gender}
-                    style={[styles.optionRow, data.gender === gender && styles.optionRowActive]}
-                    onPress={() => handleGenderSelect(gender)}
-                  >
-                    <Text style={[styles.optionText, data.gender === gender && styles.optionTextActive]}>{gender}</Text>
-                  </TouchableOpacity>
-                ))}
+            {step === 2 && (
+              <View style={styles.stepContainer}>
+                <Text style={styles.question}>how old are you?</Text>
+                <View style={styles.optionsList}>
+                  {AGE_GROUPS.map((age) => (
+                    <TouchableOpacity
+                      key={age}
+                      style={[styles.optionRow, data.age === age && styles.optionRowActive]}
+                      onPress={() => handleAgeSelect(age)}
+                    >
+                      <Text style={[styles.optionText, data.age === age && styles.optionTextActive]}>{age}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
-            </View>
-          )}
+            )}
+
+            {step === 3 && (
+              <View style={styles.stepContainer}>
+                <Text style={styles.subtitle}>this helps us personalize your practice</Text>
+                <Text style={styles.question}>how do you identify?</Text>
+                <View style={styles.optionsList}>
+                  {GENDERS.map((gender) => (
+                    <TouchableOpacity
+                      key={gender}
+                      style={[styles.optionRow, data.gender === gender && styles.optionRowActive]}
+                      onPress={() => handleGenderSelect(gender)}
+                    >
+                      <Text style={[styles.optionText, data.gender === gender && styles.optionTextActive]}>{gender}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            )}
           </ScrollView>
-          {step === 0 && (
-            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={data.name.trim().length === 0} />
-            </View>
-          )}
-          {step === 2 && (
-            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <AlohaButton onPress={() => setStep(3)} text="continue" variant="primary"  disabled={!data.age} />
-            </View>
-          )}
-          {step === 3 && (
-            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-              <AlohaButton onPress={() => router.push('/onboarding/screentime')} text="continue" variant="primary"  disabled={!data.gender} />
-            </View>
-          )}
+        </SafeAreaView>
+        {step === 0 && (
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={data.name.trim().length === 0} />
+          </View>
+        )}
+        {step === 2 && (
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <AlohaButton onPress={() => setStep(3)} text="continue" variant="primary"  disabled={!data.age} />
+          </View>
+        )}
+        {step === 3 && (
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <AlohaButton onPress={() => router.push('/onboarding/screentime')} text="continue" variant="primary"  disabled={!data.gender} />
+          </View>
+        )}
       </KeyboardAvoidingView>
-    </SafeAreaView>
-  </LinearGradient>
+    </LinearGradient>
   );
 }
 
-const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
@@ -243,38 +254,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 32,
   },
-  continueButton: {
-    backgroundColor: '#e86935',
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 5,
+  bottomContainerLink: {
+    position: 'absolute',
+    bottom: 28,
+    right: 32,
   },
-  continueText: {
-    fontFamily: 'Nunito_700Bold',
+  linkButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  linkButtonText: {
+    fontFamily: 'Nunito_600SemiBold',
     fontSize: 18,
     color: '#ffffff',
-    textTransform: 'lowercase',
-  },
-  continueButtonWhite: {
-    backgroundColor: '#ffffff',
-    paddingVertical: 18,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 5,
-  },
-  continueTextOrange: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#e86935',
-    textTransform: 'lowercase',
   },
 });

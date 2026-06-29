@@ -122,10 +122,10 @@ export default function GuiltScreen() {
             </View>
           </View>
         </View>
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 32 }}>
-          <AlohaButton onPress={handleContinue} text="continue" variant="primary" />
-        </View>
       </SafeAreaView>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <AlohaButton onPress={handleContinue} text="continue" variant="primary" />
+      </View>
     </LinearGradient>
   );
 }
@@ -229,24 +229,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     fontSize: 14,
     color: '#9ca3af',
-  },
-  bottomContainer: {
-    paddingBottom: 32,
-    paddingTop: 16,
-    alignItems: 'center',
-    paddingHorizontal: 32,
-  },
-  continueButton: {
-    backgroundColor: '#fa8231',
-    paddingVertical: 18,
-    paddingHorizontal: 40,
-    borderRadius: 16, // matching the slightly less rounded look
-    width: '100%',
-    alignItems: 'center',
-  },
-  continueText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#ffffff',
   },
 });

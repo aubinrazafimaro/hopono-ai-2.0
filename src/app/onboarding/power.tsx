@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions, Pressable } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions, Pressable, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -13,6 +13,52 @@ const chartHeight = 220;
 
 export default function PowerScreen() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isModalMounted, setIsModalMounted] = useState(false);
+  const modalScale = useRef(new Animated.Value(0.8)).current;
+  const overlayOpacity = useRef(new Animated.Value(0)).current;
+
+  const openModal = () => {
+    setIsModalMounted(true);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    Animated.parallel([
+      Animated.timing(overlayOpacity, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(modalScale, {
+        toValue: 0.8,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setIsModalMounted(false);
+    });
+  };
+
+  useEffect(() => {
+    if (modalVisible) {
+      modalScale.setValue(0.8);
+      overlayOpacity.setValue(0);
+      Animated.parallel([
+        Animated.timing(overlayOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(modalScale, {
+          toValue: 1,
+          friction: 6,
+          tension: 40,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [modalVisible]);
 
   // SVG dimensions
   const w = cardWidth;
@@ -126,20 +172,20 @@ export default function PowerScreen() {
           </Text>
         </View>
 
-        <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.learnMoreBtn}>
+        <TouchableOpacity onPress={openModal} style={styles.learnMoreBtn}>
           <Text style={styles.learnMoreText}>see how it works <Feather name="arrow-right" size={14} /></Text>
         </TouchableOpacity>
 
         {/* MODAL */}
         <Modal
-          animationType="fade"
+          animationType="none"
           transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
+          visible={isModalMounted}
+          onRequestClose={closeModal}
         >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalCard}>
-              <TouchableOpacity style={styles.closeBtn} onPress={() => setModalVisible(false)}>
+          <Animated.View style={[styles.modalOverlay, { opacity: overlayOpacity }]}>
+            <Animated.View style={[styles.modalCard, { transform: [{ scale: modalScale }] }]}>
+              <TouchableOpacity style={styles.closeBtn} onPress={closeModal}>
                 <Feather name="x-circle" size={24} color="#9ca3af" />
               </TouchableOpacity>
               
@@ -174,17 +220,17 @@ export default function PowerScreen() {
                 five minutes. every day. everything shifts.
               </Text>
 
-              <TouchableOpacity 
-                style={styles.getStartedBtn} 
+              <AlohaButton
                 onPress={() => {
-                  setModalVisible(false);
+                  closeModal();
                   router.push('/onboarding/mini-practice');
                 }}
-              >
-                <Text style={styles.getStartedText}>feel it for yourself 🌺</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+                text="feel it for yourself 🌺"
+                variant="primary"
+                style={{ paddingBottom: 0, paddingHorizontal: 0 }}
+              />
+            </Animated.View>
+          </Animated.View>
         </Modal>
 
       </SafeAreaView>
@@ -356,19 +402,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
     paddingHorizontal: 10,
-    textTransform: 'lowercase',
-  },
-  getStartedBtn: {
-    backgroundColor: '#e86935',
-    width: '100%',
-    paddingVertical: 14,
-    borderRadius: 24,
-    alignItems: 'center',
-  },
-  getStartedText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 16,
-    color: '#ffffff',
     textTransform: 'lowercase',
   },
 });

@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
-import { SimpleLineIcons } from '@expo/vector-icons';
-import AlohaButton from '@/components/AlohaButton';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function RecapScreen() {
   const router = useRouter();
@@ -75,9 +74,16 @@ export default function RecapScreen() {
           </Text>
         </View>
         </ScrollView>
-
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={handleFinish} text="continue" variant="secondary" />
+        <View style={styles.bottomContainerLink}>
+          <TouchableOpacity 
+            style={styles.linkButton}
+            onPress={handleFinish}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.linkButtonText}>continue</Text>
+              <Ionicons name="arrow-forward" size={18} color="#ffffff" style={{ marginLeft: 6, transform: [{ translateY: 2 }] }} />
+            </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </View>
@@ -191,5 +197,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     color: '#e86935',
+  },
+  bottomContainerLink: {
+    position: 'absolute',
+    bottom: 28,
+    right: 32,
+  },
+  linkButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  linkButtonText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 18,
+    color: '#ffffff',
   },
 });

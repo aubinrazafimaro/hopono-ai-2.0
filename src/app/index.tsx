@@ -16,6 +16,7 @@ import { useUser } from '@/context/UserContext';
 import { useAppTheme } from '@/context/AppThemeContext';
 import AlohaButton from '@/components/AlohaButton';
 import { SPACING, RADIUS, COLORS, TYPOGRAPHY } from '@/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const practices = [
   { id: '21',     label: '21 repetitions',  desc: 'quick clearing',  emoji: '🌺' },
@@ -32,6 +33,22 @@ export default function Home() {
   const currentMood  = moodStates[moodIndex];
   const currentMonthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date()).toLowerCase();
 
+  const [healingPlan, setHealingPlan] = useState<any>(null);
+
+  useEffect(() => {
+    const loadHealingPlan = async () => {
+      try {
+        const stored = await AsyncStorage.getItem('@hopono_healing_plan');
+        if (stored) {
+          setHealingPlan(JSON.parse(stored));
+        }
+      } catch (err) {
+        console.error("Failed to load healing plan:", err);
+      }
+    };
+    loadHealingPlan();
+  }, []);
+
   // ── Goal Rotation State (Interval: 15 seconds) ──
   const [currentGoalIndex, setCurrentGoalIndex] = useState(0);
 
@@ -44,62 +61,24 @@ export default function Home() {
     }
   }, [userData?.lifeGoals]);
 
-  // ── Standard Calendar Layout Calculation ──
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const firstDay = new Date(year, month, 1);
-  const startWeekday = firstDay.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  const startOffset = startWeekday === 0 ? 6 : startWeekday - 1; // Align Mon-Sun grid
+  // ── Breathing Orb Animation for Dashboard ──
+  const orbScale = useRef(new Animated.Value(1)).current;
+  const orbOpacity = useRef(new Animated.Value(0.8)).current;
 
-  const totalDays = new Date(year, month + 1, 0).getDate();
-
-  // Create standard calendar cells
-  const calendarCells = [];
-  // Empty offset days at start
-  for (let i = 0; i < startOffset; i++) {
-    calendarCells.push({ key: `empty-${i}`, type: 'empty' });
-  }
-
-  // Active days of the month
-  for (let day = 1; day <= totalDays; day++) {
-    const cellDate = new Date(year, month, day);
-    const dateStr = cellDate.toISOString().split('T')[0];
-    const isToday = day === now.getDate();
-    
-    // Find check-in data in history
-    const dayData = history.find((h) => h.date.startsWith(dateStr));
-    
-    if (isToday) {
-      calendarCells.push({
-        key: `day-${day}`,
-        type: 'day',
-        dayNum: day,
-        hasCheckIn: true,
-        moodEmoji: currentMood.emoji,
-        peaceEmoji: currentPeace.emoji,
-        isToday: true
-      });
-    } else if (dayData && dayData.hasCheckIn) {
-      calendarCells.push({
-        key: `day-${day}`,
-        type: 'day',
-        dayNum: day,
-        hasCheckIn: true,
-        moodEmoji: moodStates[dayData.moodIndex].emoji,
-        peaceEmoji: peaceStates[dayData.peaceIndex].emoji,
-        isToday: false
-      });
-    } else {
-      calendarCells.push({
-        key: `day-${day}`,
-        type: 'day',
-        dayNum: day,
-        hasCheckIn: false,
-        isToday: false
-      });
-    }
-  }
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(orbScale, { toValue: 1.15, duration: 4000, useNativeDriver: true }),
+          Animated.timing(orbOpacity, { toValue: 1, duration: 4000, useNativeDriver: true }),
+        ]),
+        Animated.parallel([
+          Animated.timing(orbScale, { toValue: 1, duration: 4000, useNativeDriver: true }),
+          Animated.timing(orbOpacity, { toValue: 0.7, duration: 4000, useNativeDriver: true }),
+        ]),
+      ])
+    ).start();
+  }, []);
 
   const [isMood, setIsMood] = useState(true);
   const moodOpacity  = useRef(new Animated.Value(1)).current;
@@ -199,67 +178,79 @@ export default function Home() {
             </View>
           </TouchableOpacity>
 
-          {/* ── MONTHLY CALENDAR (Aligned standard monthly calendar) ── */}
-          <View style={styles.sectionHeader}>
-            <View style={styles.titleRow}>
-              <Animated.Text style={[styles.sectionTitle, { color: palette.textMuted, opacity: moodOpacity }]}>
-                rhythm of {currentMonthName}
-              </Animated.Text>
-              <Animated.Text style={[styles.sectionTitle, styles.absoluteText, { color: palette.textMuted, opacity: peaceOpacity }]}>
-                harmony of {currentMonthName}
-              </Animated.Text>
+          {healingPlan?.welcomingText && (
+            <View style={[styles.welcomingCard, { backgroundColor: 'rgba(232, 105, 53, 0.08)', borderColor: 'rgba(232, 105, 53, 0.2)' }]}>
+              <Text style={[styles.welcomingText, { color: palette.textPrimary }]}>
+                ✨ {healingPlan.welcomingText}
+              </Text>
             </View>
-            <TouchableOpacity>
-              <Text style={[styles.viewCalendarText, { color: palette.primary }]}>view calendar</Text>
-            </TouchableOpacity>
-          </View>
-          
-          {/* Cute, tiny description sentence below calendar title to fill the gap */}
-          <Text style={[styles.calendarSubText, { color: palette.textMuted }]}>
-            every day is a new step towards your inner peace. 🌺
-          </Text>
+          )}
 
-          <View style={[styles.card, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder }]}>
-            <View style={styles.calendarHeader}>
-              {['m','t','w','t','f','s','s'].map((day, idx) => (
-                <Text key={idx} style={[styles.dayText, { color: palette.textMuted }]}>{day}</Text>
-              ))}
-            </View>
-            <View style={styles.calendarGrid}>
-              {calendarCells.map((item) => {
-                if (item.type === 'empty') {
-                  return (
-                    <View key={item.key} style={styles.calCell}>
-                      <View style={[styles.emptyCircle, { backgroundColor: 'transparent' }]} />
-                    </View>
-                  );
+          {/* ── CENTRAL GLOWING ORB & BRAND NAME (Replaces Calendar) ── */}
+          <View style={styles.borderlessOrbCard}>
+            <View style={styles.dashboardOrbContainer}>
+              <Animated.View style={[
+                styles.dashboardOrb, 
+                { 
+                  transform: [{ scale: orbScale }],
+                  opacity: orbOpacity 
                 }
-                
-                if (!item.hasCheckIn) {
-                  return (
-                    <View key={item.key} style={styles.calCell}>
-                      <View style={[styles.emptyCircle, { backgroundColor: 'rgba(255,255,255,0.05)' }]} />
-                      <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.dayNum}</Text>
-                    </View>
-                  );
-                }
-                
-                return (
-                  <View key={item.key} style={styles.calCell}>
-                    <View style={[styles.emojiCircle, { backgroundColor: 'rgba(255,255,255,0.08)' }]}>
-                      <Animated.Text style={[styles.smallEmoji, { opacity: moodOpacity }]}>
-                        {item.moodEmoji}
-                      </Animated.Text>
-                      <Animated.Text style={[styles.smallEmoji, styles.absoluteCenter, { opacity: peaceOpacity }]}>
-                        {item.peaceEmoji}
-                      </Animated.Text>
-                    </View>
-                    <Text style={[styles.calDateText, { color: palette.textMuted }]}>{item.dayNum}</Text>
-                  </View>
-                );
-              })}
+              ]}>
+                <LinearGradient
+                  colors={['#ffedd5', 'rgba(254, 215, 170, 0.5)', 'rgba(254, 215, 170, 0.2)', 'transparent']}
+                  style={[StyleSheet.absoluteFill, { borderRadius: 110 }]}
+                  start={{ x: 0.5, y: 0.5 }}
+                  end={{ x: 1, y: 1 }}
+                />
+              </Animated.View>
+              {/* Core sun */}
+              <View style={styles.dashboardOrbCore} />
             </View>
+            <Text style={[styles.brandTitleText, { color: palette.textPrimary }]}>
+              hopono AI
+            </Text>
+            <Text style={[styles.brandSubtitleText, { color: palette.textMuted }]}>
+              breathe in. clean inside. release.
+            </Text>
           </View>
+
+          {healingPlan && (
+            <View style={[styles.card, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder, marginBottom: SPACING.section }]}>
+              <Text style={[styles.healingExplanationTitle, { color: palette.textPrimary }]}>your healing journey 🌺</Text>
+              <Text style={[styles.healingExplanationText, { color: palette.textMuted }]}>{healingPlan.healingExplanation}</Text>
+            </View>
+          )}
+
+          {healingPlan && (
+            <>
+              <Text style={[styles.sectionTitle, { color: palette.textMuted, marginBottom: SPACING.md }]}>
+                your daily ritual 🕊️
+              </Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.horizontalScroll}
+                contentContainerStyle={{ paddingRight: SPACING.md }}
+              >
+                {healingPlan.programPhases.map((phase: any, index: number) => {
+                  const timeLabel = index === 0 ? 'morning' : index === 1 ? 'midday' : 'evening';
+                  const emoji = index === 0 ? '🌅' : index === 1 ? '☀️' : '🌙';
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={[styles.practiceCard, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder }]}
+                      activeOpacity={0.85}
+                      onPress={() => router.push(`/practice/21`)}
+                    >
+                      <Text style={styles.practiceEmoji}>{emoji}</Text>
+                      <Text style={[styles.practiceTitle, { color: palette.textPrimary }]}>{timeLabel} • {phase.weeks.toLowerCase()}</Text>
+                      <Text style={[styles.practiceDesc, { color: palette.textMuted }]}>{phase.title.toLowerCase()}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </>
+          )}
 
           {/* ── YOUR DEVOTION (ex-streak) ── */}
           <Text style={[styles.sectionTitle, { color: palette.textMuted, marginBottom: SPACING.md }]}>
@@ -453,59 +444,50 @@ const styles = StyleSheet.create({
     textTransform: 'lowercase',
     letterSpacing: 1.2,
   },
-  calendarSubText: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 12,
-    marginTop: -8,
-    marginBottom: 16,
-    textTransform: 'lowercase',
-  },
-  viewCalendarText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 12,
-    textTransform: 'lowercase',
-  },
-  calendarHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.md,
-    paddingHorizontal: 4,
-  },
-  dayText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 12,
-    width: 30,
-    textAlign: 'center',
-  },
-  calendarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  calCell: {
-    width: '14.28%',
-    alignItems: 'center',
-    marginBottom: SPACING.md,
-  },
-  emojiCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: RADIUS.pill,
+  borderlessOrbCard: {
+    paddingVertical: 12,
+    marginBottom: SPACING.section,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 6,
   },
-  smallEmoji: {
-    fontSize: 20,
+  dashboardOrbContainer: {
+    width: 240,
+    height: 240,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  emptyCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: RADIUS.pill,
-    marginBottom: 6,
+  dashboardOrb: {
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
-  calDateText: {
-    fontFamily: 'Nunito_400Regular',
-    fontSize: 11,
+  dashboardOrbCore: {
+    position: 'absolute',
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: '#ffedd5',
+    shadowColor: '#f97316',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
+    elevation: 10,
+  },
+  brandTitleText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 24,
+    marginBottom: 4,
+    letterSpacing: 1.5,
+    textTransform: 'lowercase',
+  },
+  brandSubtitleText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 12,
+    textTransform: 'lowercase',
   },
   horizontalScroll: {
     marginHorizontal: -SPACING.horizontal,
@@ -540,6 +522,30 @@ const styles = StyleSheet.create({
   practiceDesc: {
     fontFamily: 'Nunito_400Regular',
     fontSize: 12,
+    textTransform: 'lowercase',
+  },
+  welcomingCard: {
+    borderRadius: RADIUS.card,
+    padding: SPACING.card,
+    marginBottom: SPACING.section,
+    borderWidth: 1.5,
+  },
+  welcomingText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 15,
+    lineHeight: 22,
+    fontStyle: 'italic',
+  },
+  healingExplanationTitle: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18,
+    marginBottom: 8,
+    textTransform: 'lowercase',
+  },
+  healingExplanationText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 14,
+    lineHeight: 20,
     textTransform: 'lowercase',
   },
 });

@@ -104,18 +104,18 @@ export default function GoalsScreen() {
           </View>
         )}
         </ScrollView>
-        {step === 0 && (
-          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={selectedResolutions.length === 0} />
-          </View>
-        )}
-
-        {step === 1 && (
-          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-            <AlohaButton onPress={handleFinishGoals} text="continue" variant="primary"  disabled={selectedLifeGoals.length === 0} />
-          </View>
-        )}
       </SafeAreaView>
+      {step === 0 && (
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={selectedResolutions.length === 0} />
+        </View>
+      )}
+
+      {step === 1 && (
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <AlohaButton onPress={handleFinishGoals} text="continue" variant="primary"  disabled={selectedLifeGoals.length === 0} />
+        </View>
+      )}
     </LinearGradient>
   );
 }
@@ -188,22 +188,5 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     alignItems: 'center',
     paddingHorizontal: 32,
-  },
-  continueButton: {
-    backgroundColor: '#e86935',
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 5,
-  },
-  continueText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#ffffff',
-    textTransform: 'lowercase',
   },
 });

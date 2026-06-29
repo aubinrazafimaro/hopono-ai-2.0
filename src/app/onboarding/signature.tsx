@@ -190,10 +190,18 @@ export default function SignatureScreen() {
             </Text>
           </Animated.View>
         </ScrollView>
-
         {/* Bottom Button */}
-        <View style={styles.bottomContainer}>
-          <AlohaButton onPress={handleNext} text="I commit" variant="ghost" disabled={!hasSigned} />
+        <View style={styles.bottomContainerLink}>
+          <TouchableOpacity 
+            style={[styles.linkButton, !hasSigned && { opacity: 0.5 }]}
+            onPress={handleNext}
+            disabled={!hasSigned}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.linkButtonText}>i commit</Text>
+              <Ionicons name="arrow-forward" size={18} color="#ffffff" style={{ marginLeft: 6, transform: [{ translateY: 2 }] }} />
+            </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </GestureHandlerRootView>
@@ -296,10 +304,18 @@ const styles = StyleSheet.create({
     marginTop: 16,
     textAlign: 'center',
   },
-  bottomContainer: {
+  bottomContainerLink: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    bottom: 28,
+    right: 32,
+  },
+  linkButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+  },
+  linkButtonText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 18,
+    color: '#ffffff',
   },
 });

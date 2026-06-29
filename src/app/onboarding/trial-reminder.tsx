@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePricing } from '@/hooks/usePricing';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function TrialReminderScreen() {
   const router = useRouter();
@@ -36,9 +37,12 @@ export default function TrialReminderScreen() {
             <Text style={styles.paymentDueText}>nothing to pay today</Text>
           </View>
 
-          <TouchableOpacity style={styles.ctaButton} onPress={handleNext}>
-            <Text style={styles.ctaButtonText}>begin my 7 days free 🌺</Text>
-          </TouchableOpacity>
+          <AlohaButton
+            onPress={handleNext}
+            text="begin my 7 days free 🌺"
+            variant="primary"
+            style={{ paddingBottom: 0 }}
+          />
           
           <Text style={styles.priceSubtext}>
             then {pricing.weeklyEquivalent}/week — cancel anytime, no questions.
@@ -99,7 +103,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#ffffff',
-    paddingHorizontal: 24,
     paddingTop: 8, // Compact padding
     paddingBottom: 20, // Sit lower on screen
   },
@@ -113,25 +116,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 16,
     color: '#1f2937',
-    textTransform: 'lowercase',
-  },
-  ctaButton: {
-    backgroundColor: '#e86935',
-    paddingVertical: 18,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    elevation: 8,
-  },
-  ctaButtonText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#ffffff',
     textTransform: 'lowercase',
   },
   priceSubtext: {

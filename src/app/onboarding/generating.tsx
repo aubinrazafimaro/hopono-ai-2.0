@@ -7,6 +7,8 @@ import Svg, { Circle } from 'react-native-svg';
 import { useOnboarding } from '@/context/OnboardingContext';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import AlohaButton from '@/components/AlohaButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { generateHealingPlan, generateLocalHealingPlan } from '@/services/ai';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -25,6 +27,8 @@ export default function GeneratingScreen() {
   const [percentage, setPercentage] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [apiCompleted, setApiCompleted] = useState(false);
+  const [animCompleted, setAnimCompleted] = useState(false);
   
   const progressAnim = useRef(new Animated.Value(0)).current;
   const fadeAnimFinal = useRef(new Animated.Value(0)).current;
@@ -33,6 +37,25 @@ export default function GeneratingScreen() {
   const strokeWidth = 14;
   const circumference = 2 * Math.PI * radius;
 
+  // 1. Run Claude generation API call
+  useEffect(() => {
+    const runGeneration = async () => {
+      try {
+        const result = await generateHealingPlan(data);
+        await AsyncStorage.setItem('@hopono_healing_plan', JSON.stringify(result));
+      } catch (err) {
+        console.warn("API call failed or key not configured, falling back to local generation", err);
+        const fallback = generateLocalHealingPlan(data);
+        await AsyncStorage.setItem('@hopono_healing_plan', JSON.stringify(fallback));
+      } finally {
+        setApiCompleted(true);
+      }
+    };
+
+    runGeneration();
+  }, [data]);
+
+  // 2. Run progress animation (takes ~12 seconds)
   useEffect(() => {
     progressAnim.addListener((state) => {
       const val = Math.round(state.value);
@@ -54,25 +77,31 @@ export default function GeneratingScreen() {
       }
     });
 
-    // Make it take about 18 seconds to feel substantial and deep
     Animated.timing(progressAnim, {
       toValue: 100,
-      duration: 18000,
+      duration: 12000,
       easing: Easing.bezier(0.4, 0.0, 0.2, 1),
       useNativeDriver: false,
     }).start(() => {
-      setIsFinished(true);
-      Animated.timing(fadeAnimFinal, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }).start();
+      setAnimCompleted(true);
     });
 
     return () => {
       progressAnim.removeAllListeners();
     };
   }, []);
+
+  // 3. Listen to both completions to trigger success state
+  useEffect(() => {
+    if (apiCompleted && animCompleted) {
+      setIsFinished(true);
+      Animated.timing(fadeAnimFinal, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [apiCompleted, animCompleted]);
 
   const strokeDashoffset = progressAnim.interpolate({
     inputRange: [0, 100],
@@ -98,15 +127,15 @@ export default function GeneratingScreen() {
             </Text>
           </Animated.View>
 
-          <Animated.View style={[styles.bottomContainerAbsolute, { opacity: fadeAnimFinal }]}>
-            <TouchableOpacity 
-              style={styles.whiteButton}
-              onPress={() => router.push('/onboarding/power')}
-            >
-              <Text style={styles.whiteButtonText}>I'm ready</Text>
-            </TouchableOpacity>
-          </Animated.View>
         </SafeAreaView>
+
+        <Animated.View style={[styles.bottomContainerAbsolute, { opacity: fadeAnimFinal }]}>
+          <AlohaButton
+            onPress={() => router.push('/onboarding/power')}
+            text="i'm ready"
+            variant="secondary"
+          />
+        </Animated.View>
       </View>
     );
   }
@@ -253,19 +282,8 @@ const styles = StyleSheet.create({
   },
   bottomContainerAbsolute: {
     position: 'absolute',
-    bottom: 40,
-    left: 32,
-    right: 32,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
-  whiteButton: {
-    backgroundColor: '#ffffff',
-    paddingVertical: 18,
-    borderRadius: 30,
-    alignItems: 'center',
-  },
-  whiteButtonText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#e86935',
-  }
 });

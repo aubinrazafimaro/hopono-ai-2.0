@@ -62,10 +62,10 @@ export default function DeepPainScreen() {
             })}
           </View>
         </ScrollView>
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={handleContinue} text="continue" variant="primary"  disabled={selected.length === 0} />
-        </View>
       </SafeAreaView>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <AlohaButton onPress={handleContinue} text="continue" variant="primary"  disabled={selected.length === 0} />
+      </View>
     </LinearGradient>
   );
 }
@@ -78,8 +78,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingTop: 40,
     paddingHorizontal: 32,
-    justifyContent: 'center',
-    paddingBottom: 140,
+    paddingBottom: 180,
   },
   question: {
     fontFamily: 'Nunito_600SemiBold',

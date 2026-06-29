@@ -62,10 +62,10 @@ export default function ObstaclesScreen() {
             })}
           </View>
         </ScrollView>
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={handleContinue} text="continue" variant="primary"  disabled={selected.length === 0} />
-        </View>
       </SafeAreaView>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <AlohaButton onPress={handleContinue} text="continue" variant="primary"  disabled={selected.length === 0} />
+      </View>
     </LinearGradient>
   );
 }

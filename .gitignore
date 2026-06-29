@@ -41,3 +41,6 @@ example
 # generated native folders
 /ios
 /android
+
+# API keys and local config
+src/config/api.ts

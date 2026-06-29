@@ -59,9 +59,10 @@ export default function ComparisonScreen() {
           </Text>
         </View>
 
-        {/* Button */}
-        <AlohaButton onPress={() => router.push('/onboarding/commitment')} text="I'm in" variant="secondary" />
       </SafeAreaView>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <AlohaButton onPress={() => router.push('/onboarding/commitment')} text="i'm in" variant="secondary" />
+      </View>
     </View>
   );
 }
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     justifyContent: 'space-between',
-    paddingBottom: 24,
+    paddingBottom: 110,
   },
   backButton: {
     position: 'absolute',

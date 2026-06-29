@@ -168,11 +168,12 @@ export default function PaywallScreen() {
             )}
           </View>
 
-          <TouchableOpacity style={styles.ctaButton} onPress={handleStartTrial}>
-            <Text style={styles.ctaButtonText}>
-              {selectedPlan === 'yearly' ? 'begin my healing — free' : 'continue'}
-            </Text>
-          </TouchableOpacity>
+          <AlohaButton
+            onPress={handleStartTrial}
+            text={selectedPlan === 'yearly' ? 'begin my healing — free' : 'continue'}
+            variant="primary"
+            style={{ paddingBottom: 0 }}
+          />
           
           <Text style={styles.priceSubtext}>
             {selectedPlan === 'yearly' 
@@ -301,7 +302,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#ffffff',
-    paddingHorizontal: 24,
     paddingTop: 8,
     paddingBottom: 20, // Lowered closer to bottom screen edge
   },
@@ -399,25 +399,7 @@ const styles = StyleSheet.create({
   paymentDueSpacer: {
     height: 24,
   },
-  ctaButton: {
-    backgroundColor: '#e86935',
-    paddingVertical: 18,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    elevation: 8,
-  },
-  ctaButtonText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#ffffff',
-    textTransform: 'lowercase',
-  },
+
   priceSubtext: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 13,

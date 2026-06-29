@@ -57,10 +57,10 @@ export default function PainScreen() {
             what if today, something changed?
           </Animated.Text>
         </ScrollView>
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={() => router.push('/onboarding/savior')} text="continue" variant="primary"  disabled={!showBtn} />
-        </View>
       </SafeAreaView>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <AlohaButton onPress={() => router.push('/onboarding/savior')} text="continue" variant="primary"  disabled={!showBtn} />
+      </View>
     </LinearGradient>
   );
 }

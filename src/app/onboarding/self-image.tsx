@@ -56,10 +56,10 @@ export default function SelfImageScreen() {
             })}
           </View>
         </ScrollView>
-        <View style={{ position: 'absolute', bottom: 32, left: 32, right: 32 }}>
-            <AlohaButton onPress={() => router.push('/onboarding/obstacles')} text="continue" variant="primary"  disabled={selectedImpacts.length === 0} />
-          </View>
       </SafeAreaView>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <AlohaButton onPress={() => router.push('/onboarding/obstacles')} text="continue" variant="primary"  disabled={selectedImpacts.length === 0} />
+      </View>
     </LinearGradient>
   );
 }

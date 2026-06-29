@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     position: 'absolute',
-    bottom: 32,
+    bottom: 28,
     right: 32,
   },
   continueButton: {

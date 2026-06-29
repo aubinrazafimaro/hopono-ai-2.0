@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -10,6 +10,20 @@ const { height } = Dimensions.get('window');
 export default function PlanScreen() {
   const router = useRouter();
   const { data } = useOnboarding();
+  const [showBtn, setShowBtn] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
+  const [scrollViewHeight, setScrollViewHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentHeight > 0 && scrollViewHeight > 0 && contentHeight <= scrollViewHeight + 50) {
+      setShowBtn(true);
+    }
+  }, [contentHeight, scrollViewHeight]);
+
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
+    const paddingToBottom = 50;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
 
   // Calculate the date 21 days from now
   const targetDate = new Date();
@@ -24,7 +38,18 @@ export default function PlanScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent} 
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={400}
+        onContentSizeChange={(width, height) => setContentHeight(height)}
+        onLayout={(e) => setScrollViewHeight(e.nativeEvent.layout.height)}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            setShowBtn(true);
+          }
+        }}
+      >
         
         {/* Main Commitment Card */}
         <View style={styles.commitmentCard}>
@@ -81,18 +106,20 @@ export default function PlanScreen() {
       </ScrollView>
 
       {/* Fixed Bottom Button */}
-      <LinearGradient 
-        colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.9)', 'rgba(255,255,255,1)']}
-        locations={[0, 0.4, 1]}
-        style={styles.bottomContainer}
-      >
-        <TouchableOpacity 
-          style={styles.transformButton}
-          onPress={() => router.push('/onboarding/comparison')}
+      {showBtn && (
+        <LinearGradient 
+          colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.9)', 'rgba(255,255,255,1)']}
+          locations={[0, 0.4, 1]}
+          style={styles.bottomContainer}
         >
-          <Text style={styles.transformButtonText}>this is my moment 🌺</Text>
-        </TouchableOpacity>
-      </LinearGradient>
+          <TouchableOpacity 
+            style={styles.transformButton}
+            onPress={() => router.push('/onboarding/comparison')}
+          >
+            <Text style={styles.transformButtonText}>this is my moment 🌺</Text>
+          </TouchableOpacity>
+        </LinearGradient>
+      )}
     </SafeAreaView>
   );
 }

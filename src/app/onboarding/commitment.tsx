@@ -23,43 +23,43 @@ export default function CommitmentScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
-        <View style={styles.header}>
-          <Text style={styles.smallTitle}>one last thing.</Text>
-          <Text style={styles.mainTitle}>
-            how ready are you to let go?
-          </Text>
-        </View>
+    <View style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <Text style={styles.smallTitle}>one last thing.</Text>
+            <Text style={styles.mainTitle}>how ready are you to let go?</Text>
+          </View>
 
-        <View style={styles.optionsContainer}>
-          {COMMITMENT_OPTIONS.map((option) => (
-            <TouchableOpacity
-              key={option.id}
-              style={[
-                styles.optionButton,
-                selectedId === option.id && styles.optionButtonSelected
-              ]}
-              onPress={() => setSelectedId(option.id)}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.optionEmoji}>{option.emoji}</Text>
-              <Text style={[
-                styles.optionText,
-                selectedId === option.id && styles.optionTextSelected
-              ]}>
-                {option.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+          <View style={styles.optionsContainer}>
+            {COMMITMENT_OPTIONS.map((option) => (
+              <TouchableOpacity
+                key={option.id}
+                style={[
+                  styles.optionButton,
+                  selectedId === option.id && styles.optionButtonSelected
+                ]}
+                onPress={() => setSelectedId(option.id)}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.optionEmoji}>{option.emoji}</Text>
+                <Text style={[
+                  styles.optionText,
+                  selectedId === option.id && styles.optionTextSelected
+                ]}>
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
 
       {/* Bottom Button */}
       <View style={styles.bottomContainer}>
         <AlohaButton onPress={handleNext} text="this is my answer" variant="primary" disabled={!selectedId} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -62,10 +62,10 @@ export default function ReassuranceScreen() {
           </Animated.Text>
 
         </ScrollView>
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <AlohaButton onPress={() => router.push('/onboarding/final-recap')} text="continue" variant="primary"  disabled={!showBtn} />
-        </View>
       </SafeAreaView>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <AlohaButton onPress={() => router.push('/onboarding/final-recap')} text="continue" variant="primary"  disabled={!showBtn} />
+      </View>
     </LinearGradient>
   );
 }
@@ -104,27 +104,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#4b5563',
     lineHeight: 28,
-  },
-  bottomContainer: {
-    paddingBottom: 32,
-    paddingTop: 16,
-    alignItems: 'center',
-  },
-  continueButton: {
-    backgroundColor: '#e86935',
-    paddingVertical: 18,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 5,
-  },
-  continueText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#ffffff',
-    textTransform: 'lowercase',
   },
 });

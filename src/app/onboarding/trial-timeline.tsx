@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePricing } from '@/hooks/usePricing';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function TrialTimelineScreen() {
   const router = useRouter();
@@ -146,12 +147,15 @@ export default function TrialTimelineScreen() {
         <View style={styles.bottomFixed}>
           <View style={styles.paymentDueContainer}>
             <Ionicons name="checkmark-sharp" size={18} color="#1f2937" style={{ marginRight: 6 }} />
-            <Text style={styles.paymentDueText}>No Payment Due Now</Text>
+            <Text style={styles.paymentDueText}>no payment due now</Text>
           </View>
 
-          <TouchableOpacity style={styles.ctaButton} onPress={handleNext}>
-            <Text style={styles.ctaButtonText}>begin free — no card needed</Text>
-          </TouchableOpacity>
+          <AlohaButton
+            onPress={handleNext}
+            text="begin free — no card needed"
+            variant="primary"
+            style={{ paddingBottom: 0 }}
+          />
           
           <Text style={styles.priceSubtext}>
             then just {pricing.weeklyEquivalent}/week after your free trial
@@ -299,7 +303,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#ffffff',
-    paddingHorizontal: 24,
     paddingTop: 8,
     paddingBottom: 20, // Sit lower on screen
   },
@@ -313,24 +316,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 16,
     color: '#1f2937',
-  },
-  ctaButton: {
-    backgroundColor: '#e86935',
-    paddingVertical: 18,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    elevation: 8,
-  },
-  ctaButtonText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#ffffff',
     textTransform: 'lowercase',
   },
   priceSubtext: {

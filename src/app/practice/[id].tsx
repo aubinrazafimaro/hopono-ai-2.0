@@ -3,13 +3,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, Animated } from 'reac
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SimpleLineIcons } from '@expo/vector-icons';
-
-const phrases = [
-  "Aubin, I am sorry",
-  "please, forgive me",
-  "thank you",
-  "I love you"
-];
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PracticeScreen() {
   const { id, time } = useLocalSearchParams<{ id: string, time?: string }>();
@@ -23,6 +17,16 @@ export default function PracticeScreen() {
   const [count, setCount] = useState(1);
   const countRef = useRef(1);
   const [timeLeft, setTimeLeft] = useState(initialTime);
+
+  // Synchronize timeLeft when the query parameter resolves asynchronously from Expo Router
+  useEffect(() => {
+    if (time) {
+      const parsedTime = parseInt(time, 10);
+      if (!isNaN(parsedTime) && parsedTime > 0) {
+        setTimeLeft(parsedTime);
+      }
+    }
+  }, [time]);
   
   // Mantra State
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(-1);
@@ -76,19 +80,70 @@ export default function PracticeScreen() {
     router.push(`/completion?type=${type}&value=${val}`);
   };
 
+  const [phrasesList, setPhrasesList] = useState<string[]>([
+    "I am sorry",
+    "please, forgive me",
+    "thank you",
+    "I love you"
+  ]);
+
+  useEffect(() => {
+    const loadCustomMantra = async () => {
+      try {
+        const storedPlan = await AsyncStorage.getItem('@hopono_healing_plan');
+        const storedUser = await AsyncStorage.getItem('userData');
+        
+        let userName = 'friend';
+        if (storedUser) {
+          const userObj = JSON.parse(storedUser);
+          if (userObj.name) userName = userObj.name;
+        }
+
+        if (storedPlan) {
+          const planObj = JSON.parse(storedPlan);
+          if (planObj.customMantra) {
+            const lines = planObj.customMantra
+              .split('\n')
+              .map((l: string) => l.replace(/^["'-]\s*/, '').trim())
+              .filter((l: string) => l.length > 0);
+            
+            const finalLines = lines.filter((l: string) => !l.toLowerCase().includes('mantra'));
+            if (finalLines.length >= 4) {
+              setPhrasesList(finalLines);
+              return;
+            }
+          }
+        }
+        
+        setPhrasesList([
+          `${userName}, I am sorry`,
+          "please, forgive me",
+          "thank you",
+          "I love you"
+        ]);
+      } catch (err) {
+        console.warn("Failed to load custom mantra, using defaults", err);
+      }
+    };
+    loadCustomMantra();
+  }, []);
+
   // Auto-play the sequence
   useEffect(() => {
-    playPhrase(0);
+    // Wait for phrasesList to load and play
+    if (phrasesList.length > 0) {
+      playPhrase(0);
+    }
     
     return () => {
       isFinishedRef.current = true; // Stop loops on unmount
     };
-  }, []);
+  }, [phrasesList]);
 
   const playPhrase = (index: number) => {
     if (isFinishedRef.current) return;
 
-    if (index >= phrases.length) {
+    if (index >= phrasesList.length) {
       // Sequence finished (one repetition done)
       if (!isTimerMode) {
         if (countRef.current >= targetCount) {
@@ -175,8 +230,8 @@ export default function PracticeScreen() {
           }
         ]}>
           <LinearGradient
-            colors={['#ffedd5', '#fed7aa', 'rgba(254, 215, 170, 0)']}
-            style={StyleSheet.absoluteFill}
+            colors={['#ffedd5', 'rgba(254, 215, 170, 0.5)', 'rgba(254, 215, 170, 0.2)', 'transparent']}
+            style={[StyleSheet.absoluteFill, { borderRadius: 150 }]}
             start={{ x: 0.5, y: 0.5 }}
             end={{ x: 1, y: 1 }}
           />
@@ -189,7 +244,7 @@ export default function PracticeScreen() {
       <View style={styles.bottomContainer}>
         {currentPhraseIndex !== -1 && !isFinished ? (
           <Animated.Text style={[styles.mantraText, { opacity: textOpacity }]}>
-            {phrases[currentPhraseIndex]}
+            {phrasesList[currentPhraseIndex]}
           </Animated.Text>
         ) : null}
       </View>
@@ -238,7 +293,6 @@ const styles = StyleSheet.create({
     borderRadius: 150,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 237, 213, 0.4)', // Pale orange glow
     overflow: 'hidden',
   },
   orbCore: {
