@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCheckIn, peaceStates as states } from '@/context/CheckInContext';
 
 export default function CheckInStep1() {
   const { peaceIndex, setPeaceIndex } = useCheckIn();
+  const { from } = useLocalSearchParams<{ from?: string }>();
   const [sliderValue, setSliderValue] = useState(peaceIndex);
   const animatedValue = useRef(new Animated.Value(peaceIndex)).current;
 
@@ -83,7 +84,10 @@ export default function CheckInStep1() {
           style={styles.button}
           onPress={() => {
             setPeaceIndex(sliderValue);
-            router.push('/check-in-2');
+            router.push({
+              pathname: '/check-in-2',
+              params: { from }
+            });
           }}
         >
           <Text style={styles.buttonText}>continue</Text>

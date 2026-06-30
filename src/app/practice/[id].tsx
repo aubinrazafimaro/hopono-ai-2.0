@@ -1,17 +1,60 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableWithoutFeedback, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback, Animated, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useCheckIn, peaceStates, moodStates } from '@/context/CheckInContext';
+import { useUser } from '@/context/UserContext';
+import { generateCompletionFeedback } from '@/services/ai';
+import { completeSession, saveSessionToHistory } from '@/services/history';
 
 export default function PracticeScreen() {
-  const { id, time } = useLocalSearchParams<{ id: string, time?: string }>();
+  const { id, time, type } = useLocalSearchParams<{ id: string; time?: string; type?: 'morning' | 'midday' | 'evening' }>();
   
   // Is it the timer mode or repetition mode?
   const isTimerMode = id === 'custom';
   const targetCount = isTimerMode ? 0 : parseInt(id || '21', 10);
   const initialTime = time ? parseInt(time, 10) : 300;
+
+  const { peaceIndex, moodIndex, history } = useCheckIn();
+  const { userData } = useUser();
+  const [aiFeedback, setAiFeedback] = useState<string>('');
+  const aiFeedbackRef = useRef<string>('');
+
+  useEffect(() => {
+    const prefetchFeedback = async () => {
+      if (!type) return;
+      try {
+        const todayPeace = peaceStates[peaceIndex].text;
+        const todayMood = moodStates[moodIndex].text;
+        
+        const yesterday = history[1];
+        const yesterdayPeace = yesterday ? peaceStates[yesterday.peaceIndex].text : 'unknown';
+        const yesterdayMood = yesterday ? moodStates[yesterday.moodIndex].text : 'unknown';
+        
+        const histEntries = history.slice(0, 5).map(h => 
+          `- ${h.date}: checked in feeling "${moodStates[h.moodIndex].text}" (mood) and "${peaceStates[h.peaceIndex].text}" (peace)`
+        ).join('\n');
+
+        const feedback = await generateCompletionFeedback({
+          onboardingData: userData,
+          sessionType: type,
+          reps: targetCount,
+          todayPeace,
+          todayMood,
+          yesterdayPeace,
+          yesterdayMood,
+          recentHistory: histEntries
+        });
+        setAiFeedback(feedback);
+        aiFeedbackRef.current = feedback;
+      } catch (err) {
+        console.warn('Failed to prefetch AI completion feedback:', err);
+      }
+    };
+    prefetchFeedback();
+  }, [type, userData, peaceIndex, moodIndex, history, targetCount]);
 
   // State
   const [count, setCount] = useState(1);
@@ -32,6 +75,9 @@ export default function PracticeScreen() {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(-1);
   const [isFinished, setIsFinished] = useState(false);
   const isFinishedRef = useRef(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [userName, setUserName] = useState('friend');
 
   // Animations
   const orbScale = useRef(new Animated.Value(1)).current;
@@ -56,7 +102,7 @@ export default function PracticeScreen() {
 
   // Timer Mode Logic
   useEffect(() => {
-    if (!isTimerMode || isFinished) return;
+    if (!isTimerMode || isFinished || !hasStarted) return;
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -68,77 +114,76 @@ export default function PracticeScreen() {
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [isTimerMode, isFinished]);
+  }, [isTimerMode, isFinished, hasStarted]);
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     setIsFinished(true);
     isFinishedRef.current = true;
+
+    const finalFeedback = aiFeedbackRef.current || `thank you for completing your ${type || 'session'} practice. you are doing beautifully.`;
+    
+    if (type) {
+      try {
+        await completeSession(type);
+        const todayPeace = peaceStates[peaceIndex].text;
+        const todayMood = moodStates[moodIndex].text;
+        await saveSessionToHistory(type, todayPeace, todayMood, finalFeedback);
+      } catch (err) {
+        console.warn('Failed to save session completion status:', err);
+      }
+    }
     
     // Instantly redirect to the Celebration screen
-    const type = isTimerMode ? 'timer' : 'repetition';
+    const practiceType = isTimerMode ? 'timer' : 'repetition';
     const val = isTimerMode ? initialTime : targetCount;
-    router.push(`/completion?type=${type}&value=${val}`);
+    router.push(`/completion?type=${practiceType}&value=${val}&feedback=${encodeURIComponent(finalFeedback)}`);
   };
 
-  const [phrasesList, setPhrasesList] = useState<string[]>([
-    "I am sorry",
-    "please, forgive me",
-    "thank you",
-    "I love you"
-  ]);
+  const [phrasesList, setPhrasesList] = useState<string[]>([]);
 
   useEffect(() => {
     const loadCustomMantra = async () => {
       try {
-        const storedPlan = await AsyncStorage.getItem('@hopono_healing_plan');
         const storedUser = await AsyncStorage.getItem('userData');
-        
-        let userName = 'friend';
+        let name = 'friend';
         if (storedUser) {
           const userObj = JSON.parse(storedUser);
-          if (userObj.name) userName = userObj.name;
+          if (userObj.name) name = userObj.name.trim().toLowerCase();
         }
+        setUserName(name);
 
-        if (storedPlan) {
-          const planObj = JSON.parse(storedPlan);
-          if (planObj.customMantra) {
-            const lines = planObj.customMantra
-              .split('\n')
-              .map((l: string) => l.replace(/^["'-]\s*/, '').trim())
-              .filter((l: string) => l.length > 0);
-            
-            const finalLines = lines.filter((l: string) => !l.toLowerCase().includes('mantra'));
-            if (finalLines.length >= 4) {
-              setPhrasesList(finalLines);
-              return;
-            }
-          }
-        }
-        
         setPhrasesList([
-          `${userName}, I am sorry`,
-          "please, forgive me",
+          `${name}, i am sorry`,
+          "please forgive me",
           "thank you",
-          "I love you"
+          "i love you"
         ]);
+        setIsLoaded(true);
       } catch (err) {
-        console.warn("Failed to load custom mantra, using defaults", err);
+        console.warn("Failed to load user name for mantra, using default", err);
+        setPhrasesList([
+          "i am sorry",
+          "please forgive me",
+          "thank you",
+          "i love you"
+        ]);
+        setIsLoaded(true);
       }
     };
     loadCustomMantra();
-  }, []);
+  }, [type]);
 
   // Auto-play the sequence
   useEffect(() => {
-    // Wait for phrasesList to load and play
-    if (phrasesList.length > 0) {
-      playPhrase(0);
-    }
+    if (!isLoaded || phrasesList.length === 0 || !hasStarted) return;
+    
+    isFinishedRef.current = false;
+    playPhrase(0);
     
     return () => {
       isFinishedRef.current = true; // Stop loops on unmount
     };
-  }, [phrasesList]);
+  }, [isLoaded, phrasesList, hasStarted]);
 
   const playPhrase = (index: number) => {
     if (isFinishedRef.current) return;
@@ -192,6 +237,39 @@ export default function PracticeScreen() {
     const s = seconds % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
+
+  if (!hasStarted) {
+    return (
+      <View style={styles.container}>
+        <LinearGradient
+          colors={['#ffffff', '#fff7ed']} 
+          style={StyleSheet.absoluteFill}
+        />
+
+        <View style={styles.backButton}>
+          <SimpleLineIcons name="close" size={28} color="#94a3b8" onPress={() => router.push('/')} />
+        </View>
+
+        <View style={styles.greetingCenterContainer}>
+          <Text style={styles.greetingEmoji}>🌺</Text>
+          <Text style={styles.greetingTitle}>aloha, {userName}</Text>
+          <Text style={styles.greetingText}>
+            happy to see you again for this beautiful day. if you are ready, tap below to begin your clearing.
+          </Text>
+        </View>
+
+        <View style={styles.greetingBottomContainer}>
+          <TouchableOpacity 
+            style={styles.startButton}
+            activeOpacity={0.8}
+            onPress={() => setHasStarted(true)}
+          >
+            <Text style={styles.startText}>start</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -265,6 +343,57 @@ const styles = StyleSheet.create({
     top: 60,
     left: 24,
     zIndex: 10,
+  },
+  greetingCenterContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+    marginTop: 40,
+  },
+  greetingEmoji: {
+    fontSize: 64,
+    marginBottom: 16,
+  },
+  greetingTitle: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 28,
+    color: '#1e293b',
+    textTransform: 'lowercase',
+    marginBottom: 12,
+  },
+  greetingText: {
+    fontFamily: 'Nunito_400Regular',
+    fontSize: 16,
+    color: '#475569',
+    textAlign: 'center',
+    lineHeight: 24,
+    textTransform: 'lowercase',
+  },
+  greetingBottomContainer: {
+    width: '100%',
+    paddingHorizontal: 24,
+    paddingBottom: 60,
+    alignItems: 'center',
+  },
+  startButton: {
+    backgroundColor: '#e86935',
+    paddingVertical: 18,
+    borderRadius: 16,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#e86935',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 6,
+  },
+  startText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18,
+    color: '#ffffff',
+    textTransform: 'lowercase',
   },
   topContainer: {
     marginTop: 120,

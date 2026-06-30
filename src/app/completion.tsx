@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Defs, RadialGradient, Stop, Circle } from 'react-native-svg';
@@ -32,7 +32,7 @@ const getWeekDays = () => {
 };
 
 export default function CompletionScreen() {
-  const { type, value } = useLocalSearchParams<{ type: string; value: string }>();
+  const { type, value, feedback } = useLocalSearchParams<{ type: string; value: string; feedback?: string }>();
 
   const [affirmation] = useState(() => affirmations[Math.floor(Math.random() * affirmations.length)]);
   const [weekDays] = useState(getWeekDays);
@@ -132,7 +132,13 @@ export default function CompletionScreen() {
           <Text style={styles.hugeWord}>hoʻomaikaʻi</Text>
           <Text style={styles.translationText}>(congratulations)</Text>
           <Text style={styles.streakText}>{formatValue()}</Text>
-          <Text style={styles.affirmationText}>{affirmation}</Text>
+          <View style={{ maxHeight: 110, paddingHorizontal: 10, width: '100%', marginBottom: 12 }}>
+            <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={{ alignItems: 'center' }}>
+              <Text style={styles.affirmationText}>
+                {feedback ? decodeURIComponent(feedback) : affirmation}
+              </Text>
+            </ScrollView>
+          </View>
         </Animated.View>
 
         <Animated.View style={[styles.calendarCard, { opacity: contentOpacity }]}>
@@ -163,7 +169,7 @@ export default function CompletionScreen() {
           activeOpacity={0.8}
           onPress={handleDismiss}
         >
-          <Text style={styles.continueText}>continue</Text>
+          <Text style={styles.continueText}>done</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>

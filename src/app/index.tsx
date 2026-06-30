@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Share2 } from 'lucide-react-native'; // Changed Share to Share2 for the 3-dots connected share icon
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCheckIn, peaceStates, moodStates } from '@/context/CheckInContext';
 import { useUser } from '@/context/UserContext';
@@ -17,6 +17,8 @@ import { useAppTheme } from '@/context/AppThemeContext';
 import AlohaButton from '@/components/AlohaButton';
 import { SPACING, RADIUS, COLORS, TYPOGRAPHY } from '@/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getDailyProgress, DailyProgress } from '@/services/history';
+import { generateLocalHealingPlan } from '@/services/ai';
 
 const practices = [
   { id: '21',     label: '21 repetitions',  desc: 'quick clearing',  emoji: '🌺' },
@@ -34,20 +36,90 @@ export default function Home() {
   const currentMonthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date()).toLowerCase();
 
   const [healingPlan, setHealingPlan] = useState<any>(null);
+  const [dailyProgress, setDailyProgress] = useState<DailyProgress | null>(null);
 
   useEffect(() => {
     const loadHealingPlan = async () => {
       try {
         const stored = await AsyncStorage.getItem('@hopono_healing_plan');
         if (stored) {
-          setHealingPlan(JSON.parse(stored));
+          const plan = JSON.parse(stored);
+          if (!plan.morningTitle) {
+            // Migrate old plan by merging it with new default daily fields
+            const fallback = generateLocalHealingPlan(userData || {});
+            const migratedPlan = { ...plan, ...fallback };
+            await AsyncStorage.setItem('@hopono_healing_plan', JSON.stringify(migratedPlan));
+            setHealingPlan(migratedPlan);
+          } else {
+            setHealingPlan(plan);
+          }
         }
       } catch (err) {
         console.error("Failed to load healing plan:", err);
       }
     };
     loadHealingPlan();
-  }, []);
+  }, [userData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadProgress = async () => {
+        const progress = await getDailyProgress();
+        setDailyProgress(progress);
+      };
+      loadProgress();
+    }, [healingPlan])
+  );
+
+  const getProgressDetails = () => {
+    if (!dailyProgress) {
+      return { percentage: 0, text: 'loading...', nextSession: null, reps: 0 };
+    }
+    
+    let percentage = 0;
+    let text = 'begin morning cleaning';
+    let nextSession: 'morning' | 'midday' | 'evening' | null = 'morning';
+    let reps = healingPlan?.morningReps || 3;
+    
+    if (dailyProgress.morningCompleted) {
+      percentage = 30;
+      text = 'begin midday pause';
+      nextSession = 'midday';
+      reps = healingPlan?.middayReps || 6;
+    }
+    
+    if (dailyProgress.middayCompleted) {
+      percentage = 60;
+      text = 'begin evening release';
+      nextSession = 'evening';
+      reps = healingPlan?.eveningReps || 9;
+    }
+    
+    if (dailyProgress.eveningCompleted) {
+      percentage = 100;
+      text = 'peace is complete 🌺';
+      nextSession = null;
+      reps = 0;
+    }
+    
+    return { percentage, text, nextSession, reps };
+  };
+
+  const { percentage: progressPercent, text: progressText, nextSession, reps: nextReps } = getProgressDetails();
+
+  const handleOrbPress = () => {
+    if (!healingPlan || !nextSession) return;
+    
+    if (nextSession === 'morning') {
+      router.push({
+        pathname: '/check-in-1',
+        params: { from: 'ritual' }
+      });
+      return;
+    }
+    
+    router.push(`/practice/${nextReps}?type=${nextSession}`);
+  };
 
   // ── Goal Rotation State (Interval: 15 seconds) ──
   const [currentGoalIndex, setCurrentGoalIndex] = useState(0);
@@ -188,7 +260,12 @@ export default function Home() {
 
           {/* ── CENTRAL GLOWING ORB & BRAND NAME (Replaces Calendar) ── */}
           <View style={styles.borderlessOrbCard}>
-            <View style={styles.dashboardOrbContainer}>
+            <TouchableOpacity 
+              activeOpacity={0.85} 
+              onPress={handleOrbPress} 
+              disabled={!nextSession || !healingPlan}
+              style={styles.dashboardOrbContainer}
+            >
               <Animated.View style={[
                 styles.dashboardOrb, 
                 { 
@@ -204,14 +281,41 @@ export default function Home() {
                 />
               </Animated.View>
               {/* Core sun */}
-              <View style={styles.dashboardOrbCore} />
-            </View>
+              <View style={[styles.dashboardOrbCore, { justifyContent: 'center', alignItems: 'center' }]}>
+                {healingPlan && (
+                  <Text style={styles.orbPercentageText}>
+                    {progressPercent}%
+                  </Text>
+                )}
+              </View>
+            </TouchableOpacity>
+            
             <Text style={[styles.brandTitleText, { color: palette.textPrimary }]}>
               hopono AI
             </Text>
-            <Text style={[styles.brandSubtitleText, { color: palette.textMuted }]}>
-              breathe in. clean inside. release.
-            </Text>
+            
+            {healingPlan ? (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleOrbPress}
+                disabled={!nextSession}
+                style={[
+                  styles.progressButton, 
+                  { 
+                    backgroundColor: nextSession ? palette.primary : 'rgba(255,255,255,0.06)', 
+                    borderColor: palette.cardBorder 
+                  }
+                ]}
+              >
+                <Text style={[styles.progressButtonText, { color: nextSession ? '#ffffff' : palette.textMuted }]}>
+                  {progressText}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={[styles.brandSubtitleText, { color: palette.textMuted }]}>
+                breathe in. clean inside. release.
+              </Text>
+            )}
           </View>
 
           {healingPlan && (
@@ -219,37 +323,6 @@ export default function Home() {
               <Text style={[styles.healingExplanationTitle, { color: palette.textPrimary }]}>your healing journey 🌺</Text>
               <Text style={[styles.healingExplanationText, { color: palette.textMuted }]}>{healingPlan.healingExplanation}</Text>
             </View>
-          )}
-
-          {healingPlan && (
-            <>
-              <Text style={[styles.sectionTitle, { color: palette.textMuted, marginBottom: SPACING.md }]}>
-                your daily ritual 🕊️
-              </Text>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={styles.horizontalScroll}
-                contentContainerStyle={{ paddingRight: SPACING.md }}
-              >
-                {healingPlan.programPhases.map((phase: any, index: number) => {
-                  const timeLabel = index === 0 ? 'morning' : index === 1 ? 'midday' : 'evening';
-                  const emoji = index === 0 ? '🌅' : index === 1 ? '☀️' : '🌙';
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      style={[styles.practiceCard, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder }]}
-                      activeOpacity={0.85}
-                      onPress={() => router.push(`/practice/21`)}
-                    >
-                      <Text style={styles.practiceEmoji}>{emoji}</Text>
-                      <Text style={[styles.practiceTitle, { color: palette.textPrimary }]}>{timeLabel} • {phase.weeks.toLowerCase()}</Text>
-                      <Text style={[styles.practiceDesc, { color: palette.textMuted }]}>{phase.title.toLowerCase()}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            </>
           )}
 
           {/* ── YOUR DEVOTION (ex-streak) ── */}
@@ -476,6 +549,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 24,
     elevation: 10,
+  },
+  orbPercentageText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 16,
+    color: '#e86935',
+  },
+  progressButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    marginTop: 10,
+    borderWidth: 1.5,
+    shadowColor: '#e86935',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  progressButtonText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 14,
+    textTransform: 'lowercase',
   },
   brandTitleText: {
     fontFamily: 'Nunito_700Bold',

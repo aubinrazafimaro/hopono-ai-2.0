@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCheckIn, moodStates as states } from '@/context/CheckInContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CheckInStep2() {
   const { moodIndex, setMoodIndex } = useCheckIn();
+  const { from } = useLocalSearchParams<{ from?: string }>();
   const [sliderValue, setSliderValue] = useState(moodIndex);
   const animatedValue = useRef(new Animated.Value(moodIndex)).current;
 
@@ -81,9 +83,29 @@ export default function CheckInStep2() {
         {/* CONTINUE BUTTON */}
         <TouchableOpacity 
           style={styles.button}
-          onPress={() => {
+          onPress={async () => {
             setMoodIndex(sliderValue);
-            router.push('/');
+            try {
+              const todayStr = new Date().toISOString().split('T')[0];
+              await AsyncStorage.setItem('@last_checkin_date', todayStr);
+            } catch (err) {
+              console.warn('Failed to save check-in date:', err);
+            }
+            if (from === 'ritual') {
+              let reps = 3;
+              try {
+                const storedPlan = await AsyncStorage.getItem('@hopono_healing_plan');
+                if (storedPlan) {
+                  const plan = JSON.parse(storedPlan);
+                  if (plan.morningReps) reps = plan.morningReps;
+                }
+              } catch (e) {
+                console.warn('Failed to read morning reps from storage', e);
+              }
+              router.replace(`/practice/${reps}?type=morning`);
+            } else {
+              router.push('/');
+            }
           }}
         >
           <Animated.Text style={[styles.buttonText, { color: backgroundColor }]}>
