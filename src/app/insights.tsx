@@ -129,32 +129,77 @@ export default function Insights() {
     }
   };
 
-  // Generate progress trend
-  const generateHealingTrend = (finalValue: number) => {
-    const data = [];
-    let current = Math.max(0, finalValue - 1.5); 
-    const step = (finalValue - current) / 6;
+  // Fetch real chart data points based on actual history database entries
+  const getChartData = (type: 'peace' | 'mood' | 'sessions') => {
+    const slice = history.slice(0, selectedPeriod).reverse();
     
-    for (let i = 0; i < 6; i++) {
-      data.push(current);
-      const noise = (Math.random() * 0.4) - 0.1;
-      current += step + noise;
+    if (selectedPeriod === 7 || selectedPeriod === 30) {
+      if (type === 'peace') {
+        return slice.map((d) => d.hasCheckIn ? d.peaceIndex : 2);
+      } else if (type === 'mood') {
+        return slice.map((d) => d.hasCheckIn ? d.moodIndex : 2);
+      } else {
+        let cum = 0;
+        return slice.map((d) => {
+          cum += d.sessions * 0.5;
+          return cum;
+        });
+      }
     }
-    data.push(finalValue);
-    return data;
-  };
-
-  // Generate cumulative data for Time Saved
-  const generateCumulativeData = (total: number) => {
-    const data = [0];
-    let current = 0;
-    const step = total / 6;
-    for (let i = 1; i < 6; i++) {
-      current += step * (0.5 + Math.random());
-      data.push(current);
+    
+    // For 90 days (group by weeks: 13 weeks of 7 days)
+    if (selectedPeriod === 90) {
+      const weeks = [];
+      const numWeeks = 13;
+      for (let i = 0; i < numWeeks; i++) {
+        const weekSlice = slice.slice(i * 7, (i + 1) * 7);
+        if (weekSlice.length === 0) continue;
+        
+        if (type === 'sessions') {
+          const sum = weekSlice.reduce((acc, d) => acc + d.sessions * 0.5, 0);
+          weeks.push(sum);
+        } else {
+          const checkedIn = weekSlice.filter((d) => d.hasCheckIn);
+          const sum = checkedIn.reduce((acc, d) => acc + (type === 'peace' ? d.peaceIndex : d.moodIndex), 0);
+          weeks.push(checkedIn.length > 0 ? sum / checkedIn.length : 2);
+        }
+      }
+      
+      if (type === 'sessions') {
+        let cum = 0;
+        return weeks.map((w) => {
+          cum += w;
+          return cum;
+        });
+      }
+      return weeks;
     }
-    data.push(total);
-    return data.sort((a, b) => a - b);
+    
+    // For 365 days (group by months: 12 months of ~30 days)
+    const months = [];
+    const numMonths = 12;
+    for (let i = 0; i < numMonths; i++) {
+      const monthSlice = slice.slice(i * 30, (i + 1) * 30);
+      if (monthSlice.length === 0) continue;
+      
+      if (type === 'sessions') {
+        const sum = monthSlice.reduce((acc, d) => acc + d.sessions * 0.5, 0);
+        months.push(sum);
+      } else {
+        const checkedIn = monthSlice.filter((d) => d.hasCheckIn);
+        const sum = checkedIn.reduce((acc, d) => acc + (type === 'peace' ? d.peaceIndex : d.moodIndex), 0);
+        months.push(checkedIn.length > 0 ? sum / checkedIn.length : 2);
+      }
+    }
+    
+    if (type === 'sessions') {
+      let cum = 0;
+      return months.map((m) => {
+        cum += m;
+        return cum;
+      });
+    }
+    return months;
   };
 
   const chartConfig = {
@@ -179,17 +224,17 @@ export default function Insights() {
   const charts = [
     {
       title: 'harmony evolution',
-      data: generateHealingTrend(roundedPeace),
+      data: getChartData('peace'),
       color: '#e86935',
     },
     {
       title: 'rhythm progression',
-      data: generateHealingTrend(roundedMood),
+      data: getChartData('mood'),
       color: '#0abfbc',
     },
     {
       title: 'time saved (hours)',
-      data: generateCumulativeData(stats.totalSessions * 0.5),
+      data: getChartData('sessions'),
       color: '#eab308',
     }
   ];
