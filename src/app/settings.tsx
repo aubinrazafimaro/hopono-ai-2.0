@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -43,38 +43,87 @@ const SettingsItem = ({
 
 export default function SettingsScreen() {
   const { palette } = useAppTheme();
-  const [hasPermissions, setHasPermissions] = useState(false);
-  const [isBlockerActive, setIsBlockerActive] = useState(false);
+  const [isNotificationsActive, setIsNotificationsActive] = useState(true);
+  const [isHapticsActive, setIsHapticsActive] = useState(true);
   
   useEffect(() => {
-    import('expo-app-blocker').then(({ getPermissionStatus }) => {
-      getPermissionStatus().then((status) => {
-        setHasPermissions(status.allGranted);
-      }).catch(console.warn);
-    }).catch(console.warn);
+    const loadSettings = async () => {
+      try {
+        const notif = await AsyncStorage.getItem('@hopono_notifications_enabled');
+        if (notif !== null) {
+          setIsNotificationsActive(notif === 'true');
+        }
+        const hapt = await AsyncStorage.getItem('@hopono_haptics_enabled');
+        if (hapt !== null) {
+          setIsHapticsActive(hapt === 'true');
+        }
+      } catch (e) {
+        console.warn('Failed to load settings:', e);
+      }
+    };
+    loadSettings();
   }, []);
 
-  const handleToggleBlocker = async (value: boolean) => {
+  const handleToggleNotifications = async (value: boolean) => {
+    setIsNotificationsActive(value);
     try {
-      const { requestPermissions } = await import('expo-app-blocker');
-      if (value && !hasPermissions) {
-        const result = await requestPermissions();
-        setHasPermissions(result.allGranted);
-        if (!result.allGranted) return;
-      }
-      setIsBlockerActive(value);
+      await AsyncStorage.setItem('@hopono_notifications_enabled', value.toString());
     } catch (e) {
-      console.warn("App Blocker is not available. Please compile the native app.", e);
+      console.warn(e);
     }
   };
 
-  const handleRestartOnboarding = async () => {
+  const handleToggleHaptics = async (value: boolean) => {
+    setIsHapticsActive(value);
     try {
-      await AsyncStorage.setItem('hasCompletedOnboarding', 'false');
-      router.replace('/onboarding');
+      await AsyncStorage.setItem('@hopono_haptics_enabled', value.toString());
     } catch (e) {
-      console.warn('Failed to reset onboarding state:', e);
+      console.warn(e);
     }
+  };
+
+  const handleRestartOnboarding = () => {
+    Alert.alert(
+      "restart onboarding",
+      "would you like to re-answer the questions and generate a new healing plan?",
+      [
+        { text: "cancel", style: "cancel" },
+        { 
+          text: "yes, restart", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await AsyncStorage.setItem('hasCompletedOnboarding', 'false');
+              router.replace('/onboarding');
+            } catch (e) {
+              console.warn('Failed to reset onboarding:', e);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleClearAllData = () => {
+    Alert.alert(
+      "clear all history",
+      "this will permanently delete all your daily check-ins, practice history, progress, and onboarding data. this cannot be undone. would you like to proceed?",
+      [
+        { text: "cancel", style: "cancel" },
+        { 
+          text: "clear everything", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await AsyncStorage.clear();
+              router.replace('/onboarding');
+            } catch (e) {
+              console.warn('Failed to clear app data:', e);
+            }
+          }
+        }
+      ]
+    );
   };
 
   return (
@@ -85,86 +134,68 @@ export default function SettingsScreen() {
     >
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       
+      {/* HEADER */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <SimpleLineIcons name="arrow-left" size={24} color="#334155" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>settings</Text>
+        <View style={{ width: 28 }} />
+      </View>
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        {/* HEADER */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>settings</Text>
-        </View>
-
-        <Text style={styles.sectionHeader}>app blocker</Text>
+        <Text style={styles.sectionHeader}>preferences</Text>
         <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
           <SettingsItem 
-            icon="shield" 
-            title="enable blocker" 
+            icon="bell" 
+            title="daily reminder" 
             iconBgColor={palette.cardBg} 
             iconColor={palette.primary}
             rightElement={
               <Switch
-                value={isBlockerActive}
-                onValueChange={handleToggleBlocker}
+                value={isNotificationsActive}
+                onValueChange={handleToggleNotifications}
                 trackColor={{ false: '#e2e8f0', true: palette.primary }}
               />
             }
           />
           <SettingsItem 
-            icon="lock" 
-            title="lock list" 
+            icon="control-play" 
+            title="haptic breathing beats" 
             iconBgColor={palette.cardBg} 
             iconColor={palette.primary}
             isLast={true}
-            onPress={() => {
-              if (hasPermissions || isBlockerActive) {
-                router.push('/lock-list');
-              } else {
-                handleToggleBlocker(true);
-              }
-            }}
+            rightElement={
+              <Switch
+                value={isHapticsActive}
+                onValueChange={handleToggleHaptics}
+                trackColor={{ false: '#e2e8f0', true: palette.primary }}
+              />
+            }
           />
         </View>
 
-        <Text style={styles.sectionHeader}>practice experience</Text>
+        <Text style={styles.sectionHeader}>account & data</Text>
         <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
-          <SettingsItem 
-            icon="equalizer" 
-            title="practice mode" 
-            iconBgColor={palette.cardBg} 
-            iconColor={palette.primary}
-          />
-          <SettingsItem 
-            icon="globe" 
-            title="mantra language" 
-            iconBgColor={palette.cardBg} 
-            iconColor={palette.primary}
-            isLast={true}
-          />
-        </View>
-
-        <Text style={styles.sectionHeader}>account settings</Text>
-        <View style={[styles.cardBlock, { shadowColor: palette.primary }]}>
-          <SettingsItem 
-            icon="bell" 
-            title="notifications" 
-            iconBgColor={palette.cardBg} 
-            iconColor={palette.primary}
-          />
-          <SettingsItem 
-            icon="shield" 
-            title="privacy & security" 
-            iconBgColor={palette.cardBg} 
-            iconColor={palette.primary}
-          />
           <SettingsItem 
             icon="refresh" 
             title="restart onboarding" 
             iconBgColor={palette.cardBg} 
             iconColor={palette.primary}
-            isLast={true}
             onPress={handleRestartOnboarding}
+          />
+          <SettingsItem 
+            icon="trash" 
+            title="clear all history" 
+            iconBgColor={palette.cardBg} 
+            iconColor="#ef4444"
+            isLast={true}
+            onPress={handleClearAllData}
           />
         </View>
 
-        <View style={{ height: 40 }} /> {/* Bottom padding */}
+        <View style={{ height: 40 }} />
       </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -182,8 +213,15 @@ const styles = StyleSheet.create({
   
   // Header
   header: {
-    marginBottom: 16,
-    marginTop: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    marginTop: 20,
+    marginBottom: 24,
+  },
+  backBtn: {
+    padding: 4,
   },
   headerTitle: {
     fontFamily: 'Nunito_700Bold',
