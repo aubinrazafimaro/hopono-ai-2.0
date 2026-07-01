@@ -240,18 +240,32 @@ export default function Insights() {
   ];
 
   const getXLabels = (days: number) => {
-    switch (days) {
-      case 7:
-        return ['0h', '4h', '8h', '12h', '16h', '20h', '24h'];
-      case 30:
-        return ['1', '5', '10', '15', '20', '25', '30'];
-      case 90:
-        return ['w1', 'w3', 'w5', 'w7', 'w9', 'w11', 'w13'];
-      case 365:
-        return ['jan', 'mar', 'may', 'jul', 'sep', 'nov', 'dec'];
-      default:
-        return ['1', '2', '3', '4', '5', '6', '7'];
+    const labels = [];
+    const today = new Date();
+    
+    if (days === 7) {
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        labels.push(d.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase());
+      }
+      return labels;
     }
+    
+    if (days === 30) {
+      for (let i = 4; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i * 6);
+        labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toLowerCase());
+      }
+      return labels;
+    }
+    
+    if (days === 90) {
+      return ['w1', 'w3', 'w5', 'w7', 'w9', 'w11', 'w13'];
+    }
+    
+    return ['jan', 'mar', 'may', 'jul', 'sep', 'nov', 'dec'];
   };
 
   const chartLabels = getXLabels(selectedPeriod);
