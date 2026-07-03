@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -10,6 +10,8 @@ const HOLD_DURATION = 1000; // slightly shorter hold
 
 export default function HookScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 18 : 28;
   const [greetingIndex, setGreetingIndex] = useState(0);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const continueOpacity = useRef(new Animated.Value(0)).current;
@@ -76,7 +78,7 @@ export default function HookScreen() {
           </Animated.Text>
         </View>
 
-        <Animated.View style={[styles.bottomContainer, { opacity: continueOpacity }]}>
+        <Animated.View style={[styles.bottomContainer, { bottom: bottomPos, opacity: continueOpacity }]}>
           <TouchableOpacity 
             style={styles.continueButton}
             onPress={() => router.push('/onboarding/pain')}

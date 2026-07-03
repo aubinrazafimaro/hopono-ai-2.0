@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function RecapScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 18 : 28;
   const { data } = useOnboarding();
 
   const handleFinish = () => {
@@ -74,7 +76,7 @@ export default function RecapScreen() {
           </Text>
         </View>
         </ScrollView>
-        <View style={styles.bottomContainerLink}>
+        <View style={[styles.bottomContainerLink, { bottom: bottomPos }]}>
           <TouchableOpacity 
             style={styles.linkButton}
             onPress={handleFinish}

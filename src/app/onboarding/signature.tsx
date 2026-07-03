@@ -4,10 +4,13 @@ import { useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AlohaButton from '@/components/AlohaButton';
 
 export default function SignatureScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 18 : 28;
   
   const [paths, setPaths] = useState<string[]>([]);
   const [currentPath, setCurrentPath] = useState<string>('');
@@ -191,7 +194,7 @@ export default function SignatureScreen() {
           </Animated.View>
         </ScrollView>
         {/* Bottom Button */}
-        <View style={styles.bottomContainerLink}>
+        <View style={[styles.bottomContainerLink, { bottom: bottomPos }]}>
           <TouchableOpacity 
             style={[styles.linkButton, !hasSigned && { opacity: 0.5 }]}
             onPress={handleNext}

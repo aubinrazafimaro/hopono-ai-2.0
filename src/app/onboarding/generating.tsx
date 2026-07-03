@@ -131,7 +131,7 @@ export default function GeneratingScreen() {
 
         <Animated.View style={[styles.bottomContainerAbsolute, { opacity: fadeAnimFinal }]}>
           <AlohaButton
-            onPress={() => router.push('/onboarding/power')}
+            onPress={() => router.push('/onboarding/plan')}
             text="i'm ready"
             variant="secondary"
           />

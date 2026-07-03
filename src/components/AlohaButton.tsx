@@ -12,6 +12,7 @@ interface AlohaButtonProps {
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
   icon?: React.ReactNode;
+  small?: boolean;
 }
 
 export default function AlohaButton({
@@ -21,6 +22,7 @@ export default function AlohaButton({
   disabled = false,
   style,
   icon,
+  small = false,
 }: AlohaButtonProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const insets = useSafeAreaInsets();
@@ -48,11 +50,11 @@ export default function AlohaButton({
           colors={['#FF8C5A', '#e86935']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={styles.button}
+          style={[styles.button, small && styles.buttonSmall]}
         >
           <View style={styles.contentRow}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
-            <Text style={[styles.text, styles.textWhite]}>{text}</Text>
+            <Text style={[styles.text, styles.textWhite, small && styles.textSmall]}>{text}</Text>
           </View>
         </LinearGradient>
       );
@@ -60,10 +62,10 @@ export default function AlohaButton({
 
     if (variant === 'secondary') {
       return (
-        <View style={[styles.button, styles.buttonSecondary]}>
+        <View style={[styles.button, styles.buttonSecondary, small && styles.buttonSmall]}>
           <View style={styles.contentRow}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
-            <Text style={[styles.text, styles.textOrange]}>{text}</Text>
+            <Text style={[styles.text, styles.textOrange, small && styles.textSmall]}>{text}</Text>
           </View>
         </View>
       );
@@ -71,10 +73,10 @@ export default function AlohaButton({
 
     if (variant === 'ghost') {
       return (
-        <View style={[styles.button, styles.buttonGhost]}>
+        <View style={[styles.button, styles.buttonGhost, small && styles.buttonSmall]}>
           <View style={styles.contentRow}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
-            <Text style={[styles.text, styles.textWhite]}>{text}</Text>
+            <Text style={[styles.text, styles.textWhite, small && styles.textSmall]}>{text}</Text>
           </View>
         </View>
       );
@@ -129,6 +131,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     elevation: 0,
   },
+  buttonSmall: {
+    paddingVertical: 14,
+    borderRadius: 28,
+  },
   contentRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -141,6 +147,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 18,
     textTransform: 'lowercase',
+  },
+  textSmall: {
+    fontSize: 16,
   },
   textWhite: {
     color: '#ffffff',

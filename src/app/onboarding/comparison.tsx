@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AlohaButton from '@/components/AlohaButton';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 export default function ComparisonScreen() {
   const router = useRouter();
@@ -10,7 +12,7 @@ export default function ComparisonScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        
+
         {/* Back Button */}
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color="#ffffff" />
@@ -25,12 +27,12 @@ export default function ComparisonScreen() {
 
         {/* Central Graphic Area */}
         <View style={styles.graphicContainer}>
-          {/* Left Item: Inner Peace */}
+          {/* Left Item: Dove */}
           <View style={[styles.itemContainer, styles.itemLeft]}>
             <View style={styles.labelPill}>
               <Text style={styles.labelText}>🌺 your healing</Text>
             </View>
-            <View style={styles.iconWrapper}>
+            <View style={[styles.iconWrapper, styles.doveIconWrapper]}>
               <Text style={styles.hugeIcon}>🕊️</Text>
             </View>
           </View>
@@ -45,24 +47,31 @@ export default function ComparisonScreen() {
             <View style={styles.iconWrapper}>
               <Text style={styles.hugeIcon}>☕</Text>
             </View>
-            <View style={styles.labelPill}>
-              <Text style={styles.labelText}>☕ less than a coffee a week</Text>
+            <View style={[styles.labelPill, styles.coffeeLabelPill]}>
+              <Text style={styles.labelText}>☕ less than a{'\n'}coffee a week</Text>
             </View>
           </View>
         </View>
 
-        {/* Bottom Text */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>try it free for 7 days. feel the difference.</Text>
-          <Text style={styles.description}>
-            if it doesn't change something in you, cancel anytime. no questions asked.
-          </Text>
+        {/* Bottom Section containing text and button naturally in a column */}
+        <View style={styles.bottomSection}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>try it free for 7 days.{'\n'}feel the difference.</Text>
+            <Text style={styles.description}>
+              if it doesn't change something in you, cancel anytime. no questions asked.
+            </Text>
+          </View>
+
+          <AlohaButton
+            onPress={() => router.push('/onboarding/commitment')}
+            text="i'm in"
+            variant="secondary"
+            small={true}
+            style={styles.buttonStyle}
+          />
         </View>
 
       </SafeAreaView>
-      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-        <AlohaButton onPress={() => router.push('/onboarding/commitment')} text="i'm in" variant="secondary" />
-      </View>
     </View>
   );
 }
@@ -76,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     justifyContent: 'space-between',
-    paddingBottom: 110,
+    paddingBottom: 10,
   },
   backButton: {
     position: 'absolute',
@@ -92,7 +101,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     alignItems: 'center',
-    marginTop: 10, // Moved up to let the page breathe
+    marginTop: 10,
   },
   pill: {
     backgroundColor: '#ffffff',
@@ -112,48 +121,60 @@ const styles = StyleSheet.create({
   },
   graphicContainer: {
     width: '100%',
-    height: 320,
+    height: 290,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    marginTop: 10, // Moved up slightly
+    marginTop: 10,
     marginBottom: 10,
   },
   itemContainer: {
     position: 'absolute',
     alignItems: 'center',
+    width: 160,
   },
   itemLeft: {
-    top: 10,
-    left: 36, // Moved in to cluster centered, away from the screen edge
+    top: 15,
+    right: '50%',
+    marginRight: -35,
     transform: [{ rotate: '-8deg' }],
   },
   itemRight: {
-    bottom: 10,
-    right: 36, // Moved in to cluster centered, away from the screen edge
+    bottom: 15,
+    left: '50%',
+    marginLeft: -35,
     transform: [{ rotate: '8deg' }],
   },
   iconWrapper: {
-    marginVertical: 10,
+    marginVertical: 3,
+  },
+  doveIconWrapper: {
+    marginTop: -20, // pulls dove closer to label pill above it
+  },
+  coffeeLabelPill: {
+    marginTop: -20, // pulls label pill closer to coffee cup above it
   },
   hugeIcon: {
-    fontSize: 100, // Premium large size matching the mockup proportions
+    fontSize: 135,
   },
   labelPill: {
     backgroundColor: '#ffffff',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 7,
+    paddingHorizontal: 14,
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.12,
     shadowRadius: 10,
     elevation: 4,
+    zIndex: 5,
   },
   labelText: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 12,
     color: '#1f2937',
+    textAlign: 'center',
+    lineHeight: 17,
   },
   vsBadge: {
     width: 52,
@@ -175,25 +196,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#e86935',
   },
+  bottomSection: {
+    width: '100%',
+    alignItems: 'stretch',
+  },
   textContainer: {
-    marginBottom: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
+    marginBottom: 20,
   },
   title: {
-    fontFamily: 'Nunito_700Bold', // Keep original app typography
-    fontSize: 22,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 26,
     color: '#ffffff',
     marginBottom: 12,
-    lineHeight: 28,
-    textAlign: 'left', // Aligned to the left matching the mockup
+    lineHeight: 33,
+    textAlign: 'left',
     textTransform: 'lowercase',
   },
   description: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
-    lineHeight: 20,
-    textAlign: 'left', // Aligned to the left matching the mockup
+    color: 'rgba(255, 255, 255, 0.88)',
+    lineHeight: 22,
+    textAlign: 'left',
     textTransform: 'lowercase',
+  },
+  buttonStyle: {
+    paddingHorizontal: 0,
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableOpacity, SafeAreaView, Dimensions, Modal } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,6 +8,7 @@ import { peaceStates, moodStates } from '@/context/CheckInContext';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { Ionicons } from '@expo/vector-icons';
 import AlohaButton from '@/components/AlohaButton';
+import * as StoreReview from 'expo-store-review';
 
 const { height } = Dimensions.get('window');
 
@@ -304,6 +305,10 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
   const flowerBreath = useRef(new Animated.Value(1)).current;
   const [weekDays] = useState(getWeekDays);
   const [showBtn, setShowBtn] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedStars, setSelectedStars] = useState(0);
+  const modalScale = useRef(new Animated.Value(0.85)).current;
+  const modalOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.sequence([
@@ -325,6 +330,34 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
       setShowBtn(true);
     });
   }, []);
+
+  const openRatingModal = () => {
+    setShowRatingModal(true);
+    modalScale.setValue(0.85);
+    modalOpacity.setValue(0);
+    Animated.parallel([
+      Animated.timing(modalOpacity, { toValue: 1, duration: 250, useNativeDriver: true }),
+      Animated.spring(modalScale, { toValue: 1, friction: 6, tension: 50, useNativeDriver: true }),
+    ]).start();
+  };
+
+  const handleStarPress = async (star: number) => {
+    setSelectedStars(star);
+    // Trigger native App Store review prompt
+    const isAvailable = await StoreReview.isAvailableAsync();
+    if (isAvailable) {
+      await StoreReview.requestReview();
+    }
+    setTimeout(() => {
+      setShowRatingModal(false);
+      onNext();
+    }, 600);
+  };
+
+  const handleLater = () => {
+    setShowRatingModal(false);
+    onNext();
+  };
 
   const finalEmojiScale = Animated.multiply(emojiScale, flowerBreath);
 
@@ -348,7 +381,7 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
               </Svg>
             </Animated.View>
             <Animated.Text style={[styles.congratsEmoji, { transform: [{ scale: finalEmojiScale }] }]}>
-              🌺
+              🔥
             </Animated.Text>
           </View>
           
@@ -380,11 +413,76 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
           </Animated.View>
         </View>
       </SafeAreaView>
+
       {showBtn && (
         <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingBottom: 0 }}>
-          <AlohaButton onPress={onNext} text="i felt it. what's next?" variant="secondary" />
+          <AlohaButton onPress={openRatingModal} text="i felt it. what's next?" variant="secondary" />
         </View>
       )}
+
+      {/* Rating Modal */}
+      <Modal
+        transparent
+        visible={showRatingModal}
+        animationType="none"
+        statusBarTranslucent
+        onRequestClose={handleLater}
+      >
+        <View style={styles.ratingOverlay}>
+          {/* Flame floating above card */}
+          <Animated.View style={[
+            styles.ratingCardWrapper,
+            { opacity: modalOpacity, transform: [{ scale: modalScale }] }
+          ]}>
+            <View style={styles.ratingCard}>
+              {/* App icon with gradient */}
+              <LinearGradient
+                colors={['#ff9a5c', '#e86935']}
+                style={styles.ratingAppIcon}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <Text style={{ fontSize: 30 }}>🌺</Text>
+              </LinearGradient>
+
+              <Text style={styles.ratingTitle}>you love hopono ai?</Text>
+              <Text style={styles.ratingSubtitle}>
+                tap a star to rate us{`\n`}in the App Store.
+              </Text>
+
+              {/* Stars */}
+              <View style={styles.starsRow}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <TouchableOpacity
+                    key={star}
+                    onPress={() => handleStarPress(star)}
+                    activeOpacity={0.8}
+                    style={styles.starBtn}
+                  >
+                    <Ionicons
+                      name={star <= selectedStars ? 'star' : 'star-outline'}
+                      size={42}
+                      color={star <= selectedStars ? '#f59e0b' : '#c4c9d4'}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Divider */}
+              <View style={styles.ratingDivider} />
+
+              {/* Later button */}
+              <TouchableOpacity
+                onPress={handleLater}
+                style={styles.ratingLaterBtn}
+                activeOpacity={0.6}
+              >
+                <Text style={styles.ratingLaterText}>plus tard</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -399,7 +497,7 @@ export default function MiniPracticeScreen() {
   if (step === 'peace') return <PeaceStep onNext={() => setStep('mood')} />;
   if (step === 'mood') return <MoodStep onNext={() => setStep('practice')} />;
   if (step === 'practice') return <PracticeStep name={name} onNext={() => setStep('congrats')} />;
-  if (step === 'congrats') return <CongratsStep onNext={() => router.push('/onboarding/plan')} />;
+  if (step === 'congrats') return <CongratsStep onNext={() => router.push('/onboarding/generating')} />;
 
   return null;
 }
@@ -618,5 +716,96 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     paddingBottom: 40,
+  },
+  // Rating Modal
+  ratingOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 10, 6, 0.72)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 28,
+  },
+  ratingCardWrapper: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  ratingFlame: {
+    fontSize: 60,
+    marginBottom: -20,
+    zIndex: 10,
+    textShadowColor: 'rgba(232, 105, 53, 0.6)',
+    textShadowOffset: { width: 0, height: 4 },
+    textShadowRadius: 16,
+  },
+  ratingCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 28,
+    width: '100%',
+    paddingTop: 32,
+    paddingBottom: 0,
+    paddingHorizontal: 28,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 24 },
+    shadowOpacity: 0.25,
+    shadowRadius: 40,
+    elevation: 20,
+    overflow: 'hidden',
+  },
+  ratingAppIcon: {
+    width: 72,
+    height: 72,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    shadowColor: '#e86935',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  ratingTitle: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 20,
+    color: '#111827',
+    textAlign: 'center',
+    marginBottom: 8,
+    textTransform: 'lowercase',
+    letterSpacing: -0.3,
+  },
+  ratingSubtitle: {
+    fontFamily: 'Nunito_400Regular',
+    fontSize: 14,
+    color: '#9ca3af',
+    textAlign: 'center',
+    marginBottom: 28,
+    lineHeight: 22,
+    textTransform: 'lowercase',
+  },
+  starsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 6,
+    marginBottom: 28,
+  },
+  starBtn: {
+    padding: 4,
+  },
+  ratingDivider: {
+    height: 1,
+    width: '110%',
+    backgroundColor: '#f3f4f6',
+  },
+  ratingLaterBtn: {
+    width: '110%',
+    paddingVertical: 18,
+    alignItems: 'center',
+  },
+  ratingLaterText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 16,
+    color: '#9ca3af',
+    textTransform: 'lowercase',
   },
 });

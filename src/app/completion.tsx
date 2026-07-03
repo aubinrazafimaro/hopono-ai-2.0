@@ -124,7 +124,7 @@ export default function CompletionScreen() {
             </Svg>
           </Animated.View>
           <Animated.Text style={[styles.emoji, { transform: [{ scale: finalEmojiScale }] }]}>
-            🌺
+            🔥
           </Animated.Text>
         </View>
         

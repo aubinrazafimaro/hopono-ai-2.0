@@ -257,7 +257,7 @@ export default function Insights() {
             
             {/* Card 1: Streak */}
             <View style={[styles.card, { shadowColor: palette.primary }]}>
-              <Text style={styles.cardEmoji}>🥳</Text>
+              <Text style={styles.cardEmoji}>🔥</Text>
               <Text style={[styles.cardNumber, { color: '#e86935' }]}>{stats.streak}</Text>
               <Text style={styles.cardTitle}>current streak</Text>
               <Text style={styles.cardSubtitle}>days</Text>

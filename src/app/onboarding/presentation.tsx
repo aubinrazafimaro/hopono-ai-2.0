@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Animated, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,6 +12,8 @@ const GENDERS = ['female', 'male'];
 
 export default function PresentationScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 18 : 28;
   const { data, updateData } = useOnboarding();
   const [step, setStep] = useState(0);
 
@@ -69,7 +71,7 @@ export default function PresentationScreen() {
             </Animated.Text>
           </ScrollView>
           {showTransitionBtn && (
-            <View style={styles.bottomContainerLink}>
+            <View style={[styles.bottomContainerLink, { bottom: bottomPos }]}>
               <TouchableOpacity 
                 style={styles.linkButton}
                 onPress={handleTransitionComplete}

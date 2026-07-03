@@ -5,9 +5,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { useUser } from '@/context/UserContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function RecapScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 18 : 28;
   const { data } = useOnboarding();
   const { refreshUserData } = useUser();
   const [showBtn, setShowBtn] = useState(false);
@@ -23,10 +26,10 @@ export default function RecapScreen() {
       await AsyncStorage.setItem('userData', JSON.stringify(data));
       await refreshUserData();
       
-      router.push('/onboarding/generating');
+      router.push('/onboarding/power');
     } catch (e) {
       console.error('Failed to save onboarding state:', e);
-      router.push('/onboarding/generating'); 
+      router.push('/onboarding/power'); 
     }
   };
 
@@ -148,7 +151,7 @@ export default function RecapScreen() {
           </View>
         </ScrollView>
         {showBtn && (
-          <View style={styles.bottomContainerLink}>
+          <View style={[styles.bottomContainerLink, { bottom: bottomPos }]}>
             <TouchableOpacity 
               style={styles.linkButton}
               onPress={handleFinish}
