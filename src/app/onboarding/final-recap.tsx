@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     paddingBottom: 140,
   },
   mainTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 28,
     color: '#ffffff',
     marginBottom: 8,

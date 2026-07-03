@@ -66,7 +66,7 @@ export default function PresentationScreen() {
             <Animated.Text style={[styles.transitionText, { opacity: text2Opacity }]}>
               this is your fresh start.
             </Animated.Text>
-            <Animated.Text style={[styles.transitionText, { opacity: text3Opacity, fontFamily: 'Nunito_700Bold' }]}>
+            <Animated.Text style={[styles.transitionText, { opacity: text3Opacity, fontFamily: 'Nunito_800ExtraBold', fontSize: 26 }]}>
               aloha. 🌺
             </Animated.Text>
           </ScrollView>
@@ -198,8 +198,8 @@ export default function PresentationScreen() {
     lineHeight: 28,
   },
   question: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 24,
+    fontFamily: 'Nunito_800ExtraBold',
+    fontSize: 28,
     color: '#1f2937',
     marginBottom: 24,
   },

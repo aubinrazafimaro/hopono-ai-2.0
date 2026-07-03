@@ -52,7 +52,7 @@ export default function SaviorScreen() {
             a few minutes a day. and something inside begins to shift.
           </Animated.Text>
 
-          <Animated.Text style={[styles.bodyText, { opacity: text4Opacity, fontFamily: 'Nunito_700Bold', color: '#e86935', fontSize: 20 }]}>
+          <Animated.Text style={[styles.bodyText, { opacity: text4Opacity, fontFamily: 'Nunito_800ExtraBold', color: '#e86935', fontSize: 22 }]}>
             ready to let go?
           </Animated.Text>
 
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   title: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 28,
     color: '#e86935',
     marginBottom: 8,

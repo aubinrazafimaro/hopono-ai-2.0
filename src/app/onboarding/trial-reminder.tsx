@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     paddingBottom: 150, // Avoid overlapping the fixed bottom CTA
   },
   title: {
-    fontFamily: 'Nunito_700Bold', // Uniform Nunito font family
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 28,
     color: '#1f2937',
     textAlign: 'center',

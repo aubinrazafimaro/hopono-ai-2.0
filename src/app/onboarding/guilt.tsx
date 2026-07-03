@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginTop: -40, // offset question slightly to stay balanced
   },
   question: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 24,
     color: '#000000',
     textAlign: 'center',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   valueNumber: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 56,
     color: '#000000',
   },

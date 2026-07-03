@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e2e8f0', // Light gray
   },
   loadingText: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 20,
     color: '#1e293b',
     textAlign: 'center',
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   successTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 28,
     color: '#ffffff',
     textAlign: 'center',

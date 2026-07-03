@@ -1,7 +1,6 @@
 import { DefaultTheme, ThemeProvider } from 'expo-router';
 import { useFonts } from 'expo-font';
-import { Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold } from '@expo-google-fonts/nunito';
-import { PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
+import { Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
@@ -22,7 +21,7 @@ export default function TabLayout() {
     Nunito_400Regular,
     Nunito_600SemiBold,
     Nunito_700Bold,
-    PlayfairDisplay_700Bold,
+    Nunito_800ExtraBold,
   });
 
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);

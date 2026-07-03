@@ -1,12 +1,12 @@
 import { ViewStyle, TextStyle } from 'react-native';
 
 // ─────────────────────────────────────────────────────────────────
-// SPACING — "l'Hawaï c'est l'espace, la respiration, l'horizon infini"
+// SPACING
 // ─────────────────────────────────────────────────────────────────
 export const SPACING = {
-  horizontal: 24,   // Marges horizontales globales
-  card: 24,         // Padding interne des cards
-  section: 32,      // Gap vertical entre sections
+  horizontal: 24,
+  card: 24,
+  section: 32,
   sm: 12,
   md: 16,
   lg: 24,
@@ -14,129 +14,138 @@ export const SPACING = {
 } as const;
 
 // ─────────────────────────────────────────────────────────────────
-// BORDER RADIUS — "Les vagues n'ont pas de coins"
+// BORDER RADIUS
 // ─────────────────────────────────────────────────────────────────
 export const RADIUS = {
-  card: 24,       // Cards
-  button: 32,     // Boutons CTA
-  pill: 999,      // Pills / tags
+  card: 24,
+  button: 32,
+  pill: 999,
   sm: 12,
   md: 16,
 } as const;
 
 // ─────────────────────────────────────────────────────────────────
-// COLORS — Palette Lave de nuit + accents Hawaïens
+// COLORS — Full palette including legacy Lava Night variables for backwards compatibility
 // ─────────────────────────────────────────────────────────────────
 export const COLORS = {
-  // Lava Night (fond)
+  // Legacy Lava & Dark mode variables (needed by non-onboarding screens)
   lava: '#0F0A06',
   lavaDark: '#07040300',
   lavaWarm: '#1A0F0A',
+  textSand: '#F5EED8',
+  textSandMuted: '#A89070',
+  textTeal: '#E8F5F5',
+  textTealMuted: '#7AABAB',
+  cardBg: 'rgba(255, 255, 255, 0.06)',
+  cardBorder: 'rgba(255, 255, 255, 0.10)',
+  errorBg: 'rgba(255, 107, 107, 0.10)',
 
-  // Sunset gradient (action, ritual)
+  // Canonical light Hawaiian theme tokens
+  orange: '#e86935',
+  orangeLight: '#ff8e53',
   sunsetStart: '#E86935',
   sunsetMid: '#FF6B6B',
   sunsetEnd: '#FF8E53',
 
-  // Ocean gradient (calme, completion)
+  // Secondary (Ocean)
+  turquoise: '#0abfbc',
+  green: '#2ecc71',
   oceanStart: '#0ABFBC',
   oceanMid: '#2ECC71',
   oceanEnd: '#1A6B6B',
 
-  // Text
-  textSand: '#F5EED8',       // Sable chaud (texte principal sur fond sombre)
-  textSandMuted: '#A89070',  // Sable atténué (sous-texte)
-  textTeal: '#E8F5F5',       // Blanc-turquoise pour le thème Ocean
-  textTealMuted: '#7AABAB',  // Teal atténué
+  // Neutrals / Sands
+  sandLight: '#fff5f0',
+  sandDark: '#ffe8db',
+  white: '#ffffff',
+  textDark: '#1f2937',
+  textMuted: '#64748b',
+  borderLight: '#f1f5f9',
+  borderDark: '#cbd5e1',
 
-  // Surfaces (semi-opaques sur fond Lave)
-  cardBg: 'rgba(255, 255, 255, 0.06)',
-  cardBorder: 'rgba(255, 255, 255, 0.10)',
-
-  // Error (coral doux, jamais rouge agressif)
+  // Semantic
   error: '#FF6B6B',
-  errorBg: 'rgba(255, 107, 107, 0.10)',
+  success: '#22c55e',
 } as const;
 
 // ─────────────────────────────────────────────────────────────────
-// MOTION — "Lent et organique. Comme une vague."
+// MOTION
 // ─────────────────────────────────────────────────────────────────
 export const MOTION = {
-  duration: 600,         // Durée standard
-  breathIn: 4000,        // Inspire (orbe)
-  breathOut: 4000,       // Expire (orbe)
-  // Easing: 'ease-in-out' via React Native Easing.inOut(Easing.ease)
+  duration: 600,
+  breathIn: 4000,
+  breathOut: 4000,
 } as const;
 
 // ─────────────────────────────────────────────────────────────────
-// TYPOGRAPHY — Playfair Display (headlines) + Nunito (corps)
+// TYPOGRAPHY — Nunito (headlines & body)
 // ─────────────────────────────────────────────────────────────────
 export const TYPOGRAPHY = {
   h1: {
-    fontFamily: 'PlayfairDisplay_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 32,
-    color: COLORS.textSand,
+    color: COLORS.textDark,
     lineHeight: 40,
   } as TextStyle,
   h2: {
-    fontFamily: 'PlayfairDisplay_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 26,
-    color: COLORS.textSand,
+    color: COLORS.textDark,
     lineHeight: 34,
   } as TextStyle,
   h3: {
-    fontFamily: 'PlayfairDisplay_700Bold',
+    fontFamily: 'Nunito_700Bold',
     fontSize: 22,
-    color: COLORS.textSand,
+    color: COLORS.textDark,
     lineHeight: 28,
   } as TextStyle,
   subtitle: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 18,
-    color: COLORS.textSandMuted,
+    color: COLORS.textMuted,
     lineHeight: 26,
   } as TextStyle,
   body: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 16,
-    color: COLORS.textSandMuted,
+    color: COLORS.textMuted,
     lineHeight: 24,
   } as TextStyle,
   bodySmall: {
     fontFamily: 'Nunito_400Regular',
     fontSize: 14,
-    color: COLORS.textSandMuted,
+    color: COLORS.textMuted,
     lineHeight: 20,
   } as TextStyle,
   label: {
     fontFamily: 'Nunito_700Bold',
     fontSize: 12,
-    color: COLORS.textSandMuted,
+    color: COLORS.textMuted,
     textTransform: 'lowercase' as const,
     letterSpacing: 1.2,
   } as TextStyle,
 } as const;
 
 // ─────────────────────────────────────────────────────────────────
-// SHADOWS — Teintées Sunset pour donner chaleur
+// SHADOWS
 // ─────────────────────────────────────────────────────────────────
 export const SHADOWS = {
   soft: {
-    shadowColor: '#E86935',
+    shadowColor: '#e86935',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 10,
     elevation: 2,
   } as ViewStyle,
   medium: {
-    shadowColor: '#E86935',
+    shadowColor: '#e86935',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.12,
     shadowRadius: 16,
     elevation: 4,
   } as ViewStyle,
   heavy: {
-    shadowColor: '#E86935',
+    shadowColor: '#e86935',
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.18,
     shadowRadius: 24,
@@ -145,7 +154,7 @@ export const SHADOWS = {
 } as const;
 
 // ─────────────────────────────────────────────────────────────────
-// HAWAIIAN VOCABULARY — Mots clés à intégrer dans le copy
+// HAWAIIAN VOCABULARY
 // ─────────────────────────────────────────────────────────────────
 export const HAWAIIAN = {
   greeting: 'Aloha',

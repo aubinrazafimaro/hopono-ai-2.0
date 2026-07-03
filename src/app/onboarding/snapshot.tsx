@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   title: {
-    fontFamily: 'Nunito_700Bold', // Typography aligned to initial choice (Nunito Bold)
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 32,
     color: '#1f2937',
     marginBottom: 16,
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     textTransform: 'lowercase',
   },
   subtitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 18,
     color: '#94a3b8',
     marginBottom: 16,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   cardTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 18,
     color: '#1f2937',
     textTransform: 'lowercase',
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   sectionTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 24,
     color: '#1f2937',
     marginBottom: 20,
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   itemTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 18,
     color: '#1f2937',
     marginBottom: 8,

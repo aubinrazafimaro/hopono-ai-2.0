@@ -28,10 +28,8 @@ export type FeedbackInput = {
 
 async function fetchClaudeMessage(prompt: string, maxTokens: number): Promise<string> {
   const models = [
-    'claude-3-5-sonnet-latest',
-    'claude-3-5-sonnet-20241022',
-    'claude-3-5-sonnet-20240620',
-    'claude-3-haiku-20240307'
+    'claude-sonnet-4-6',         // Primary model
+    'claude-haiku-4-5-20251001', // Fallback model
   ];
 
   let lastError: any = null;

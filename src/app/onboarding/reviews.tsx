@@ -47,15 +47,15 @@ export default function ReviewsScreen() {
           <Text style={styles.title}>
             hopono was designed{'\n'}for <Text style={styles.titleHighlight}>hearts like you.</Text>
           </Text>
-          <Text style={styles.subtitle}>reviews from people using hopono ai.</Text>
+          <Text style={styles.subtitle}>early feedback from our beta community.</Text>
 
           {/* Award Block with Laurel Wreaths */}
           <View style={styles.awardSection}>
             <View style={styles.awardContainer}>
               <LaurelBranch isLeft={true} />
               <View style={styles.awardTextContainer}>
-                <Text style={styles.awardText}>the #1 emotional</Text>
-                <Text style={styles.awardText}>healing app</Text>
+                <Text style={styles.awardText}>highly rated by</Text>
+                <Text style={styles.awardText}>early testers</Text>
               </View>
               <LaurelBranch isLeft={false} />
             </View>
@@ -68,7 +68,7 @@ export default function ReviewsScreen() {
                 ))}
               </View>
               {/* Emojis matching the mockup layout + social proof */}
-              <Text style={styles.peopleText}>🙏 🥺 🙌 + 50,000 people</Text>
+              <Text style={styles.peopleText}>🙏 🥺 🙌 early beta community</Text>
             </View>
           </View>
 
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     paddingBottom: 120, // Space for footer button
   },
   title: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 28,
     color: '#1f2937',
     marginBottom: 8,

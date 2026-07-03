@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   cardGoalTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 20,
     color: '#1f2937',
     marginBottom: 8,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   destinationText: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 22,
     color: '#1f2937',
     textAlign: 'center',
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   bottomTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 20,
     color: '#ffffff',
     textAlign: 'center',

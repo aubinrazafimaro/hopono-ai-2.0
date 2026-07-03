@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePricing } from '@/hooks/usePricing';
@@ -182,8 +182,12 @@ export default function PaywallScreen() {
           </Text>
 
           <View style={styles.footerLinks}>
-            <Text style={styles.footerLink}>privacy</Text>
-            <Text style={styles.footerLink}>terms</Text>
+            <TouchableOpacity onPress={() => Linking.openURL('https://hopono.ai/privacy')}>
+              <Text style={styles.footerLink}>privacy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL('https://hopono.ai/terms')}>
+              <Text style={styles.footerLink}>terms</Text>
+            </TouchableOpacity>
           </View>
 
         </View>

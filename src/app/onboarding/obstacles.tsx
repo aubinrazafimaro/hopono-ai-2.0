@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     paddingBottom: 140,
   },
   question: {
-    fontFamily: 'Nunito_600SemiBold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 24,
     color: '#1f2937',
     lineHeight: 32,

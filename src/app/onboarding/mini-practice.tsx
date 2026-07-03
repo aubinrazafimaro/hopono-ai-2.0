@@ -517,7 +517,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 24,
     textAlign: 'center',
     lineHeight: 32,
@@ -638,7 +638,7 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -15 }],
   },
   congratsHuge: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 48,
     color: '#ffffff',
     textTransform: 'lowercase',
@@ -654,7 +654,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   congratsDesc: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 20,
     color: '#ffffff',
     textTransform: 'lowercase',
@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   ratingTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 20,
     color: '#111827',
     textAlign: 'center',

@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   title: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 28,
     color: '#e86935',
     marginBottom: 8,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     color: '#4b5563',
   },
   question: {
-    fontFamily: 'Nunito_600SemiBold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 20,
     color: '#1f2937',
     marginBottom: 24,

@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   commitmentTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 20,
     color: '#1f2937',
     textAlign: 'center',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   dateText: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 18,
     color: '#1f2937',
   },
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     textTransform: 'lowercase',
   },
   sectionTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 18,
     color: '#1f2937',
     marginBottom: 20,
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   featureTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 16,
     color: '#1f2937',
     marginBottom: 6,

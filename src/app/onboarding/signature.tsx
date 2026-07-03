@@ -225,13 +225,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   mainTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 32,
     color: '#ffffff',
     marginBottom: 8,
   },
   subTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 18,
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 24,

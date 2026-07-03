@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     fontSize: 72,
   },
   mainTitle: {
-    fontFamily: 'Nunito_700Bold', // Uniform Nunito font family
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 22,
     color: '#1f2937',
     textAlign: 'center',
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_800ExtraBold',
     fontSize: 16,
     color: '#1f2937',
     marginBottom: 6,
