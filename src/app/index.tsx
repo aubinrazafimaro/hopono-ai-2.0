@@ -250,13 +250,7 @@ export default function Home() {
             </View>
           </TouchableOpacity>
 
-          {healingPlan?.welcomingText && (
-            <View style={[styles.welcomingCard, { backgroundColor: 'rgba(232, 105, 53, 0.08)', borderColor: 'rgba(232, 105, 53, 0.2)' }]}>
-              <Text style={[styles.welcomingText, { color: palette.textPrimary }]}>
-                ✨ {healingPlan.welcomingText}
-              </Text>
-            </View>
-          )}
+
 
           {/* ── CENTRAL GLOWING ORB & BRAND NAME (Replaces Calendar) ── */}
           <View style={styles.borderlessOrbCard}>
@@ -318,12 +312,7 @@ export default function Home() {
             )}
           </View>
 
-          {healingPlan && (
-            <View style={[styles.card, { backgroundColor: palette.cardBg, borderColor: palette.cardBorder, marginBottom: SPACING.section }]}>
-              <Text style={[styles.healingExplanationTitle, { color: palette.textPrimary }]}>your healing journey 🌺</Text>
-              <Text style={[styles.healingExplanationText, { color: palette.textMuted }]}>{healingPlan.healingExplanation}</Text>
-            </View>
-          )}
+
 
           {/* ── YOUR DEVOTION (ex-streak) ── */}
           <Text style={[styles.sectionTitle, { color: palette.textMuted, marginBottom: SPACING.md }]}>
@@ -619,28 +608,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textTransform: 'lowercase',
   },
-  welcomingCard: {
-    borderRadius: RADIUS.card,
-    padding: SPACING.card,
-    marginBottom: SPACING.section,
-    borderWidth: 1.5,
-  },
-  welcomingText: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 15,
-    lineHeight: 22,
-    fontStyle: 'italic',
-  },
-  healingExplanationTitle: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    marginBottom: 8,
-    textTransform: 'lowercase',
-  },
-  healingExplanationText: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 14,
-    lineHeight: 20,
-    textTransform: 'lowercase',
-  },
+
 });
