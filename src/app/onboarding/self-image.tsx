@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
-    minHeight: 64,
+    minHeight: 76,
     justifyContent: 'center',
     marginVertical: 4,
   },

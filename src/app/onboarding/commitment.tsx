@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,
-    minHeight: 64,
+    minHeight: 76,
     marginVertical: 4,
   },
   progressBarContainer: {
