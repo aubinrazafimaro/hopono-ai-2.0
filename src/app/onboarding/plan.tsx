@@ -10,7 +10,7 @@ const { height } = Dimensions.get('window');
 export default function PlanScreen() {
   const router = useRouter();
   const { data } = useOnboarding();
-  const [showBtn, setShowBtn] = useState(false);
+  const [showBtn, setShowBtn] = useState(true);
   const [contentHeight, setContentHeight] = useState(0);
   const [scrollViewHeight, setScrollViewHeight] = useState(0);
 
@@ -131,16 +131,16 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 24,
-    paddingTop: 56, // Generous top padding to avoid touching the status bar/header
+    paddingTop: 24, // Reduced from 56 for zero-scroll
     paddingBottom: 120, // space for fixed button
   },
   commitmentCard: {
     borderWidth: 2,
     borderColor: '#e86935',
     borderRadius: 24,
-    padding: 24,
+    padding: 16, // Reduced from 24
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 16, // Reduced from 32
     backgroundColor: '#ffffff',
     shadowColor: '#e86935',
     shadowOffset: { width: 0, height: 8 },
@@ -150,33 +150,33 @@ const styles = StyleSheet.create({
   },
   commitmentTitle: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 20,
+    fontSize: 18, // Reduced from 20
     color: '#1f2937',
     textAlign: 'center',
-    lineHeight: 28,
-    marginBottom: 12,
+    lineHeight: 25,
+    marginBottom: 10,
   },
   datePill: {
     borderWidth: 1.5,
     borderColor: '#e86935',
     borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingVertical: 5, // Reduced from 8
+    paddingHorizontal: 16,
+    marginBottom: 14, // Reduced from 20
   },
   dateText: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 18,
+    fontSize: 15, // Reduced from 18
     color: '#1f2937',
   },
   goalCard: {
     backgroundColor: '#ffffff',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 10, // Reduced from 16
     paddingHorizontal: 20,
     borderRadius: 16,
     width: '100%',
-    marginBottom: 12,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.08,
@@ -184,12 +184,12 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   goalEmoji: {
-    fontSize: 24,
-    marginBottom: 8,
+    fontSize: 20, // Reduced from 24
+    marginBottom: 4,
   },
   goalText: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 15,
+    fontSize: 13, // Reduced from 15
     color: '#1f2937',
     textAlign: 'center',
     textTransform: 'lowercase',
@@ -199,10 +199,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
+    paddingVertical: 10, // Reduced from 14
+    paddingHorizontal: 16,
     borderRadius: 16,
-    width: '100%',
+    width: '85%', // Shrunk width relative to goalCard
+    alignSelf: 'center', // Center aligned
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.08,
@@ -210,29 +211,29 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   metricEmoji: {
-    fontSize: 20,
-    marginRight: 10,
+    fontSize: 18,
+    marginRight: 8,
   },
   metricText: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 14,
+    fontSize: 12.5, // Reduced from 14
     color: '#1f2937',
     textAlign: 'center',
     textTransform: 'lowercase',
   },
   sectionTitle: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 18,
+    fontSize: 16, // Reduced from 18
     color: '#1f2937',
-    marginBottom: 20,
+    marginBottom: 10, // Reduced from 20
     textTransform: 'lowercase',
   },
   featureCard: {
     backgroundColor: '#ffffff',
     flexDirection: 'row',
-    padding: 20,
+    padding: 12, // Reduced from 20
     borderRadius: 20,
-    marginBottom: 16,
+    marginBottom: 10, // Reduced from 16
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.06,
@@ -240,32 +241,32 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   featureIconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: '#f3f4f6', // Light gray background in mockup
+    width: 36, // Reduced from 44
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: '#f3f4f6',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 12, // Reduced from 16
   },
   featureEmoji: {
-    fontSize: 24,
+    fontSize: 18, // Reduced from 24
   },
   featureTextContainer: {
     flex: 1,
   },
   featureTitle: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 16,
+    fontSize: 14, // Reduced from 16
     color: '#1f2937',
-    marginBottom: 6,
+    marginBottom: 4,
     textTransform: 'lowercase',
   },
   featureDesc: {
     fontFamily: 'Nunito_600SemiBold',
-    fontSize: 14,
+    fontSize: 12, // Reduced from 14
     color: '#9ca3af',
-    lineHeight: 22,
+    lineHeight: 17, // Reduced from 22
     textTransform: 'lowercase',
   },
   bottomContainer: {

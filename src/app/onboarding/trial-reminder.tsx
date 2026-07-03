@@ -62,22 +62,23 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 32,
     alignItems: 'center',
-    justifyContent: 'center', // Vertically center the title and bell
-    paddingBottom: 150, // Avoid overlapping the fixed bottom CTA
+    paddingTop: 80, // Title positioned at the top
+    paddingBottom: 170, // Avoid overlapping the fixed bottom CTA
   },
   title: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 28,
+    fontSize: 24, // Unified smaller natural font size
     color: '#1f2937',
     textAlign: 'center',
-    marginBottom: 48,
-    lineHeight: 36,
+    marginBottom: 20,
+    lineHeight: 32,
     textTransform: 'lowercase',
   },
   bellContainer: {
-    position: 'relative',
+    flex: 1,
+    justifyContent: 'center', // Center bell vertically in the remaining space
     alignItems: 'center',
-    justifyContent: 'center',
+    width: '100%',
   },
   badge: {
     position: 'absolute',

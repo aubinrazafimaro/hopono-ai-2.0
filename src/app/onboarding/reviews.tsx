@@ -54,8 +54,8 @@ export default function ReviewsScreen() {
             <View style={styles.awardContainer}>
               <LaurelBranch isLeft={true} />
               <View style={styles.awardTextContainer}>
-                <Text style={styles.awardText}>highly rated by</Text>
-                <Text style={styles.awardText}>early testers</Text>
+                <Text style={styles.awardText}>the #1 emotional</Text>
+                <Text style={styles.awardText}>healing app</Text>
               </View>
               <LaurelBranch isLeft={false} />
             </View>
@@ -138,10 +138,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 28,
+    fontSize: 24,
     color: '#1f2937',
     marginBottom: 8,
-    lineHeight: 34,
+    lineHeight: 32,
     textTransform: 'lowercase',
   },
   titleHighlight: {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     fontSize: 15,
     color: '#94a3b8',
-    marginBottom: 28,
+    marginBottom: 20,
     textTransform: 'lowercase',
   },
   awardSection: {

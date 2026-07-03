@@ -280,39 +280,39 @@ const styles = StyleSheet.create({
     fontSize: 72,
   },
   header: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
   title: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 32,
+    fontSize: 24, // Reduced from 32
     color: '#1f2937',
-    marginBottom: 16,
-    lineHeight: 38,
+    marginBottom: 12,
+    lineHeight: 30,
     textTransform: 'lowercase',
   },
   subtitle: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 18,
+    fontSize: 15, // Reduced from 18
     color: '#94a3b8',
-    marginBottom: 16,
+    marginBottom: 12,
     textTransform: 'lowercase',
   },
   socialProof: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 16,
+    fontSize: 13, // Reduced from 16
     color: '#475569',
-    lineHeight: 22,
+    lineHeight: 18,
     textTransform: 'lowercase',
   },
   cardsContainer: {
     gap: 16,
-    marginBottom: 40,
+    marginBottom: 32,
   },
   card: {
     borderWidth: 1.5,
     borderColor: '#e86935',
     borderRadius: 24,
-    padding: 20,
+    padding: 16,
     backgroundColor: '#ffffff',
     shadowColor: '#e86935',
     shadowOffset: { width: 0, height: 4 },
@@ -323,28 +323,28 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   cardIcon: {
-    fontSize: 20,
+    fontSize: 18,
     marginRight: 8,
   },
   cardTitle: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 18,
+    fontSize: 15, // Reduced from 18
     color: '#1f2937',
     textTransform: 'lowercase',
   },
   cardSubtext: {
     fontFamily: 'Nunito_600SemiBold',
-    fontSize: 14,
+    fontSize: 12.5, // Reduced from 14
     color: '#94a3b8',
-    marginBottom: 8,
+    marginBottom: 6,
     textTransform: 'lowercase',
   },
   bigStat: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 32, // Enlarged as requested
+    fontSize: 26, // Reduced from 32
     color: '#1f2937',
   },
   barBackground: {
@@ -372,36 +372,36 @@ const styles = StyleSheet.create({
   },
   barLabelTextLeft: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 14,
-    color: '#ffffff', // Overlay text inside filled bar
+    fontSize: 13,
+    color: '#ffffff',
   },
   barLabelTextRight: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 14,
-    color: '#94a3b8', // Gray text on unfilled area
+    fontSize: 13,
+    color: '#94a3b8',
   },
   cardFooterText: {
-    fontFamily: 'Nunito_700Bold', // Styled as bold & larger matching mockup
-    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 14, // Reduced from 16
     color: '#1f2937',
     marginTop: 4,
   },
   section: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
   sectionTitle: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 24,
+    fontSize: 18, // Reduced from 24
     color: '#1f2937',
-    marginBottom: 20,
+    marginBottom: 16,
     textTransform: 'lowercase',
   },
   listItemCard: {
-    backgroundColor: '#ffffff', // White card matching mockup shapes
+    backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#f1f5f9',
     borderRadius: 20,
-    padding: 20,
+    padding: 16,
     marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -411,16 +411,16 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 18,
+    fontSize: 14, // Reduced from 18
     color: '#1f2937',
-    marginBottom: 8,
+    marginBottom: 6,
     textTransform: 'lowercase',
   },
   itemDesc: {
     fontFamily: 'Nunito_600SemiBold',
-    fontSize: 15,
+    fontSize: 12.5, // Reduced from 15
     color: '#94a3b8',
-    lineHeight: 22,
+    lineHeight: 17, // Reduced from 22
     textTransform: 'lowercase',
   },
   bottomFixed: {

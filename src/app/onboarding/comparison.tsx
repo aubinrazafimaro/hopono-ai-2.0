@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import AlohaButton from '@/components/AlohaButton';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -62,13 +61,12 @@ export default function ComparisonScreen() {
             </Text>
           </View>
 
-          <AlohaButton
+          <TouchableOpacity 
+            style={styles.actionButton}
             onPress={() => router.push('/onboarding/commitment')}
-            text="i'm in"
-            variant="secondary"
-            small={true}
-            style={styles.buttonStyle}
-          />
+          >
+            <Text style={styles.actionButtonText}>i'm in</Text>
+          </TouchableOpacity>
         </View>
 
       </SafeAreaView>
@@ -134,28 +132,26 @@ const styles = StyleSheet.create({
     width: 160,
   },
   itemLeft: {
-    top: 15,
-    right: '50%',
-    marginRight: -35,
+    top: 20,
+    left: 10,
     transform: [{ rotate: '-8deg' }],
   },
   itemRight: {
-    bottom: 15,
-    left: '50%',
-    marginLeft: -35,
+    bottom: 20,
+    right: 10,
     transform: [{ rotate: '8deg' }],
   },
   iconWrapper: {
     marginVertical: 3,
   },
   doveIconWrapper: {
-    marginTop: -20, // pulls dove closer to label pill above it
+    marginTop: -10,
   },
   coffeeLabelPill: {
-    marginTop: -20, // pulls label pill closer to coffee cup above it
+    marginTop: -10,
   },
   hugeIcon: {
-    fontSize: 135,
+    fontSize: 125,
   },
   labelPill: {
     backgroundColor: '#ffffff',
@@ -203,14 +199,15 @@ const styles = StyleSheet.create({
   textContainer: {
     paddingHorizontal: 8,
     marginBottom: 20,
+    alignItems: 'center',
   },
   title: {
     fontFamily: 'Nunito_700Bold',
-    fontSize: 26,
+    fontSize: 24,
     color: '#ffffff',
     marginBottom: 12,
-    lineHeight: 33,
-    textAlign: 'left',
+    lineHeight: 32,
+    textAlign: 'center',
     textTransform: 'lowercase',
   },
   description: {
@@ -218,10 +215,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.88)',
     lineHeight: 22,
-    textAlign: 'left',
+    textAlign: 'center',
     textTransform: 'lowercase',
   },
-  buttonStyle: {
-    paddingHorizontal: 0,
+  actionButton: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    paddingVertical: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+    width: '100%',
+    marginBottom: 20,
+  },
+  actionButtonText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 18,
+    color: '#e86935',
+    textTransform: 'lowercase',
   },
 });

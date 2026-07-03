@@ -3,8 +3,34 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Linki
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePricing } from '@/hooks/usePricing';
+import Svg, { Path } from 'react-native-svg';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
 import AlohaButton from '@/components/AlohaButton';
+
+const LaurelBranch = ({ isLeft }: { isLeft: boolean }) => {
+  return (
+    <Svg
+      width={32}
+      height={48}
+      viewBox="0 0 32 48"
+      style={{ transform: [{ scaleX: isLeft ? 1 : -1 }] }}
+    >
+      <Path
+        d="M4,44 Q16,30 20,4"
+        fill="none"
+        stroke="#e86935"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+      />
+      {/* Leaves along the branch */}
+      <Path d="M6,36 Q10,32 14,35 Q8,41 6,36" fill="#e86935" />
+      <Path d="M8,27 Q13,23 17,26 Q11,32 8,27" fill="#e86935" />
+      <Path d="M12,18 Q17,14 21,17 Q15,23 12,18" fill="#e86935" />
+      <Path d="M15,9 Q20,6 23,10 Q17,15 15,9" fill="#e86935" />
+      <Path d="M19,1 Q22,0 23,4 Q20,6 19,1" fill="#e86935" />
+    </Svg>
+  );
+};
 
 const { height } = Dimensions.get('window');
 
@@ -37,7 +63,7 @@ export default function PaywallScreen() {
           </TouchableOpacity>
           
           <View style={styles.awardContainer}>
-            <Ionicons name="leaf" size={20} color="#e86935" style={styles.laurelLeft} />
+            <LaurelBranch isLeft={true} />
             <View style={styles.awardTextContainer}>
               <Text style={styles.awardText}>the #1 emotional</Text>
               <Text style={styles.awardText}>healing app</Text>
@@ -47,7 +73,7 @@ export default function PaywallScreen() {
                 ))}
               </View>
             </View>
-            <Ionicons name="leaf" size={20} color="#e86935" style={styles.laurelRight} />
+            <LaurelBranch isLeft={false} />
           </View>
 
           {/* Spacer to balance the back button */}
@@ -124,8 +150,10 @@ export default function PaywallScreen() {
               <View style={styles.toggleRow}>
                 <View style={styles.toggleTextContainer}>
                   <Text style={styles.toggleSubtitle}>monthly</Text>
-                  <Text style={styles.toggleTitle}>{pricing.monthlyPrice}</Text>
-                  <Text style={styles.togglePeriod}>/month</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'baseline', marginTop: 2 }}>
+                    <Text style={styles.toggleTitle}>{pricing.monthlyPrice}</Text>
+                    <Text style={styles.togglePeriod}>/month</Text>
+                  </View>
                 </View>
                 <View style={[styles.radio, selectedPlan === 'monthly' && styles.radioActive]}>
                   {selectedPlan === 'monthly' && <Ionicons name="checkmark" size={14} color="#ffffff" />}
@@ -146,8 +174,10 @@ export default function PaywallScreen() {
               <View style={styles.toggleRow}>
                 <View style={styles.toggleTextContainer}>
                   <Text style={styles.toggleSubtitle}>yearly</Text>
-                  <Text style={styles.toggleTitle}>{pricing.weeklyEquivalent}</Text>
-                  <Text style={styles.togglePeriod}>/week</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'baseline', marginTop: 2 }}>
+                    <Text style={styles.toggleTitle}>{pricing.weeklyEquivalent}</Text>
+                    <Text style={styles.togglePeriod}>/week</Text>
+                  </View>
                 </View>
                 <View style={[styles.radio, selectedPlan === 'yearly' && styles.radioActive]}>
                   {selectedPlan === 'yearly' && <Ionicons name="checkmark" size={14} color="#ffffff" />}
@@ -308,6 +338,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     paddingTop: 8,
     paddingBottom: 20, // Lowered closer to bottom screen edge
+    paddingHorizontal: 24, // Added to prevent touching left/right borders
   },
   togglesContainer: {
     flexDirection: 'row',

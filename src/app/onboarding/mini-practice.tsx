@@ -436,14 +436,7 @@ const CongratsStep = ({ onNext }: { onNext: () => void }) => {
           ]}>
             <View style={styles.ratingCard}>
               {/* App icon with gradient */}
-              <LinearGradient
-                colors={['#ff9a5c', '#e86935']}
-                style={styles.ratingAppIcon}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-              >
-                <Text style={{ fontSize: 30 }}>🌺</Text>
-              </LinearGradient>
+              <Text style={{ fontSize: 48, marginBottom: 20 }}>🌺</Text>
 
               <Text style={styles.ratingTitle}>you love hopono ai?</Text>
               <Text style={styles.ratingSubtitle}>

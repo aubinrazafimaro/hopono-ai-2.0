@@ -29,13 +29,7 @@ export default function TrialTimelineScreen() {
 
           {/* Titles */}
           <Text style={styles.mainTitle}>healing is a practice, not a promise.</Text>
-          <Text style={styles.subtitle}>here's what your first 7 days look like.</Text>
-          
-          <Text style={styles.paragraph}>
-            you don't need to be ready. you just need to begin.
-          </Text>
-          
-          <Text style={styles.weekIntro}>seven days. one shift at a time.</Text>
+          <Text style={styles.subtitle}>here's what your first 7 days look like. one shift at a time.</Text>
 
           {/* Timeline Items (Staggered layout matching mockup) */}
           <View style={styles.timelineContainer}>
@@ -73,8 +67,21 @@ export default function TrialTimelineScreen() {
               </View>
             </View>
 
-            {/* Day 4: Left */}
+            {/* Day 3: Left (New!) */}
             <View style={[styles.card, styles.alignLeft]}>
+              <View style={styles.cardIconContainer}>
+                <Text style={styles.cardEmoji}>🌱</Text>
+              </View>
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>day 3 — a tiny crack of light</Text>
+                <Text style={styles.cardDesc}>
+                  you might feel a sudden sigh. or a moment of stillness you haven't felt in weeks.
+                </Text>
+              </View>
+            </View>
+
+            {/* Day 4: Right */}
+            <View style={[styles.card, styles.alignRight]}>
               <View style={styles.cardIconContainer}>
                 <Text style={styles.cardEmoji}>🕊️</Text>
               </View>
@@ -86,8 +93,8 @@ export default function TrialTimelineScreen() {
               </View>
             </View>
 
-            {/* Day 5: Right */}
-            <View style={[styles.card, styles.alignRight]}>
+            {/* Day 5: Left */}
+            <View style={[styles.card, styles.alignLeft]}>
               <View style={styles.cardIconContainer}>
                 <Text style={styles.cardEmoji}>📖</Text>
               </View>
@@ -99,8 +106,8 @@ export default function TrialTimelineScreen() {
               </View>
             </View>
 
-            {/* Day 6: Left */}
-            <View style={[styles.card, styles.alignLeft]}>
+            {/* Day 6: Right */}
+            <View style={[styles.card, styles.alignRight]}>
               <View style={styles.cardIconContainer}>
                 <Text style={styles.cardEmoji}>🚀</Text>
               </View>
@@ -112,8 +119,8 @@ export default function TrialTimelineScreen() {
               </View>
             </View>
 
-            {/* Day 7: Right */}
-            <View style={[styles.card, styles.alignRight]}>
+            {/* Day 7: Left */}
+            <View style={[styles.card, styles.alignLeft]}>
               <View style={styles.cardIconContainer}>
                 <Text style={styles.cardEmoji}>😌</Text>
               </View>
@@ -125,8 +132,8 @@ export default function TrialTimelineScreen() {
               </View>
             </View>
 
-            {/* Week One Complete: Left */}
-            <View style={[styles.card, styles.cardSolid, styles.alignLeft]}>
+            {/* Week One Complete: Right */}
+            <View style={[styles.card, styles.cardSolid, styles.alignRight]}>
               <View style={styles.cardIconContainer}>
                 <Text style={styles.cardEmoji}>🔥</Text>
               </View>

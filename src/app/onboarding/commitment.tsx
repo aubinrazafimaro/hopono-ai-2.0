@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
+import { LinearGradient } from 'expo-linear-gradient';
 import AlohaButton from '@/components/AlohaButton';
 
 const COMMITMENT_OPTIONS = [
-  { id: '1', emoji: '🌺', label: 'fully. I need this.' },
-  { id: '2', emoji: '🌊', label: 'very. I\'m tired of carrying this.' },
-  { id: '3', emoji: '🌿', label: 'somewhat. I want to try.' },
-  { id: '4', emoji: '🌱', label: 'a little. I\'m not sure yet.' },
+  { id: '1', emoji: '🌺', label: 'fully. i need this.' },
+  { id: '2', emoji: '🌊', label: "very. i'm tired of carrying this." },
+  { id: '3', emoji: '🌿', label: 'somewhat. i want to try.' },
+  { id: '4', emoji: '🌱', label: "a little. i'm not sure yet." },
   { id: '5', emoji: '🐢', label: 'just exploring for now.' },
 ];
 
@@ -23,18 +25,16 @@ export default function CommitmentScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={{ flex: 1 }}>
+    <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
+      <SafeAreaView style={styles.containerTransparent}>
         {/* Progress Bar */}
         <View style={styles.progressBarContainer}>
           <View style={[styles.progressBarFill, { width: '100%' }]} />
         </View>
 
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <View style={styles.header}>
-            <Text style={styles.smallTitle}>one last thing.</Text>
-            <Text style={styles.mainTitle}>how ready are you to let go?</Text>
-          </View>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <Text style={styles.question}>how ready are you to let go?</Text>
+          <Text style={styles.subtitle}>one last thing</Text>
 
           <View style={styles.scrollFrame}>
             <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
@@ -42,18 +42,14 @@ export default function CommitmentScreen() {
                 <TouchableOpacity
                   key={option.id}
                   style={[
-                    styles.optionButton,
-                    selectedId === option.id && styles.optionButtonSelected
+                    styles.optionRow,
+                    selectedId === option.id && styles.optionRowActive
                   ]}
                   onPress={() => setSelectedId(option.id)}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.optionEmoji}>{option.emoji}</Text>
-                  <Text style={[
-                    styles.optionText,
-                    selectedId === option.id && styles.optionTextSelected
-                  ]}>
-                    {option.label}
+                  <Text style={[styles.optionText, selectedId === option.id && styles.optionTextActive]}>
+                    {option.emoji}  {option.label}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -63,54 +59,66 @@ export default function CommitmentScreen() {
       </SafeAreaView>
 
       {/* Bottom Button */}
-      <View style={styles.bottomContainer}>
+      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
         <AlohaButton onPress={handleNext} text="this is my answer" variant="primary" disabled={!selectedId} />
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  containerTransparent: {
     flex: 1,
-    backgroundColor: '#f8fafc',
   },
-  scrollContent: {
-    paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 140, // Space for bottom button
+  content: {
+    flexGrow: 1,
+    paddingTop: 40,
+    paddingHorizontal: 32,
+    justifyContent: 'center',
+    paddingBottom: 140,
   },
-  header: {
-    marginBottom: 40,
-  },
-  smallTitle: {
+  question: {
     fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 22,
+    fontSize: 24,
     color: '#1f2937',
+    lineHeight: 32,
     marginBottom: 8,
   },
-  mainTitle: {
-    fontFamily: 'Nunito_800ExtraBold',
-    fontSize: 28,
-    color: '#1f2937',
-    lineHeight: 36,
+  subtitle: {
+    fontFamily: 'Nunito_400Regular',
+    fontSize: 14,
+    color: '#6b7280',
+    marginBottom: 24,
   },
-  optionsContainer: {
-    gap: 16,
-  },
-  optionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 24,
+  optionRow: {
+    borderWidth: 1.5,
+    borderColor: 'transparent',
     borderRadius: 20,
+    paddingHorizontal: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 10,
-    elevation: 3,
+    elevation: 2,
     minHeight: 76,
+    justifyContent: 'center',
     marginVertical: 4,
+  },
+  optionRowActive: {
+    backgroundColor: '#fff5f0',
+    borderColor: '#e86935',
+    shadowColor: '#e86935',
+    shadowOpacity: 0.15,
+  },
+  optionText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 16,
+    color: '#4b5563',
+    lineHeight: 24,
+  },
+  optionTextActive: {
+    color: '#e86935',
   },
   progressBarContainer: {
     height: 6,
@@ -135,28 +143,5 @@ const styles = StyleSheet.create({
   },
   optionsScrollList: {
     gap: 8,
-  },
-  optionButtonSelected: {
-    borderColor: '#e86935',
-    borderWidth: 2,
-    backgroundColor: '#fff7ed',
-  },
-  optionEmoji: {
-    fontSize: 24,
-    marginRight: 16,
-  },
-  optionText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#334155',
-  },
-  optionTextSelected: {
-    color: '#e86935',
-  },
-  bottomContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
   },
 });
