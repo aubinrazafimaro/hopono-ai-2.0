@@ -61,6 +61,11 @@ export default function GuiltScreen() {
   return (
     <LinearGradient colors={['#ffffff', '#fdfbfb', '#fdfbfb']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.containerTransparent}>
+        {/* Progress Bar */}
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBarFill, { width: `${4 / 8 * 100}%` }]} />
+        </View>
+
         <View style={styles.content}>
           <Text style={styles.question}>
             how heavy is the weight of what you keep postponing?
@@ -229,5 +234,19 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     fontSize: 14,
     color: '#9ca3af',
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: '#e2e8f0',
+    borderRadius: 3,
+    marginHorizontal: 32,
+    marginTop: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#e86935',
+    borderRadius: 3,
   },
 });

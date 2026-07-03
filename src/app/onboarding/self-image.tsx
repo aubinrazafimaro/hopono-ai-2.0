@@ -35,25 +35,32 @@ export default function SelfImageScreen() {
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.containerTransparent}>
+        {/* Progress Bar */}
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBarFill, { width: `${5 / 8 * 100}%` }]} />
+        </View>
+
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.question}>
             when you put your phone down, how do you feel about yourself?
           </Text>
           <Text style={styles.subtitle}>choose what's true</Text>
           
-          <View style={styles.optionsList}>
-            {OPTIONS.map((opt) => {
-              const isSelected = selectedImpacts.includes(opt.label);
-              return (
-                <TouchableOpacity
-                  key={opt.label}
-                  style={[styles.optionRow, isSelected && styles.optionRowActive]}
-                  onPress={() => toggleSelection(opt.label)}
-                >
-                  <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{opt.emoji}  {opt.label}</Text>
-                </TouchableOpacity>
-              );
-            })}
+          <View style={styles.scrollFrame}>
+            <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
+              {OPTIONS.map((opt) => {
+                const isSelected = selectedImpacts.includes(opt.label);
+                return (
+                  <TouchableOpacity
+                    key={opt.label}
+                    style={[styles.optionRow, isSelected && styles.optionRowActive]}
+                    onPress={() => toggleSelection(opt.label)}
+                  >
+                    <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{opt.emoji}  {opt.label}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -96,7 +103,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'transparent',
     borderRadius: 20,
-    paddingVertical: 18,
     paddingHorizontal: 24,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     shadowColor: '#000',
@@ -104,6 +110,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
+    minHeight: 64,
+    justifyContent: 'center',
+    marginVertical: 4,
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: '#e2e8f0',
+    borderRadius: 3,
+    marginHorizontal: 32,
+    marginTop: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#e86935',
+    borderRadius: 3,
+  },
+  scrollFrame: {
+    maxHeight: 310,
+    borderRadius: 24,
+    backgroundColor: 'rgba(241, 245, 249, 0.4)',
+    padding: 8,
+    width: '100%',
+  },
+  optionsScrollList: {
+    gap: 8,
   },
   optionRowActive: {
     backgroundColor: '#fff5f0',

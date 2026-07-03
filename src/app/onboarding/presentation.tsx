@@ -95,6 +95,11 @@ export default function PresentationScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <SafeAreaView style={styles.containerTransparent}>
+          {/* Progress Bar */}
+          <View style={styles.progressBarContainer}>
+            <View style={[styles.progressBarFill, { width: `${1 / 8 * 100}%` }]} />
+          </View>
+
           <ScrollView contentContainerStyle={styles.scrollContent}>
             {step === 0 && (
               <View style={styles.stepContainer}>
@@ -114,16 +119,18 @@ export default function PresentationScreen() {
             {step === 2 && (
               <View style={styles.stepContainer}>
                 <Text style={styles.question}>how old are you?</Text>
-                <View style={styles.optionsList}>
-                  {AGE_GROUPS.map((age) => (
-                    <TouchableOpacity
-                      key={age}
-                      style={[styles.optionRow, data.age === age && styles.optionRowActive]}
-                      onPress={() => handleAgeSelect(age)}
-                    >
-                      <Text style={[styles.optionText, data.age === age && styles.optionTextActive]}>{age}</Text>
-                    </TouchableOpacity>
-                  ))}
+                <View style={styles.scrollFrame}>
+                  <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
+                    {AGE_GROUPS.map((age) => (
+                      <TouchableOpacity
+                        key={age}
+                        style={[styles.optionRow, data.age === age && styles.optionRowActive]}
+                        onPress={() => handleAgeSelect(age)}
+                      >
+                        <Text style={[styles.optionText, data.age === age && styles.optionTextActive]}>{age}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
                 </View>
               </View>
             )}
@@ -224,7 +231,6 @@ export default function PresentationScreen() {
     borderWidth: 1.5,
     borderColor: 'transparent',
     borderRadius: 20,
-    paddingVertical: 18,
     paddingHorizontal: 24,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     shadowColor: '#000',
@@ -232,6 +238,33 @@ export default function PresentationScreen() {
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
+    minHeight: 64,
+    justifyContent: 'center',
+    marginVertical: 4,
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: '#e2e8f0',
+    borderRadius: 3,
+    marginHorizontal: 32,
+    marginTop: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#e86935',
+    borderRadius: 3,
+  },
+  scrollFrame: {
+    maxHeight: 310,
+    borderRadius: 24,
+    backgroundColor: 'rgba(241, 245, 249, 0.4)',
+    padding: 8,
+    width: '100%',
+  },
+  optionsScrollList: {
+    gap: 8,
   },
   optionRowActive: {
     backgroundColor: '#fff5f0',

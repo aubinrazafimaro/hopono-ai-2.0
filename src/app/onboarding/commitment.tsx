@@ -25,32 +25,39 @@ export default function CommitmentScreen() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={{ flex: 1 }}>
+        {/* Progress Bar */}
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBarFill, { width: '100%' }]} />
+        </View>
+
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <Text style={styles.smallTitle}>one last thing.</Text>
             <Text style={styles.mainTitle}>how ready are you to let go?</Text>
           </View>
 
-          <View style={styles.optionsContainer}>
-            {COMMITMENT_OPTIONS.map((option) => (
-              <TouchableOpacity
-                key={option.id}
-                style={[
-                  styles.optionButton,
-                  selectedId === option.id && styles.optionButtonSelected
-                ]}
-                onPress={() => setSelectedId(option.id)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.optionEmoji}>{option.emoji}</Text>
-                <Text style={[
-                  styles.optionText,
-                  selectedId === option.id && styles.optionTextSelected
-                ]}>
-                  {option.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+          <View style={styles.scrollFrame}>
+            <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
+              {COMMITMENT_OPTIONS.map((option) => (
+                <TouchableOpacity
+                  key={option.id}
+                  style={[
+                    styles.optionButton,
+                    selectedId === option.id && styles.optionButtonSelected
+                  ]}
+                  onPress={() => setSelectedId(option.id)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.optionEmoji}>{option.emoji}</Text>
+                  <Text style={[
+                    styles.optionText,
+                    selectedId === option.id && styles.optionTextSelected
+                  ]}>
+                    {option.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -95,7 +102,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    paddingVertical: 18,
     paddingHorizontal: 24,
     borderRadius: 20,
     shadowColor: '#000',
@@ -103,6 +109,32 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,
+    minHeight: 64,
+    marginVertical: 4,
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: '#e2e8f0',
+    borderRadius: 3,
+    marginHorizontal: 32,
+    marginTop: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#e86935',
+    borderRadius: 3,
+  },
+  scrollFrame: {
+    maxHeight: 310,
+    borderRadius: 24,
+    backgroundColor: 'rgba(241, 245, 249, 0.4)',
+    padding: 8,
+    width: '100%',
+  },
+  optionsScrollList: {
+    gap: 8,
   },
   optionButtonSelected: {
     borderColor: '#e86935',

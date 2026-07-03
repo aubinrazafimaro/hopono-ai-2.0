@@ -81,6 +81,11 @@ export default function ScreenTimeScreen() {
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.containerTransparent}>
+        {step === 0 && (
+          <View style={styles.progressBarContainer}>
+            <View style={[styles.progressBarFill, { width: `${2 / 8 * 100}%` }]} />
+          </View>
+        )}
         {step === 0 ? (
           <ScrollView contentContainerStyle={styles.content}>
             <View style={styles.header}>
@@ -90,16 +95,18 @@ export default function ScreenTimeScreen() {
             
             <Text style={styles.question}>how many hours a day does your phone take from you?</Text>
             
-            <View style={styles.optionsList}>
-              {TIME_OPTIONS.map((time) => (
-                <TouchableOpacity
-                  key={time.label}
-                  style={[styles.optionRow, data.screenTime === time.label && styles.optionRowActive]}
-                  onPress={() => handleSelectTime(time.label)}
-                >
-                  <Text style={[styles.optionText, data.screenTime === time.label && styles.optionTextActive]}>{time.emoji}  {time.label}</Text>
-                </TouchableOpacity>
-              ))}
+            <View style={styles.scrollFrame}>
+              <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
+                {TIME_OPTIONS.map((time) => (
+                  <TouchableOpacity
+                    key={time.label}
+                    style={[styles.optionRow, data.screenTime === time.label && styles.optionRowActive]}
+                    onPress={() => handleSelectTime(time.label)}
+                  >
+                    <Text style={[styles.optionText, data.screenTime === time.label && styles.optionTextActive]}>{time.emoji}  {time.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
           </ScrollView>
         ) : (
@@ -184,7 +191,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'transparent',
     borderRadius: 20,
-    paddingVertical: 18,
     paddingHorizontal: 24,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     shadowColor: '#000',
@@ -192,6 +198,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
+    minHeight: 64,
+    justifyContent: 'center',
+    marginVertical: 4,
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: '#e2e8f0',
+    borderRadius: 3,
+    marginHorizontal: 32,
+    marginTop: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#e86935',
+    borderRadius: 3,
+  },
+  scrollFrame: {
+    maxHeight: 310,
+    borderRadius: 24,
+    backgroundColor: 'rgba(241, 245, 249, 0.4)',
+    padding: 8,
+    width: '100%',
+  },
+  optionsScrollList: {
+    gap: 8,
   },
   optionRowActive: {
     backgroundColor: '#fff5f0',

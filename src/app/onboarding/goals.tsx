@@ -61,25 +61,32 @@ export default function GoalsScreen() {
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
       <SafeAreaView style={styles.containerTransparent}>
+        {/* Progress Bar */}
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBarFill, { width: `${3 / 8 * 100}%` }]} />
+        </View>
+
         <ScrollView contentContainerStyle={styles.content}>
         
         {step === 0 ? (
           <View style={styles.stepContainer}>
             <Text style={styles.question}>what's weighing on your heart?</Text>
             <Text style={styles.subtitle}>choose what feels true</Text>
-            <View style={styles.optionsList}>
-              {RESOLUTION_OPTIONS.map((res) => {
-                const isSelected = selectedResolutions.includes(res.label);
-                return (
-                  <TouchableOpacity
-                    key={res.label}
-                    style={[styles.optionRow, isSelected && styles.optionRowActive]}
-                    onPress={() => toggleResolutionGoal(res.label)}
-                  >
-                    <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{res.emoji}  {res.label}</Text>
-                  </TouchableOpacity>
-                );
-              })}
+            <View style={styles.scrollFrame}>
+              <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
+                {RESOLUTION_OPTIONS.map((res) => {
+                  const isSelected = selectedResolutions.includes(res.label);
+                  return (
+                    <TouchableOpacity
+                      key={res.label}
+                      style={[styles.optionRow, isSelected && styles.optionRowActive]}
+                      onPress={() => toggleResolutionGoal(res.label)}
+                    >
+                      <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{res.emoji}  {res.label}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
             </View>
           </View>
         ) : (
@@ -87,19 +94,21 @@ export default function GoalsScreen() {
             <Text style={styles.question}>when you're free, what becomes possible?</Text>
             <Text style={styles.subtitle}>choose your vision</Text>
             
-            <View style={styles.optionsList}>
-              {BIG_GOALS.map((goal) => {
-                const isSelected = selectedLifeGoals.includes(goal.label);
-                return (
-                  <TouchableOpacity
-                    key={goal.label}
-                    style={[styles.optionRow, isSelected && styles.optionRowActive]}
-                    onPress={() => toggleLifeGoal(goal.label)}
-                  >
-                    <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{goal.emoji}  {goal.label}</Text>
-                  </TouchableOpacity>
-                );
-              })}
+            <View style={styles.scrollFrame}>
+              <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
+                {BIG_GOALS.map((goal) => {
+                  const isSelected = selectedLifeGoals.includes(goal.label);
+                  return (
+                    <TouchableOpacity
+                      key={goal.label}
+                      style={[styles.optionRow, isSelected && styles.optionRowActive]}
+                      onPress={() => toggleLifeGoal(goal.label)}
+                    >
+                      <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{goal.emoji}  {goal.label}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
             </View>
           </View>
         )}
@@ -159,7 +168,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'transparent',
     borderRadius: 20,
-    paddingVertical: 18,
     paddingHorizontal: 24,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     shadowColor: '#000',
@@ -167,6 +175,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
+    minHeight: 64,
+    justifyContent: 'center',
+    marginVertical: 4,
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: '#e2e8f0',
+    borderRadius: 3,
+    marginHorizontal: 32,
+    marginTop: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#e86935',
+    borderRadius: 3,
+  },
+  scrollFrame: {
+    maxHeight: 310,
+    borderRadius: 24,
+    backgroundColor: 'rgba(241, 245, 249, 0.4)',
+    padding: 8,
+    width: '100%',
+  },
+  optionsScrollList: {
+    gap: 8,
   },
   optionRowActive: {
     backgroundColor: '#fff5f0',
