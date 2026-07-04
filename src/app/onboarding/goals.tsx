@@ -81,18 +81,13 @@ export default function GoalsScreen() {
                 return (
                   <TouchableOpacity
                     key={res.label}
-                    style={[styles.compactOptionRow, isSelected && styles.compactOptionRowActive]}
+                    style={[styles.optionRow, isSelected && styles.optionRowActive]}
                     onPress={() => toggleResolutionGoal(res.label)}
                     activeOpacity={0.7}
                   >
-                    <View style={styles.optionContent}>
-                      <View style={[styles.checkboxIndicator, isSelected && styles.checkboxIndicatorActive]}>
-                        {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
-                      </View>
-                      <Text style={[styles.compactOptionText, isSelected && styles.compactOptionTextActive]}>
-                        {res.emoji}  {res.label}
-                      </Text>
-                    </View>
+                    <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>
+                      {res.emoji}  {res.label}
+                    </Text>
                   </TouchableOpacity>
                 );
               })}
@@ -109,18 +104,13 @@ export default function GoalsScreen() {
                 return (
                   <TouchableOpacity
                     key={goal.label}
-                    style={[styles.compactOptionRow, isSelected && styles.compactOptionRowActive]}
+                    style={[styles.optionRow, isSelected && styles.optionRowActive]}
                     onPress={() => toggleLifeGoal(goal.label)}
                     activeOpacity={0.7}
                   >
-                    <View style={styles.optionContent}>
-                      <View style={[styles.checkboxIndicator, isSelected && styles.checkboxIndicatorActive]}>
-                        {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
-                      </View>
-                      <Text style={[styles.compactOptionText, isSelected && styles.compactOptionTextActive]}>
-                        {goal.emoji}  {goal.label}
-                      </Text>
-                    </View>
+                    <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>
+                      {goal.emoji}  {goal.label}
+                    </Text>
                   </TouchableOpacity>
                 );
               })}
@@ -202,40 +192,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#e86935',
     borderRadius: 3,
   },
-  compactOptionRow: {
-    paddingVertical: 18,
+  optionRow: {
+    paddingVertical: 14,
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
     width: '100%',
+    justifyContent: 'center',
   },
-  compactOptionRowActive: {
+  optionRowActive: {
     borderBottomColor: '#e86935',
   },
-  optionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkboxIndicator: {
-    width: 22,
-    height: 22,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#cbd5e1',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  checkboxIndicatorActive: {
-    borderColor: '#e86935',
-    backgroundColor: '#e86935',
-  },
-  compactOptionText: {
+  optionText: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 16,
     color: '#4b5563',
-    flex: 1,
+    lineHeight: 22,
   },
-  compactOptionTextActive: {
+  optionTextActive: {
     fontFamily: 'Nunito_700Bold',
     color: '#e86935',
   },
