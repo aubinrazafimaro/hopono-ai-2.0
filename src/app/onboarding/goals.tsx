@@ -5,6 +5,8 @@ import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import AlohaButton from '@/components/AlohaButton';
+import OnboardingBackButton from '@/components/OnboardingBackButton';
+import { Ionicons } from '@expo/vector-icons';
 
 const RESOLUTION_OPTIONS = [
   { label: "free the mind from blockages, pain, and trauma", emoji: "🧠" },
@@ -60,33 +62,40 @@ export default function GoalsScreen() {
 
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
+      <OnboardingBackButton light={false} />
       <SafeAreaView style={styles.containerTransparent}>
         {/* Progress Bar */}
         <View style={styles.progressBarContainer}>
           <View style={[styles.progressBarFill, { width: `${3 / 8 * 100}%` }]} />
         </View>
 
-        <ScrollView contentContainerStyle={styles.content}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         
         {step === 0 ? (
           <View style={styles.stepContainer}>
             <Text style={styles.question}>what's weighing on your heart?</Text>
             <Text style={styles.subtitle}>choose what feels true</Text>
-            <View style={styles.scrollFrame}>
-              <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
-                {RESOLUTION_OPTIONS.map((res) => {
-                  const isSelected = selectedResolutions.includes(res.label);
-                  return (
-                    <TouchableOpacity
-                      key={res.label}
-                      style={[styles.optionRow, isSelected && styles.optionRowActive]}
-                      onPress={() => toggleResolutionGoal(res.label)}
-                    >
-                      <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{res.emoji}  {res.label}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
+            <View style={styles.optionsList}>
+              {RESOLUTION_OPTIONS.map((res) => {
+                const isSelected = selectedResolutions.includes(res.label);
+                return (
+                  <TouchableOpacity
+                    key={res.label}
+                    style={[styles.compactOptionRow, isSelected && styles.compactOptionRowActive]}
+                    onPress={() => toggleResolutionGoal(res.label)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.optionContent}>
+                      <View style={[styles.checkboxIndicator, isSelected && styles.checkboxIndicatorActive]}>
+                        {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                      </View>
+                      <Text style={[styles.compactOptionText, isSelected && styles.compactOptionTextActive]}>
+                        {res.emoji}  {res.label}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
         ) : (
@@ -94,36 +103,51 @@ export default function GoalsScreen() {
             <Text style={styles.question}>when you're free, what becomes possible?</Text>
             <Text style={styles.subtitle}>choose your vision</Text>
             
-            <View style={styles.scrollFrame}>
-              <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
-                {BIG_GOALS.map((goal) => {
-                  const isSelected = selectedLifeGoals.includes(goal.label);
-                  return (
-                    <TouchableOpacity
-                      key={goal.label}
-                      style={[styles.optionRow, isSelected && styles.optionRowActive]}
-                      onPress={() => toggleLifeGoal(goal.label)}
-                    >
-                      <Text style={[styles.optionText, isSelected && styles.optionTextActive]}>{goal.emoji}  {goal.label}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
+            <View style={styles.optionsList}>
+              {BIG_GOALS.map((goal) => {
+                const isSelected = selectedLifeGoals.includes(goal.label);
+                return (
+                  <TouchableOpacity
+                    key={goal.label}
+                    style={[styles.compactOptionRow, isSelected && styles.compactOptionRowActive]}
+                    onPress={() => toggleLifeGoal(goal.label)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.optionContent}>
+                      <View style={[styles.checkboxIndicator, isSelected && styles.checkboxIndicatorActive]}>
+                        {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                      </View>
+                      <Text style={[styles.compactOptionText, isSelected && styles.compactOptionTextActive]}>
+                        {goal.emoji}  {goal.label}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
         )}
         </ScrollView>
       </SafeAreaView>
+      
       {step === 0 && (
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+          locations={[0, 0.4, 1]}
+          style={styles.bottomFixedContainer}
+        >
           <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={selectedResolutions.length === 0} />
-        </View>
+        </LinearGradient>
       )}
 
       {step === 1 && (
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+          locations={[0, 0.4, 1]}
+          style={styles.bottomFixedContainer}
+        >
           <AlohaButton onPress={handleFinishGoals} text="continue" variant="primary"  disabled={selectedLifeGoals.length === 0} />
-        </View>
+        </LinearGradient>
       )}
     </LinearGradient>
   );
@@ -164,21 +188,6 @@ const styles = StyleSheet.create({
   optionsList: {
     gap: 12,
   },
-  optionRow: {
-    borderWidth: 1.5,
-    borderColor: 'transparent',
-    borderRadius: 20,
-    paddingHorizontal: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-    minHeight: 76,
-    justifyContent: 'center',
-    marginVertical: 4,
-  },
   progressBarContainer: {
     height: 6,
     backgroundColor: '#e2e8f0',
@@ -193,35 +202,48 @@ const styles = StyleSheet.create({
     backgroundColor: '#e86935',
     borderRadius: 3,
   },
-  scrollFrame: {
-    maxHeight: 352,
-    borderRadius: 24,
-    backgroundColor: 'rgba(241, 245, 249, 0.4)',
-    padding: 8,
+  compactOptionRow: {
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
     width: '100%',
   },
-  optionsScrollList: {
-    gap: 8,
+  compactOptionRowActive: {
+    borderBottomColor: '#e86935',
   },
-  optionRowActive: {
-    backgroundColor: '#fff5f0',
+  optionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkboxIndicator: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#cbd5e1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  checkboxIndicatorActive: {
     borderColor: '#e86935',
-    shadowColor: '#e86935',
-    shadowOpacity: 0.15,
+    backgroundColor: '#e86935',
   },
-  optionText: {
+  compactOptionText: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 16,
     color: '#4b5563',
-    lineHeight: 24,
+    flex: 1,
   },
-  optionTextActive: {
+  compactOptionTextActive: {
+    fontFamily: 'Nunito_700Bold',
     color: '#e86935',
   },
-  bottomContainer: {
-    paddingBottom: 32,
-    paddingTop: 16,
-    alignItems: 'center',
-    paddingHorizontal: 32,
+  bottomFixedContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 32,
   },
 });

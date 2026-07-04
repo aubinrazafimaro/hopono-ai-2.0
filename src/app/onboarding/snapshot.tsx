@@ -133,7 +133,7 @@ export default function SnapshotScreen() {
     if (data.obstacles && data.obstacles.includes("I numb the pain instead of facing it")) {
       areas.push({
         title: 'meeting the pain directly',
-        desc: 'hopono intercepts the moment you reach for your phone — and offers something better.'
+        desc: 'hopono ai intercepts the moment you reach for your phone — and offers something better.'
       });
     }
 
@@ -240,7 +240,7 @@ export default function SnapshotScreen() {
 
           {/* Section: Work Areas */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🌱 where hopono will take you</Text>
+            <Text style={styles.sectionTitle}>🌱 where hopono ai will take you</Text>
             {workAreas.map((item, index) => (
               <View key={index} style={styles.listItemCard}>
                 <Text style={styles.itemTitle}>{item.title}</Text>

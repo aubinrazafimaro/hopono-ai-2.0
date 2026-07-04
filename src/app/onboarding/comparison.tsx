@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } fr
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AlohaButton from '@/components/AlohaButton';
+import OnboardingBackButton from '@/components/OnboardingBackButton';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -14,9 +15,7 @@ export default function ComparisonScreen() {
       <SafeAreaView style={styles.safeArea}>
 
         {/* Back Button */}
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
+        <OnboardingBackButton light={true} />
 
         {/* Header Pill */}
         <View style={styles.headerContainer}>
@@ -67,6 +66,7 @@ export default function ComparisonScreen() {
               onPress={() => router.push('/onboarding/commitment')}
               text="i commit to my healing"
               variant="secondary"
+              fullWidth={false}
             />
           </View>
         </View>
@@ -86,18 +86,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: 'space-between',
     paddingBottom: 10,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
   },
   headerContainer: {
     alignItems: 'center',

@@ -45,7 +45,7 @@ export default function ReviewsScreen() {
 
           {/* Header */}
           <Text style={styles.title}>
-            hopono was designed{'\n'}for <Text style={styles.titleHighlight}>hearts like you.</Text>
+            hopono ai was designed{'\n'}for <Text style={styles.titleHighlight}>hearts like you.</Text>
           </Text>
           <Text style={styles.subtitle}>early feedback from our beta community.</Text>
 
@@ -109,7 +109,7 @@ export default function ReviewsScreen() {
               </View>
               <Text style={styles.reviewTitle}>MY THERAPIST RECOMMENDS IT.</Text>
               <Text style={styles.reviewBody}>
-                she asked what I was doing differently. I told her about hopono. now she recommends it to her other clients.
+                she asked what I was doing differently. I told her about hopono ai. now she recommends it to her other clients.
               </Text>
             </View>
           </View>

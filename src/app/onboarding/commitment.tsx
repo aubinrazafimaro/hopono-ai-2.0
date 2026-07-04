@@ -5,6 +5,8 @@ import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import AlohaButton from '@/components/AlohaButton';
+import OnboardingBackButton from '@/components/OnboardingBackButton';
+import { Ionicons } from '@expo/vector-icons';
 
 const COMMITMENT_OPTIONS = [
   { id: '1', emoji: '🌺', label: 'fully. i need this.' },
@@ -26,42 +28,50 @@ export default function CommitmentScreen() {
 
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
+      <OnboardingBackButton light={false} />
       <SafeAreaView style={styles.containerTransparent}>
         {/* Progress Bar */}
         <View style={styles.progressBarContainer}>
-          <View style={[styles.progressBarFill, { width: '100%' }]} />
+          <View style={[styles.progressBarFill, { width: `${100}%` }]} />
         </View>
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Text style={styles.question}>how ready are you to let go?</Text>
           <Text style={styles.subtitle}>one last thing</Text>
 
-          <View style={styles.scrollFrame}>
-            <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
-              {COMMITMENT_OPTIONS.map((option) => (
-                <TouchableOpacity
-                  key={option.id}
-                  style={[
-                    styles.optionRow,
-                    selectedId === option.id && styles.optionRowActive
-                  ]}
-                  onPress={() => setSelectedId(option.id)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[styles.optionText, selectedId === option.id && styles.optionTextActive]}>
+          <View style={styles.optionsList}>
+            {COMMITMENT_OPTIONS.map((option) => (
+              <TouchableOpacity
+                key={option.id}
+                style={[
+                  styles.compactOptionRow,
+                  selectedId === option.id && styles.compactOptionRowActive
+                ]}
+                onPress={() => setSelectedId(option.id)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.optionContent}>
+                  <View style={[styles.checkboxIndicator, selectedId === option.id && styles.checkboxIndicatorActive]}>
+                    {selectedId === option.id && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                  </View>
+                  <Text style={[styles.compactOptionText, selectedId === option.id && styles.compactOptionTextActive]}>
                     {option.emoji}  {option.label}
                   </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
         </ScrollView>
       </SafeAreaView>
 
-      {/* Bottom Button */}
-      <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+      {/* Bottom Button wrapped in LinearGradient */}
+      <LinearGradient
+        colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+        locations={[0, 0.4, 1]}
+        style={styles.bottomFixedContainer}
+      >
         <AlohaButton onPress={handleNext} text="this is my answer" variant="primary" disabled={!selectedId} />
-      </View>
+      </LinearGradient>
     </LinearGradient>
   );
 }
@@ -90,34 +100,44 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     marginBottom: 24,
   },
-  optionRow: {
-    borderWidth: 1.5,
-    borderColor: 'transparent',
-    borderRadius: 20,
-    paddingHorizontal: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-    minHeight: 76,
+  optionsList: {
+    gap: 16,
+  },
+  compactOptionRow: {
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    width: '100%',
+  },
+  compactOptionRowActive: {
+    borderBottomColor: '#e86935',
+  },
+  optionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkboxIndicator: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#cbd5e1',
     justifyContent: 'center',
-    marginVertical: 4,
+    alignItems: 'center',
+    marginRight: 16,
   },
-  optionRowActive: {
-    backgroundColor: '#fff5f0',
+  checkboxIndicatorActive: {
     borderColor: '#e86935',
-    shadowColor: '#e86935',
-    shadowOpacity: 0.15,
+    backgroundColor: '#e86935',
   },
-  optionText: {
+  compactOptionText: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 16,
     color: '#4b5563',
-    lineHeight: 24,
+    flex: 1,
   },
-  optionTextActive: {
+  compactOptionTextActive: {
+    fontFamily: 'Nunito_700Bold',
     color: '#e86935',
   },
   progressBarContainer: {
@@ -134,14 +154,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#e86935',
     borderRadius: 3,
   },
-  scrollFrame: {
-    maxHeight: 352,
-    borderRadius: 24,
-    backgroundColor: 'rgba(241, 245, 249, 0.4)',
-    padding: 8,
-    width: '100%',
-  },
-  optionsScrollList: {
-    gap: 8,
+  bottomFixedContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 32,
   },
 });

@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useOnboarding } from '@/context/OnboardingContext';
 import AlohaButton from '@/components/AlohaButton';
+import OnboardingBackButton from '@/components/OnboardingBackButton';
 
 const AGE_GROUPS = ['15-20', '21-25', '26-30', '31-40', '41-50', '50+'];
 const GENDERS = ['female', 'male'];
@@ -90,6 +91,9 @@ export default function PresentationScreen() {
 
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
+      {step !== 1 && (
+        <OnboardingBackButton light={false} onPress={step === 2 ? () => setStep(0) : step === 3 ? () => setStep(2) : undefined} />
+      )}
       <KeyboardAvoidingView 
         style={{ flex: 1 }} 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -100,7 +104,7 @@ export default function PresentationScreen() {
             <View style={[styles.progressBarFill, { width: `${1 / 8 * 100}%` }]} />
           </View>
 
-          <ScrollView contentContainerStyle={styles.scrollContent}>
+          <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             {step === 0 && (
               <View style={styles.stepContainer}>
                 <Text style={styles.question}>what's your name?</Text>
@@ -119,18 +123,25 @@ export default function PresentationScreen() {
             {step === 2 && (
               <View style={styles.stepContainer}>
                 <Text style={styles.question}>how old are you?</Text>
-                <View style={styles.scrollFrame}>
-                  <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
-                    {AGE_GROUPS.map((age) => (
+                <View style={styles.optionsList}>
+                  {AGE_GROUPS.map((age) => {
+                    const isSelected = data.age === age;
+                    return (
                       <TouchableOpacity
                         key={age}
-                        style={[styles.optionRow, data.age === age && styles.optionRowActive]}
+                        style={[styles.compactOptionRow, isSelected && styles.compactOptionRowActive]}
                         onPress={() => handleAgeSelect(age)}
+                        activeOpacity={0.7}
                       >
-                        <Text style={[styles.optionText, data.age === age && styles.optionTextActive]}>{age}</Text>
+                        <View style={styles.optionContent}>
+                          <View style={[styles.checkboxIndicator, isSelected && styles.checkboxIndicatorActive]}>
+                            {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                          </View>
+                          <Text style={[styles.compactOptionText, isSelected && styles.compactOptionTextActive]}>{age}</Text>
+                        </View>
                       </TouchableOpacity>
-                    ))}
-                  </ScrollView>
+                    );
+                  })}
                 </View>
               </View>
             )}
@@ -140,34 +151,55 @@ export default function PresentationScreen() {
                 <Text style={styles.subtitle}>this helps us personalize your practice</Text>
                 <Text style={styles.question}>how do you identify?</Text>
                 <View style={styles.optionsList}>
-                  {GENDERS.map((gender) => (
-                    <TouchableOpacity
-                      key={gender}
-                      style={[styles.optionRow, data.gender === gender && styles.optionRowActive]}
-                      onPress={() => handleGenderSelect(gender)}
-                    >
-                      <Text style={[styles.optionText, data.gender === gender && styles.optionTextActive]}>{gender}</Text>
-                    </TouchableOpacity>
-                  ))}
+                  {GENDERS.map((gender) => {
+                    const isSelected = data.gender === gender;
+                    return (
+                      <TouchableOpacity
+                        key={gender}
+                        style={[styles.compactOptionRow, isSelected && styles.compactOptionRowActive]}
+                        onPress={() => handleGenderSelect(gender)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={styles.optionContent}>
+                          <View style={[styles.checkboxIndicator, isSelected && styles.checkboxIndicatorActive]}>
+                            {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                          </View>
+                          <Text style={[styles.compactOptionText, isSelected && styles.compactOptionTextActive]}>{gender}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </View>
             )}
           </ScrollView>
         </SafeAreaView>
         {step === 0 && (
-          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+            locations={[0, 0.4, 1]}
+            style={styles.bottomFixedContainer}
+          >
             <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary"  disabled={data.name.trim().length === 0} />
-          </View>
+          </LinearGradient>
         )}
         {step === 2 && (
-          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+            locations={[0, 0.4, 1]}
+            style={styles.bottomFixedContainer}
+          >
             <AlohaButton onPress={() => setStep(3)} text="continue" variant="primary"  disabled={!data.age} />
-          </View>
+          </LinearGradient>
         )}
         {step === 3 && (
-          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <LinearGradient
+            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+            locations={[0, 0.4, 1]}
+            style={styles.bottomFixedContainer}
+          >
             <AlohaButton onPress={() => router.push('/onboarding/screentime')} text="continue" variant="primary"  disabled={!data.gender} />
-          </View>
+          </LinearGradient>
         )}
       </KeyboardAvoidingView>
     </LinearGradient>
@@ -227,20 +259,42 @@ export default function PresentationScreen() {
   optionsList: {
     gap: 16,
   },
-  optionRow: {
-    borderWidth: 1.5,
-    borderColor: 'transparent',
-    borderRadius: 20,
-    paddingHorizontal: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-    minHeight: 76,
+  compactOptionRow: {
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    width: '100%',
+  },
+  compactOptionRowActive: {
+    borderBottomColor: '#e86935',
+  },
+  optionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkboxIndicator: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#cbd5e1',
     justifyContent: 'center',
-    marginVertical: 4,
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  checkboxIndicatorActive: {
+    borderColor: '#e86935',
+    backgroundColor: '#e86935',
+  },
+  compactOptionText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 16,
+    color: '#4b5563',
+    flex: 1,
+  },
+  compactOptionTextActive: {
+    fontFamily: 'Nunito_700Bold',
+    color: '#e86935',
   },
   progressBarContainer: {
     height: 6,
@@ -256,38 +310,12 @@ export default function PresentationScreen() {
     backgroundColor: '#e86935',
     borderRadius: 3,
   },
-  scrollFrame: {
-    maxHeight: 310,
-    borderRadius: 24,
-    backgroundColor: 'rgba(241, 245, 249, 0.4)',
-    padding: 8,
-    width: '100%',
-  },
-  optionsScrollList: {
-    gap: 8,
-  },
-  optionRowActive: {
-    backgroundColor: '#fff5f0',
-    borderColor: '#e86935',
-    shadowColor: '#e86935',
-    shadowOpacity: 0.15,
-  },
-  optionText: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 16,
-    color: '#4b5563',
-  },
-  optionTextActive: {
-    color: '#e86935',
-  },
-  spacing: {
-    height: 48,
-  },
-  bottomContainer: {
-    paddingBottom: 32,
-    paddingTop: 16,
-    alignItems: 'center',
-    paddingHorizontal: 32,
+  bottomFixedContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 32,
   },
   bottomContainerLink: {
     position: 'absolute',

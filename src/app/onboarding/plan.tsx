@@ -98,7 +98,7 @@ export default function PlanScreen() {
           <View style={styles.featureTextContainer}>
             <Text style={styles.featureTitle}>a ritual, not a chore.</Text>
             <Text style={styles.featureDesc}>
-              hopono meets you where you are — even when life is loud. a few minutes a day is all it takes to begin shifting what you feel.
+              hopono ai meets you where you are — even when life is loud. a few minutes a day is all it takes to begin shifting what you feel.
             </Text>
           </View>
         </View>

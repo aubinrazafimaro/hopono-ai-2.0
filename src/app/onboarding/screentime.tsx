@@ -5,6 +5,8 @@ import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import AlohaButton from '@/components/AlohaButton';
+import OnboardingBackButton from '@/components/OnboardingBackButton';
+import { Ionicons } from '@expo/vector-icons';
 
 const TIME_OPTIONS = [
   { label: 'less than 1h', emoji: '🌿' },
@@ -80,6 +82,7 @@ export default function ScreenTimeScreen() {
 
   return (
     <LinearGradient colors={['#ffffff', '#fff5f0', '#ffe8db']} style={{ flex: 1 }}>
+      <OnboardingBackButton light={false} onPress={step === 1 ? () => setStep(0) : undefined} />
       <SafeAreaView style={styles.containerTransparent}>
         {step === 0 && (
           <View style={styles.progressBarContainer}>
@@ -87,30 +90,39 @@ export default function ScreenTimeScreen() {
           </View>
         )}
         {step === 0 ? (
-          <ScrollView contentContainerStyle={styles.content}>
+          <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
             <View style={styles.header}>
               <Text style={styles.title}>let's be honest.</Text>
-              <Text style={styles.subtitle}>this is just between you and hopono.</Text>
+              <Text style={styles.subtitle}>this is just between you and hopono ai.</Text>
             </View>
             
             <Text style={styles.question}>how many hours a day does your phone take from you?</Text>
             
-            <View style={styles.scrollFrame}>
-              <ScrollView contentContainerStyle={styles.optionsScrollList} showsVerticalScrollIndicator={false}>
-                {TIME_OPTIONS.map((time) => (
+            <View style={styles.optionsList}>
+              {TIME_OPTIONS.map((time) => {
+                const isSelected = data.screenTime === time.label;
+                return (
                   <TouchableOpacity
                     key={time.label}
-                    style={[styles.optionRow, data.screenTime === time.label && styles.optionRowActive]}
+                    style={[styles.compactOptionRow, isSelected && styles.compactOptionRowActive]}
                     onPress={() => handleSelectTime(time.label)}
+                    activeOpacity={0.7}
                   >
-                    <Text style={[styles.optionText, data.screenTime === time.label && styles.optionTextActive]}>{time.emoji}  {time.label}</Text>
+                    <View style={styles.optionContent}>
+                      <View style={[styles.checkboxIndicator, isSelected && styles.checkboxIndicatorActive]}>
+                        {isSelected && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+                      </View>
+                      <Text style={[styles.compactOptionText, isSelected && styles.compactOptionTextActive]}>
+                        {time.emoji}  {time.label}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
-                ))}
-              </ScrollView>
+                );
+              })}
             </View>
           </ScrollView>
         ) : (
-          <ScrollView contentContainerStyle={[styles.content, { justifyContent: 'center' }]}>
+          <ScrollView contentContainerStyle={[styles.content, { justifyContent: 'center' }]} showsVerticalScrollIndicator={false}>
             <View style={styles.guiltSection}>
               <Animated.Text style={[styles.bodyText, { opacity: t1 }]}>
                 {data.screenTime} a day. that's {yearlyH} hours this year.
@@ -125,7 +137,7 @@ export default function ScreenTimeScreen() {
                 that time belongs to you, {data.name}.
               </Animated.Text>
               <Animated.Text style={[styles.bodyText, { opacity: r2 }]}>
-                hopono turns those moments into healing.
+                hopono ai turns those moments into healing.
               </Animated.Text>
               <Animated.Text style={[styles.bodyText, { opacity: r3 }]}>
                 every minute you reclaim is a minute you give back to yourself.
@@ -135,14 +147,22 @@ export default function ScreenTimeScreen() {
         )}
       </SafeAreaView>
       {step === 0 && (
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+          locations={[0, 0.4, 1]}
+          style={styles.bottomFixedContainer}
+        >
           <AlohaButton onPress={() => setStep(1)} text="continue" variant="primary" disabled={!data.screenTime} />
-        </View>
+        </LinearGradient>
       )}
       {step === 1 && (
-        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.95)', '#ffe8db']}
+          locations={[0, 0.4, 1]}
+          style={styles.bottomFixedContainer}
+        >
           <AlohaButton onPress={() => router.push('/onboarding/goals')} text="continue" variant="primary" disabled={!showBtn} />
-        </View>
+        </LinearGradient>
       )}
     </LinearGradient>
   );
@@ -187,20 +207,42 @@ const styles = StyleSheet.create({
   optionsList: {
     gap: 16,
   },
-  optionRow: {
-    borderWidth: 1.5,
-    borderColor: 'transparent',
-    borderRadius: 20,
-    paddingHorizontal: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-    minHeight: 76,
+  compactOptionRow: {
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    width: '100%',
+  },
+  compactOptionRowActive: {
+    borderBottomColor: '#e86935',
+  },
+  optionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkboxIndicator: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#cbd5e1',
     justifyContent: 'center',
-    marginVertical: 4,
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  checkboxIndicatorActive: {
+    borderColor: '#e86935',
+    backgroundColor: '#e86935',
+  },
+  compactOptionText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 16,
+    color: '#4b5563',
+    flex: 1,
+  },
+  compactOptionTextActive: {
+    fontFamily: 'Nunito_700Bold',
+    color: '#e86935',
   },
   progressBarContainer: {
     height: 6,
@@ -216,29 +258,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#e86935',
     borderRadius: 3,
   },
-  scrollFrame: {
-    maxHeight: 310,
-    borderRadius: 24,
-    backgroundColor: 'rgba(241, 245, 249, 0.4)',
-    padding: 8,
-    width: '100%',
-  },
-  optionsScrollList: {
-    gap: 8,
-  },
-  optionRowActive: {
-    backgroundColor: '#fff5f0',
-    borderColor: '#e86935',
-    shadowColor: '#e86935',
-    shadowOpacity: 0.15,
-  },
-  optionText: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 16,
-    color: '#4b5563',
-  },
-  optionTextActive: {
-    color: '#e86935',
+  bottomFixedContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 32,
   },
   guiltSection: {
     gap: 16,
@@ -252,11 +277,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#1f2937',
     lineHeight: 28,
-  },
-  bottomContainer: {
-    paddingBottom: 32,
-    paddingTop: 16,
-    alignItems: 'center',
-    paddingHorizontal: 32,
   },
 });

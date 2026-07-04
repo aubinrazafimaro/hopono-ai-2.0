@@ -13,6 +13,7 @@ interface AlohaButtonProps {
   style?: StyleProp<ViewStyle>;
   icon?: React.ReactNode;
   small?: boolean;
+  fullWidth?: boolean;
 }
 
 export default function AlohaButton({
@@ -23,6 +24,7 @@ export default function AlohaButton({
   style,
   icon,
   small = false,
+  fullWidth = true,
 }: AlohaButtonProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const insets = useSafeAreaInsets();
@@ -44,13 +46,19 @@ export default function AlohaButton({
   };
 
   const renderButton = () => {
+    const btnStyle = [
+      styles.button,
+      small && styles.buttonSmall,
+      !fullWidth && { width: undefined, paddingHorizontal: 32 }
+    ];
+
     if (variant === 'primary') {
       return (
         <LinearGradient
           colors={['#FF8C5A', '#e86935']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={[styles.button, small && styles.buttonSmall]}
+          style={btnStyle}
         >
           <View style={styles.contentRow}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
@@ -62,7 +70,7 @@ export default function AlohaButton({
 
     if (variant === 'secondary') {
       return (
-        <View style={[styles.button, styles.buttonSecondary, small && styles.buttonSmall]}>
+        <View style={[btnStyle, styles.buttonSecondary]}>
           <View style={styles.contentRow}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
             <Text style={[styles.text, styles.textOrange, small && styles.textSmall]}>{text}</Text>
@@ -73,7 +81,7 @@ export default function AlohaButton({
 
     if (variant === 'ghost') {
       return (
-        <View style={[styles.button, styles.buttonGhost, small && styles.buttonSmall]}>
+        <View style={[btnStyle, styles.buttonGhost]}>
           <View style={styles.contentRow}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
             <Text style={[styles.text, styles.textWhite, small && styles.textSmall]}>{text}</Text>
@@ -86,14 +94,23 @@ export default function AlohaButton({
   const bottomPadding = insets.bottom > 0 ? insets.bottom + 10 : 20;
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: bottomPadding }, style]}>
-      <Animated.View style={[{ transform: [{ scale: scaleAnim }], width: '100%' }, disabled && { opacity: 0.4 }]}>
+    <View style={[
+      styles.wrapper,
+      !fullWidth && { width: undefined, paddingHorizontal: 0, alignSelf: 'center' },
+      { paddingBottom: bottomPadding },
+      style
+    ]}>
+      <Animated.View style={[
+        { transform: [{ scale: scaleAnim }], width: fullWidth ? '100%' : undefined },
+        disabled && { opacity: 0.4 }
+      ]}>
         <TouchableOpacity
           onPress={onPress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
           activeOpacity={1}
           disabled={disabled}
+          style={!fullWidth && { alignSelf: 'center' }}
         >
           {renderButton()}
         </TouchableOpacity>

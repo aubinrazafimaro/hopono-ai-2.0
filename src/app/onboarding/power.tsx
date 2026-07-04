@@ -138,7 +138,7 @@ export default function PowerScreen() {
 
               {/* Texts */}
               <SvgText x={w-25} y="66" fill="#f59e0b" fontSize="10" fontFamily="Nunito_700Bold" textAnchor="end">
-                with hopono
+                with hopono ai
               </SvgText>
 
               <SvgText x="194" y="160" fill="#ef4444" fontSize="9" fontFamily="Nunito_600SemiBold" textAnchor="middle">

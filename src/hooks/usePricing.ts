@@ -9,7 +9,7 @@ export function usePricing() {
     return {
       yearlyPrice: "149,24 €",
       weeklyEquivalent: "2,87 €",
-      monthlyPrice: "19,00 €",
+      monthlyPrice: "19,99 €",
       currencySymbol: "€"
     };
   }, []);

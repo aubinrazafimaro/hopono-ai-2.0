@@ -6,6 +6,7 @@ import { usePricing } from '@/hooks/usePricing';
 import Svg, { Path } from 'react-native-svg';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
 import AlohaButton from '@/components/AlohaButton';
+import OnboardingBackButton from '@/components/OnboardingBackButton';
 
 
 
@@ -33,12 +34,10 @@ export default function PaywallScreen() {
     <View style={styles.container}>
       <AnimatedFadeIn style={{ flex: 1 }}>
       
-        {/* Header (No refresh button, only back button and central award) */}
+        {/* Header with standard OnboardingBackButton and central award badge */}
+        <OnboardingBackButton light={false} />
+        
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.headerIcon}>
-            <Ionicons name="chevron-back" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          
           <View style={styles.awardContainer}>
             <View style={styles.awardTextContainer}>
               <Text style={styles.awardText}>the #1 emotional</Text>
@@ -49,11 +48,6 @@ export default function PaywallScreen() {
                 ))}
               </View>
             </View>
-          </View>
-
-          {/* Spacer to balance the back button */}
-          <View style={[styles.headerIcon, { opacity: 0 }]} pointerEvents="none">
-            <Ionicons name="chevron-back" size={24} color="#1f2937" />
           </View>
         </View>
 
@@ -77,7 +71,7 @@ export default function PaywallScreen() {
               <View style={styles.timelineContent}>
                 <Text style={styles.timelineTitle}>today</Text>
                 <Text style={styles.timelineDesc}>
-                  your healing begins. access your personalized practice, your AI companion, and everything hopono has for you.
+                  your healing begins. access your personalized practice, your AI companion, and everything hopono ai has for you.
                 </Text>
               </View>
             </View>
@@ -103,7 +97,7 @@ export default function PaywallScreen() {
               <View style={styles.timelineContent}>
                 <Text style={styles.timelineTitle}>day 7</Text>
                 <Text style={styles.timelineDesc}>
-                  if hopono changed something in you, stay. if not, cancel — no questions. charged on {formatDate(in7Days)} only if you choose to continue.
+                  if hopono ai changed something in you, stay. if not, cancel — no questions. charged on {formatDate(in7Days)} only if you choose to continue.
                 </Text>
               </View>
             </View>
@@ -173,6 +167,12 @@ export default function PaywallScreen() {
             )}
           </View>
 
+          <Text style={styles.priceSubtext}>
+            {selectedPlan === 'yearly' 
+              ? `7 days free. then ${pricing.weeklyEquivalent}/week — less than a coffee.`
+              : `${pricing.monthlyPrice}/month — cancel anytime, no questions.`}
+          </Text>
+
           <AlohaButton
             onPress={handleStartTrial}
             text={selectedPlan === 'yearly' ? 'begin my healing — free' : 'continue'}
@@ -180,12 +180,6 @@ export default function PaywallScreen() {
             style={{ paddingBottom: 0 }}
           />
           
-          <Text style={styles.priceSubtext}>
-            {selectedPlan === 'yearly' 
-              ? `7 days free. then ${pricing.weeklyEquivalent}/week — less than a coffee.`
-              : `${pricing.monthlyPrice}/month — cancel anytime, no questions.`}
-          </Text>
-
           <View style={styles.footerLinks}>
             <TouchableOpacity onPress={() => Linking.openURL('https://hopono.ai/privacy')}>
               <Text style={styles.footerLink}>privacy</Text>
@@ -307,8 +301,8 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#ffffff',
     paddingTop: 8,
-    paddingBottom: 20, // Lowered closer to bottom screen edge
-    paddingHorizontal: 24, // Added to prevent touching left/right borders
+    paddingBottom: 12,
+    paddingHorizontal: 24,
   },
   togglesContainer: {
     flexDirection: 'row',
@@ -410,12 +404,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#94a3b8',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 8,
     textTransform: 'lowercase',
   },
   footerLinks: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    marginTop: 8,
+    marginBottom: 4,
   },
   footerLink: {
     fontFamily: 'Nunito_600SemiBold',
