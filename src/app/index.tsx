@@ -137,6 +137,10 @@ export default function Home() {
   const orbScale = useRef(new Animated.Value(1)).current;
   const orbOpacity = useRef(new Animated.Value(0.8)).current;
 
+  // Liquid/Fluid float animation values
+  const floatAnimX = useRef(new Animated.Value(0)).current;
+  const floatAnimY = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -147,6 +151,25 @@ export default function Home() {
         Animated.parallel([
           Animated.timing(orbScale, { toValue: 1, duration: 4000, useNativeDriver: true }),
           Animated.timing(orbOpacity, { toValue: 0.7, duration: 4000, useNativeDriver: true }),
+        ]),
+      ])
+    ).start();
+  }, []);
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(floatAnimX, { toValue: 8, duration: 3500, useNativeDriver: true }),
+          Animated.timing(floatAnimY, { toValue: -6, duration: 3500, useNativeDriver: true }),
+        ]),
+        Animated.parallel([
+          Animated.timing(floatAnimX, { toValue: -8, duration: 4500, useNativeDriver: true }),
+          Animated.timing(floatAnimY, { toValue: 8, duration: 4500, useNativeDriver: true }),
+        ]),
+        Animated.parallel([
+          Animated.timing(floatAnimX, { toValue: 0, duration: 3500, useNativeDriver: true }),
+          Animated.timing(floatAnimY, { toValue: 0, duration: 3500, useNativeDriver: true }),
         ]),
       ])
     ).start();
@@ -260,33 +283,88 @@ export default function Home() {
               disabled={!nextSession || !healingPlan}
               style={styles.dashboardOrbContainer}
             >
+              {/* Layer 1: Outer Halo */}
               <Animated.View style={[
-                styles.dashboardOrb, 
-                { 
+                styles.orbOuterHalo,
+                {
                   transform: [{ scale: orbScale }],
-                  opacity: orbOpacity 
                 }
               ]}>
                 <LinearGradient
-                  colors={['#ffedd5', 'rgba(254, 215, 170, 0.5)', 'rgba(254, 215, 170, 0.2)', 'transparent']}
-                  style={[StyleSheet.absoluteFill, { borderRadius: 110 }]}
+                  colors={['rgba(232, 105, 53, 0.35)', 'rgba(254, 215, 170, 0.12)', 'rgba(254, 215, 170, 0.02)', 'transparent']}
+                  style={StyleSheet.absoluteFill}
                   start={{ x: 0.5, y: 0.5 }}
                   end={{ x: 1, y: 1 }}
                 />
               </Animated.View>
-              {/* Core sun */}
-              <View style={[styles.dashboardOrbCore, { justifyContent: 'center', alignItems: 'center' }]}>
-                {healingPlan && (
-                  <Text style={styles.orbPercentageText}>
-                    {progressPercent}%
-                  </Text>
-                )}
-              </View>
+
+              {/* Layers 2-5: The 3D Liquid Breathing Base Sphere */}
+              <Animated.View style={[
+                styles.orbBase,
+                {
+                  transform: [{ scale: orbScale }],
+                  opacity: orbOpacity,
+                }
+              ]}>
+                {/* Sphere Base Gradient */}
+                <LinearGradient
+                  colors={['#e86935', '#f97316', '#fdba74']}
+                  style={StyleSheet.absoluteFill}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                />
+                
+                {/* Liquid/Fluid Accent 1 (Pinkish Glow) */}
+                <Animated.View style={[
+                  styles.orbLiquidAccentPink,
+                  {
+                    transform: [
+                      { translateX: floatAnimX },
+                      { translateY: floatAnimY },
+                    ],
+                  }
+                ]}>
+                  <LinearGradient
+                    colors={['rgba(244, 63, 94, 0.75)', 'transparent']}
+                    style={StyleSheet.absoluteFill}
+                  />
+                </Animated.View>
+
+                {/* Liquid/Fluid Accent 2 (Purple Glow) */}
+                <Animated.View style={[
+                  styles.orbLiquidAccentPurple,
+                  {
+                    transform: [
+                      { translateX: Animated.multiply(floatAnimX, -1) },
+                      { translateY: Animated.multiply(floatAnimY, -1) },
+                    ],
+                  }
+                ]}>
+                  <LinearGradient
+                    colors={['rgba(139, 92, 246, 0.65)', 'transparent']}
+                    style={StyleSheet.absoluteFill}
+                  />
+                </Animated.View>
+
+                {/* Glass 3D Reflection Highlight */}
+                <LinearGradient
+                  colors={['rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 0.1)', 'transparent']}
+                  style={styles.orbReflection}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0.7, y: 0.7 }}
+                />
+              </Animated.View>
             </TouchableOpacity>
             
-            <Text style={[styles.brandTitleText, { color: palette.textPrimary }]}>
+            <Text style={[styles.brandTitleText, { color: '#ffffff' }]}>
               hopono AI
             </Text>
+
+            {healingPlan && (
+              <Text style={[styles.progressPercentLabel, { color: 'rgba(255, 255, 255, 0.6)' }]}>
+                personalized plan • {progressPercent}% completed
+              </Text>
+            )}
             
             {healingPlan ? (
               <TouchableOpacity
@@ -297,16 +375,16 @@ export default function Home() {
                   styles.progressButton, 
                   { 
                     backgroundColor: nextSession ? palette.primary : 'rgba(255,255,255,0.06)', 
-                    borderColor: palette.cardBorder 
+                    borderColor: 'rgba(255,255,255,0.1)' 
                   }
                 ]}
               >
-                <Text style={[styles.progressButtonText, { color: nextSession ? '#ffffff' : palette.textMuted }]}>
+                <Text style={[styles.progressButtonText, { color: nextSession ? '#ffffff' : 'rgba(255,255,255,0.4)' }]}>
                   {progressText}
                 </Text>
               </TouchableOpacity>
             ) : (
-              <Text style={[styles.brandSubtitleText, { color: palette.textMuted }]}>
+              <Text style={[styles.brandSubtitleText, { color: 'rgba(255, 255, 255, 0.5)' }]}>
                 breathe in. clean inside. release.
               </Text>
             )}
@@ -507,42 +585,75 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
   },
   borderlessOrbCard: {
-    paddingVertical: 12,
+    paddingVertical: 32,
+    paddingHorizontal: 24,
     marginBottom: SPACING.section,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#090d16', // Deep dark space background for stunning contrast
+    borderRadius: 32,
+    borderWidth: 1,
+    borderColor: 'rgba(232, 105, 53, 0.15)', // Subtle glowing primary border
+    shadowColor: '#e86935',
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.12,
+    shadowRadius: 30,
+    elevation: 8,
   },
   dashboardOrbContainer: {
     width: 240,
     height: 240,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  dashboardOrb: {
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  dashboardOrbCore: {
+  orbOuterHalo: {
     position: 'absolute',
-    width: 76,
-    height: 76,
-    borderRadius: 38,
-    backgroundColor: '#ffedd5',
-    shadowColor: '#f97316',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 24,
-    elevation: 10,
+    width: 230,
+    height: 230,
+    borderRadius: 115,
   },
-  orbPercentageText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 16,
-    color: '#e86935',
+  orbBase: {
+    width: 170,
+    height: 170,
+    borderRadius: 85,
+    overflow: 'hidden',
+    position: 'relative',
+    shadowColor: '#e86935',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+  },
+  orbLiquidAccentPink: {
+    position: 'absolute',
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    top: -20,
+    left: -20,
+  },
+  orbLiquidAccentPurple: {
+    position: 'absolute',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    bottom: -20,
+    right: -20,
+  },
+  orbReflection: {
+    position: 'absolute',
+    width: 170,
+    height: 170,
+    borderRadius: 85,
+    top: 0,
+    left: 0,
+  },
+  progressPercentLabel: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 13,
+    marginTop: 2,
+    marginBottom: 8,
+    textTransform: 'lowercase',
   },
   progressButton: {
     paddingVertical: 12,
