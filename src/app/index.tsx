@@ -283,7 +283,7 @@ export default function Home() {
               disabled={!nextSession || !healingPlan}
               style={styles.dashboardOrbContainer}
             >
-              {/* Layer 1: Outer Halo */}
+              {/* Layer 1: Outer Halo (Subtle neon multi-glow) */}
               <Animated.View style={[
                 styles.orbOuterHalo,
                 {
@@ -291,14 +291,14 @@ export default function Home() {
                 }
               ]}>
                 <LinearGradient
-                  colors={['rgba(232, 105, 53, 0.35)', 'rgba(254, 215, 170, 0.12)', 'rgba(254, 215, 170, 0.02)', 'transparent']}
+                  colors={['rgba(59, 130, 246, 0.2)', 'rgba(236, 72, 153, 0.15)', 'rgba(16, 185, 129, 0.1)', 'transparent']}
                   style={StyleSheet.absoluteFill}
-                  start={{ x: 0.5, y: 0.5 }}
-                  end={{ x: 1, y: 1 }}
+                  start={{ x: 0.2, y: 0.2 }}
+                  end={{ x: 0.8, y: 0.8 }}
                 />
               </Animated.View>
 
-              {/* Layers 2-5: The 3D Liquid Breathing Base Sphere */}
+              {/* Layers 2-6: The Siri-style 3D Glass Sphere with intersecting neon blobs */}
               <Animated.View style={[
                 styles.orbBase,
                 {
@@ -306,17 +306,10 @@ export default function Home() {
                   opacity: orbOpacity,
                 }
               ]}>
-                {/* Sphere Base Gradient */}
-                <LinearGradient
-                  colors={['#e86935', '#f97316', '#fdba74']}
-                  style={StyleSheet.absoluteFill}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                />
                 
-                {/* Liquid/Fluid Accent 1 (Pinkish Glow) */}
+                {/* 1. Neon Blue Blob */}
                 <Animated.View style={[
-                  styles.orbLiquidAccentPink,
+                  styles.orbBlobBlue,
                   {
                     transform: [
                       { translateX: floatAnimX },
@@ -325,33 +318,68 @@ export default function Home() {
                   }
                 ]}>
                   <LinearGradient
-                    colors={['rgba(244, 63, 94, 0.75)', 'transparent']}
+                    colors={['rgba(37, 99, 235, 0.75)', 'transparent']}
                     style={StyleSheet.absoluteFill}
                   />
                 </Animated.View>
 
-                {/* Liquid/Fluid Accent 2 (Purple Glow) */}
+                {/* 2. Neon Pink Blob */}
                 <Animated.View style={[
-                  styles.orbLiquidAccentPurple,
+                  styles.orbBlobPink,
                   {
                     transform: [
-                      { translateX: Animated.multiply(floatAnimX, -1) },
-                      { translateY: Animated.multiply(floatAnimY, -1) },
+                      { translateX: Animated.multiply(floatAnimX, -1.2) },
+                      { translateY: Animated.multiply(floatAnimY, 0.8) },
                     ],
                   }
                 ]}>
                   <LinearGradient
-                    colors={['rgba(139, 92, 246, 0.65)', 'transparent']}
+                    colors={['rgba(236, 72, 153, 0.8)', 'transparent']}
                     style={StyleSheet.absoluteFill}
                   />
                 </Animated.View>
 
-                {/* Glass 3D Reflection Highlight */}
+                {/* 3. Neon Cyan Blob */}
+                <Animated.View style={[
+                  styles.orbBlobCyan,
+                  {
+                    transform: [
+                      { translateX: Animated.multiply(floatAnimY, 0.6) },
+                      { translateY: Animated.multiply(floatAnimX, -1) },
+                    ],
+                  }
+                ]}>
+                  <LinearGradient
+                    colors={['rgba(6, 182, 212, 0.75)', 'transparent']}
+                    style={StyleSheet.absoluteFill}
+                  />
+                </Animated.View>
+
+                {/* 4. Neon Green Blob */}
+                <Animated.View style={[
+                  styles.orbBlobGreen,
+                  {
+                    transform: [
+                      { translateX: Animated.multiply(floatAnimX, 0.7) },
+                      { translateY: Animated.multiply(floatAnimY, -1.3) },
+                    ],
+                  }
+                ]}>
+                  <LinearGradient
+                    colors={['rgba(16, 185, 129, 0.7)', 'transparent']}
+                    style={StyleSheet.absoluteFill}
+                  />
+                </Animated.View>
+
+                {/* 5. Bright White Core */}
+                <View style={styles.orbCoreWhite} />
+
+                {/* 6. 3D Glass Reflection Rim Highlight */}
                 <LinearGradient
-                  colors={['rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 0.1)', 'transparent']}
+                  colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.05)', 'transparent']}
                   style={styles.orbReflection}
                   start={{ x: 0, y: 0 }}
-                  end={{ x: 0.7, y: 0.7 }}
+                  end={{ x: 0.6, y: 0.6 }}
                 />
               </Animated.View>
             </TouchableOpacity>
@@ -586,19 +614,10 @@ const styles = StyleSheet.create({
   },
   borderlessOrbCard: {
     paddingVertical: 32,
-    paddingHorizontal: 24,
     marginBottom: SPACING.section,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#090d16', // Deep dark space background for stunning contrast
-    borderRadius: 32,
-    borderWidth: 1,
-    borderColor: 'rgba(232, 105, 53, 0.15)', // Subtle glowing primary border
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.12,
-    shadowRadius: 30,
-    elevation: 8,
+    backgroundColor: 'transparent', // Fully floating transparent container as requested
   },
   dashboardOrbContainer: {
     width: 240,
@@ -609,42 +628,74 @@ const styles = StyleSheet.create({
   },
   orbOuterHalo: {
     position: 'absolute',
-    width: 230,
-    height: 230,
-    borderRadius: 115,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
   },
   orbBase: {
-    width: 170,
-    height: 170,
-    borderRadius: 85,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     overflow: 'hidden',
     position: 'relative',
-    shadowColor: '#e86935',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
+    backgroundColor: 'rgba(10, 15, 30, 0.85)', // Siri dark semi-transparent sphere base
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.28)', // Soft glass rim
   },
-  orbLiquidAccentPink: {
+  orbBlobBlue: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    top: -15,
+    right: -15,
+  },
+  orbBlobPink: {
+    position: 'absolute',
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    bottom: -15,
+    left: -15,
+  },
+  orbBlobCyan: {
     position: 'absolute',
     width: 130,
     height: 130,
     borderRadius: 65,
-    top: -20,
-    left: -20,
+    top: 25,
+    left: 25,
   },
-  orbLiquidAccentPurple: {
+  orbBlobGreen: {
     position: 'absolute',
     width: 120,
     height: 120,
     borderRadius: 60,
-    bottom: -20,
-    right: -20,
+    bottom: -10,
+    right: -10,
+  },
+  orbCoreWhite: {
+    position: 'absolute',
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#ffffff',
+    top: '50%',
+    left: '50%',
+    marginTop: -11,
+    marginLeft: -11,
+    shadowColor: '#ffffff',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.95,
+    shadowRadius: 12,
+    elevation: 8,
+    opacity: 0.95,
   },
   orbReflection: {
     position: 'absolute',
-    width: 170,
-    height: 170,
-    borderRadius: 85,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     top: 0,
     left: 0,
   },
