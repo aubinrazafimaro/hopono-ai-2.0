@@ -19,6 +19,7 @@ import { SPACING, RADIUS, COLORS, TYPOGRAPHY } from '@/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDailyProgress, DailyProgress } from '@/services/history';
 import { generateLocalHealingPlan } from '@/services/ai';
+import Svg, { Circle, Defs, Filter, FeGaussianBlur, RadialGradient, Stop } from 'react-native-svg';
 
 const practices = [
   { id: '21',     label: '21 repetitions',  desc: 'quick clearing',  emoji: '🌺' },
@@ -298,7 +299,7 @@ export default function Home() {
                 />
               </Animated.View>
 
-              {/* Layers 2-6: The Siri-style 3D Glass Sphere with intersecting neon blobs */}
+              {/* Layers 2-6: The Siri-style 3D Glass Sphere with intersecting SVG neon blobs */}
               <Animated.View style={[
                 styles.orbBase,
                 {
@@ -307,80 +308,107 @@ export default function Home() {
                 }
               ]}>
                 
-                {/* 1. Neon Blue Blob */}
+                {/* 1. Neon Blue Blob (Floating) */}
                 <Animated.View style={[
-                  styles.orbBlobBlue,
+                  StyleSheet.absoluteFill,
                   {
                     transform: [
                       { translateX: floatAnimX },
                       { translateY: floatAnimY },
-                    ],
+                    ]
                   }
                 ]}>
-                  <LinearGradient
-                    colors={['rgba(37, 99, 235, 0.75)', 'transparent']}
-                    style={StyleSheet.absoluteFill}
-                  />
+                  <Svg width="180" height="180" viewBox="0 0 180 180">
+                    <Defs>
+                      <Filter id="siri-blue-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <FeGaussianBlur stdDeviation="22" />
+                      </Filter>
+                    </Defs>
+                    <Circle cx="80" cy="75" r="50" fill="#2563eb" opacity="0.8" filter="url(#siri-blue-glow)" />
+                  </Svg>
                 </Animated.View>
 
-                {/* 2. Neon Pink Blob */}
+                {/* 2. Neon Pink/Red Blob (Floating opposite) */}
                 <Animated.View style={[
-                  styles.orbBlobPink,
+                  StyleSheet.absoluteFill,
                   {
                     transform: [
                       { translateX: Animated.multiply(floatAnimX, -1.2) },
                       { translateY: Animated.multiply(floatAnimY, 0.8) },
-                    ],
+                    ]
                   }
                 ]}>
-                  <LinearGradient
-                    colors={['rgba(236, 72, 153, 0.8)', 'transparent']}
-                    style={StyleSheet.absoluteFill}
-                  />
+                  <Svg width="180" height="180" viewBox="0 0 180 180">
+                    <Defs>
+                      <Filter id="siri-pink-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <FeGaussianBlur stdDeviation="22" />
+                      </Filter>
+                    </Defs>
+                    <Circle cx="115" cy="100" r="45" fill="#ec4899" opacity="0.8" filter="url(#siri-pink-glow)" />
+                  </Svg>
                 </Animated.View>
 
-                {/* 3. Neon Cyan Blob */}
+                {/* 3. Neon Cyan Blob (Floating cross) */}
                 <Animated.View style={[
-                  styles.orbBlobCyan,
+                  StyleSheet.absoluteFill,
                   {
                     transform: [
                       { translateX: Animated.multiply(floatAnimY, 0.6) },
                       { translateY: Animated.multiply(floatAnimX, -1) },
-                    ],
+                    ]
                   }
                 ]}>
-                  <LinearGradient
-                    colors={['rgba(6, 182, 212, 0.75)', 'transparent']}
-                    style={StyleSheet.absoluteFill}
-                  />
+                  <Svg width="180" height="180" viewBox="0 0 180 180">
+                    <Defs>
+                      <Filter id="siri-cyan-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <FeGaussianBlur stdDeviation="22" />
+                      </Filter>
+                    </Defs>
+                    <Circle cx="75" cy="110" r="45" fill="#06b6d4" opacity="0.8" filter="url(#siri-cyan-glow)" />
+                  </Svg>
                 </Animated.View>
 
-                {/* 4. Neon Green Blob */}
+                {/* 4. Neon Green Blob (Floating staggered) */}
                 <Animated.View style={[
-                  styles.orbBlobGreen,
+                  StyleSheet.absoluteFill,
                   {
                     transform: [
                       { translateX: Animated.multiply(floatAnimX, 0.7) },
                       { translateY: Animated.multiply(floatAnimY, -1.3) },
-                    ],
+                    ]
                   }
                 ]}>
-                  <LinearGradient
-                    colors={['rgba(16, 185, 129, 0.7)', 'transparent']}
-                    style={StyleSheet.absoluteFill}
-                  />
+                  <Svg width="180" height="180" viewBox="0 0 180 180">
+                    <Defs>
+                      <Filter id="siri-green-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <FeGaussianBlur stdDeviation="22" />
+                      </Filter>
+                    </Defs>
+                    <Circle cx="105" cy="115" r="40" fill="#10b981" opacity="0.75" filter="url(#siri-green-glow)" />
+                  </Svg>
                 </Animated.View>
 
-                {/* 5. Bright White Core */}
-                <View style={styles.orbCoreWhite} />
+                {/* 5-7. Core and Reflection Overlay */}
+                <Svg width="180" height="180" viewBox="0 0 180 180" style={StyleSheet.absoluteFill}>
+                  <Defs>
+                    <Filter id="core-glow" x="-30%" y="-30%" width="160%" height="160%">
+                      <FeGaussianBlur stdDeviation="12" />
+                    </Filter>
+                    <RadialGradient id="reflection-grad" cx="30%" cy="30%" rx="70%" ry="70%">
+                      <Stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
+                      <Stop offset="45%" stopColor="#ffffff" stopOpacity="0.08" />
+                      <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+                    </RadialGradient>
+                  </Defs>
+                  {/* Bright White Core Glow */}
+                  <Circle cx="90" cy="90" r="24" fill="#ffffff" opacity="0.9" filter="url(#core-glow)" />
 
-                {/* 6. 3D Glass Reflection Rim Highlight */}
-                <LinearGradient
-                  colors={['rgba(255, 255, 255, 0.35)', 'rgba(255, 255, 255, 0.05)', 'transparent']}
-                  style={styles.orbReflection}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 0.6, y: 0.6 }}
-                />
+                  {/* Sharp White Core Center */}
+                  <Circle cx="90" cy="90" r="10" fill="#ffffff" opacity="1" />
+
+                  {/* Glass reflection overlay */}
+                  <Circle cx="90" cy="90" r="90" fill="url(#reflection-grad)" />
+                </Svg>
               </Animated.View>
             </TouchableOpacity>
             
@@ -642,63 +670,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.28)', // Soft glass rim
   },
-  orbBlobBlue: {
-    position: 'absolute',
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    top: -15,
-    right: -15,
-  },
-  orbBlobPink: {
-    position: 'absolute',
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    bottom: -15,
-    left: -15,
-  },
-  orbBlobCyan: {
-    position: 'absolute',
-    width: 130,
-    height: 130,
-    borderRadius: 65,
-    top: 25,
-    left: 25,
-  },
-  orbBlobGreen: {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    bottom: -10,
-    right: -10,
-  },
-  orbCoreWhite: {
-    position: 'absolute',
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: '#ffffff',
-    top: '50%',
-    left: '50%',
-    marginTop: -11,
-    marginLeft: -11,
-    shadowColor: '#ffffff',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.95,
-    shadowRadius: 12,
-    elevation: 8,
-    opacity: 0.95,
-  },
-  orbReflection: {
-    position: 'absolute',
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    top: 0,
-    left: 0,
-  },
+
   progressPercentLabel: {
     fontFamily: 'Nunito_600SemiBold',
     fontSize: 13,
