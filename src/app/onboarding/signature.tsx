@@ -10,7 +10,7 @@ import AlohaButton from '@/components/AlohaButton';
 export default function SignatureScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const bottomPos = insets.bottom > 0 ? insets.bottom + 14 : 24;
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 6 : 14;
   
   const [paths, setPaths] = useState<string[]>([]);
   const [currentPath, setCurrentPath] = useState<string>('');

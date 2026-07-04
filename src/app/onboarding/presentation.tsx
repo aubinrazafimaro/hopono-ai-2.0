@@ -14,7 +14,7 @@ const GENDERS = ['female', 'male'];
 export default function PresentationScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const bottomPos = insets.bottom > 0 ? insets.bottom + 14 : 24;
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 6 : 14;
   const { data, updateData } = useOnboarding();
   const [step, setStep] = useState(0);
 
