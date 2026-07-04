@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     paddingVertical: 18,
-    borderRadius: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#e86935',
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   buttonSmall: {
     paddingVertical: 14,
-    borderRadius: 28,
+    borderRadius: 16,
   },
   contentRow: {
     flexDirection: 'row',

@@ -4,11 +4,12 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router';
 import { useOnboarding } from '@/context/OnboardingContext';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import AlohaButton from '@/components/AlohaButton';
 
 export default function RecapScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const bottomPos = insets.bottom > 0 ? insets.bottom + 14 : 24;
   const { data } = useOnboarding();
 
   const handleFinish = () => {
@@ -76,17 +77,17 @@ export default function RecapScreen() {
           </Text>
         </View>
         </ScrollView>
-        <View style={[styles.bottomContainerLink, { bottom: bottomPos }]}>
-          <TouchableOpacity 
-            style={styles.linkButton}
+        <LinearGradient
+          colors={['rgba(232, 105, 53, 0)', 'rgba(232, 105, 53, 0.95)', '#e86935']}
+          locations={[0, 0.4, 1]}
+          style={styles.bottomFixedContainer}
+        >
+          <AlohaButton
             onPress={handleFinish}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.linkButtonText}>continue</Text>
-              <Ionicons name="arrow-forward" size={18} color="#ffffff" style={{ marginLeft: 6, transform: [{ translateY: 2 }] }} />
-            </View>
-          </TouchableOpacity>
-        </View>
+            text="continue"
+            variant="secondary"
+          />
+        </LinearGradient>
       </SafeAreaView>
     </View>
   );
@@ -200,18 +201,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#e86935',
   },
-  bottomContainerLink: {
+  bottomFixedContainer: {
     position: 'absolute',
-    bottom: 24,
-    right: 24,
-  },
-  linkButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-  },
-  linkButtonText: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 18,
-    color: '#ffffff',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 32,
   },
 });

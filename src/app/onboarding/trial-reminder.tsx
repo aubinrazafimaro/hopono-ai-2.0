@@ -22,10 +22,12 @@ export default function TrialReminderScreen() {
             we'll remind you before anything changes.
           </Text>
 
-          <View style={styles.bellContainer}>
-            <Ionicons name="notifications" size={160} color="#e2e8f0" />
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>1</Text>
+          <View style={styles.bellWrapper}>
+            <View style={styles.bellContainer}>
+              <Ionicons name="notifications" size={160} color="#e2e8f0" />
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>1</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -74,11 +76,18 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     textTransform: 'lowercase',
   },
-  bellContainer: {
+  bellWrapper: {
     flex: 1,
-    justifyContent: 'center', // Center bell vertically in the remaining space
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+  },
+  bellContainer: {
+    width: 160,
+    height: 160,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
   },
   badge: {
     position: 'absolute',
