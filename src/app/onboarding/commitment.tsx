@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   scrollFrame: {
-    maxHeight: 310,
+    maxHeight: 352,
     borderRadius: 24,
     backgroundColor: 'rgba(241, 245, 249, 0.4)',
     padding: 8,

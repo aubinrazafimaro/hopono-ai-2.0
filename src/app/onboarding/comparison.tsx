@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import AlohaButton from '@/components/AlohaButton';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -55,18 +56,19 @@ export default function ComparisonScreen() {
         {/* Bottom Section containing text and button naturally in a column */}
         <View style={styles.bottomSection}>
           <View style={styles.textContainer}>
-            <Text style={styles.title}>try it free for 7 days.{'\n'}feel the difference.</Text>
+            <Text style={styles.title}>invest in your mind.{'\n'}less than a coffee a week.</Text>
             <Text style={styles.description}>
-              if it doesn't change something in you, cancel anytime. no questions asked.
+              prioritize your healing, clarify your thoughts, and reclaim your attention. start with a 7-day free trial. cancel anytime.
             </Text>
           </View>
 
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={() => router.push('/onboarding/commitment')}
-          >
-            <Text style={styles.actionButtonText}>i'm in</Text>
-          </TouchableOpacity>
+          <View style={{ alignItems: 'center', width: '100%', marginBottom: 20 }}>
+            <AlohaButton 
+              onPress={() => router.push('/onboarding/commitment')}
+              text="i commit to my healing"
+              variant="secondary"
+            />
+          </View>
         </View>
 
       </SafeAreaView>
@@ -198,44 +200,24 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     paddingHorizontal: 8,
-    marginBottom: 20,
-    alignItems: 'center',
+    marginBottom: 28,
+    alignItems: 'stretch',
   },
   title: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 24,
+    fontFamily: 'Nunito_800ExtraBold',
+    fontSize: 26,
     color: '#ffffff',
     marginBottom: 12,
-    lineHeight: 32,
-    textAlign: 'center',
+    lineHeight: 34,
+    textAlign: 'left',
     textTransform: 'lowercase',
   },
   description: {
     fontFamily: 'Nunito_600SemiBold',
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.88)',
-    lineHeight: 22,
-    textAlign: 'center',
-    textTransform: 'lowercase',
-  },
-  actionButton: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    paddingVertical: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 5,
-    width: '100%',
-    marginBottom: 20,
-  },
-  actionButtonText: {
-    fontFamily: 'Nunito_700Bold',
-    fontSize: 18,
-    color: '#e86935',
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.9)',
+    lineHeight: 24,
+    textAlign: 'left',
     textTransform: 'lowercase',
   },
 });

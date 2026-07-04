@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function RecapScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const bottomPos = insets.bottom > 0 ? insets.bottom + 18 : 28;
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 14 : 24;
   const { data } = useOnboarding();
 
   const handleFinish = () => {
@@ -202,8 +202,8 @@ const styles = StyleSheet.create({
   },
   bottomContainerLink: {
     position: 'absolute',
-    bottom: 28,
-    right: 32,
+    bottom: 24,
+    right: 24,
   },
   linkButton: {
     paddingVertical: 12,

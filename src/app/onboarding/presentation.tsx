@@ -13,7 +13,7 @@ const GENDERS = ['female', 'male'];
 export default function PresentationScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const bottomPos = insets.bottom > 0 ? insets.bottom + 18 : 28;
+  const bottomPos = insets.bottom > 0 ? insets.bottom + 14 : 24;
   const { data, updateData } = useOnboarding();
   const [step, setStep] = useState(0);
 
@@ -291,8 +291,8 @@ export default function PresentationScreen() {
   },
   bottomContainerLink: {
     position: 'absolute',
-    bottom: 28,
-    right: 32,
+    bottom: 24,
+    right: 24,
   },
   linkButton: {
     paddingVertical: 12,

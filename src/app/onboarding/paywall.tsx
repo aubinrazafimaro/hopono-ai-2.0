@@ -7,30 +7,7 @@ import Svg, { Path } from 'react-native-svg';
 import AnimatedFadeIn from '@/components/AnimatedFadeIn';
 import AlohaButton from '@/components/AlohaButton';
 
-const LaurelBranch = ({ isLeft }: { isLeft: boolean }) => {
-  return (
-    <Svg
-      width={32}
-      height={48}
-      viewBox="0 0 32 48"
-      style={{ transform: [{ scaleX: isLeft ? 1 : -1 }] }}
-    >
-      <Path
-        d="M4,44 Q16,30 20,4"
-        fill="none"
-        stroke="#e86935"
-        strokeWidth={2.5}
-        strokeLinecap="round"
-      />
-      {/* Leaves along the branch */}
-      <Path d="M6,36 Q10,32 14,35 Q8,41 6,36" fill="#e86935" />
-      <Path d="M8,27 Q13,23 17,26 Q11,32 8,27" fill="#e86935" />
-      <Path d="M12,18 Q17,14 21,17 Q15,23 12,18" fill="#e86935" />
-      <Path d="M15,9 Q20,6 23,10 Q17,15 15,9" fill="#e86935" />
-      <Path d="M19,1 Q22,0 23,4 Q20,6 19,1" fill="#e86935" />
-    </Svg>
-  );
-};
+
 
 const { height } = Dimensions.get('window');
 
@@ -63,7 +40,6 @@ export default function PaywallScreen() {
           </TouchableOpacity>
           
           <View style={styles.awardContainer}>
-            <LaurelBranch isLeft={true} />
             <View style={styles.awardTextContainer}>
               <Text style={styles.awardText}>the #1 emotional</Text>
               <Text style={styles.awardText}>healing app</Text>
@@ -73,7 +49,6 @@ export default function PaywallScreen() {
                 ))}
               </View>
             </View>
-            <LaurelBranch isLeft={false} />
           </View>
 
           {/* Spacer to balance the back button */}
@@ -256,12 +231,7 @@ const styles = StyleSheet.create({
     color: '#1f2937',
     textAlign: 'center',
   },
-  laurelLeft: {
-    transform: [{ rotateY: '180deg' }, { rotateZ: '20deg' }],
-  },
-  laurelRight: {
-    transform: [{ rotateZ: '20deg' }],
-  },
+
   starsContainer: {
     flexDirection: 'row',
     gap: 2,
