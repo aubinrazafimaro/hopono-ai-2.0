@@ -8,8 +8,7 @@ import {
   Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Share2 } from 'lucide-react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Share2 } from 'lucide-react-native'; // Changed Share to Share2 for the 3-dots connected share icon
 import { router, useFocusEffect } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCheckIn, peaceStates, moodStates } from '@/context/CheckInContext';
@@ -20,7 +19,6 @@ import { SPACING, RADIUS, COLORS, TYPOGRAPHY } from '@/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDailyProgress, DailyProgress } from '@/services/history';
 import { generateLocalHealingPlan } from '@/services/ai';
-import Svg, { Circle, Defs, Filter, FeGaussianBlur, RadialGradient, Stop, Ellipse, LinearGradient as SvgLinearGradient } from 'react-native-svg';
 
 const practices = [
   { id: '21',     label: '21 repetitions',  desc: 'quick clearing',  emoji: '🌺' },
@@ -139,13 +137,6 @@ export default function Home() {
   const orbScale = useRef(new Animated.Value(1)).current;
   const orbOpacity = useRef(new Animated.Value(0.8)).current;
 
-  // Liquid/Fluid float animation values
-  const floatAnimX = useRef(new Animated.Value(0)).current;
-  const floatAnimY = useRef(new Animated.Value(0)).current;
-  
-  // Weightless slow bobbing animation for Siri-like float
-  const floatBob = useRef(new Animated.Value(0)).current;
-
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -160,51 +151,6 @@ export default function Home() {
       ])
     ).start();
   }, []);
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.parallel([
-          Animated.timing(floatAnimX, { toValue: 8, duration: 3500, useNativeDriver: true }),
-          Animated.timing(floatAnimY, { toValue: -6, duration: 3500, useNativeDriver: true }),
-        ]),
-        Animated.parallel([
-          Animated.timing(floatAnimX, { toValue: -8, duration: 4500, useNativeDriver: true }),
-          Animated.timing(floatAnimY, { toValue: 8, duration: 4500, useNativeDriver: true }),
-        ]),
-        Animated.parallel([
-          Animated.timing(floatAnimX, { toValue: 0, duration: 3500, useNativeDriver: true }),
-          Animated.timing(floatAnimY, { toValue: 0, duration: 3500, useNativeDriver: true }),
-        ]),
-      ])
-    ).start();
-  }, []);
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(floatBob, { toValue: -8, duration: 4000, useNativeDriver: true }),
-        Animated.timing(floatBob, { toValue: 8, duration: 4000, useNativeDriver: true }),
-      ])
-    ).start();
-  }, []);
-
-  // Intersecting 3D rotation based on float translation
-  const orbRotation = floatAnimX.interpolate({
-    inputRange: [-8, 8],
-    outputRange: ['-3deg', '3deg'],
-  });
-
-  // Mathematically coupled floor shadow dynamics for 3D lévitation
-  const shadowScale = floatBob.interpolate({
-    inputRange: [-8, 8],
-    outputRange: [0.88, 1.12], // Shrunk shadow when floating higher up
-  });
-
-  const shadowOpacity = floatBob.interpolate({
-    inputRange: [-8, 8],
-    outputRange: [0.3, 0.65], // Lighter shadow when floating higher up
-  });
 
   const [isMood, setIsMood] = useState(true);
   const moodOpacity  = useRef(new Animated.Value(1)).current;
@@ -312,237 +258,35 @@ export default function Home() {
               activeOpacity={0.85} 
               onPress={handleOrbPress} 
               disabled={!nextSession || !healingPlan}
-              style={[
-                styles.dashboardOrbContainer,
-                {
-                  transform: [
-                    { translateY: floatBob }
-                  ]
-                }
-              ]}
+              style={styles.dashboardOrbContainer}
             >
-              {/* Floor shadow linked dynamically to vertical bobbing value floatBob */}
               <Animated.View style={[
-                styles.orbFloorShadow,
-                {
-                  transform: [{ scale: shadowScale }],
-                  opacity: shadowOpacity,
-                }
-              ]} />
-
-              {/* Layer 1: Outer Halo (Subtle warm sunset glow) */}
-              <Animated.View style={[
-                styles.orbOuterHalo,
-                {
+                styles.dashboardOrb, 
+                { 
                   transform: [{ scale: orbScale }],
+                  opacity: orbOpacity 
                 }
               ]}>
                 <LinearGradient
-                  colors={['rgba(232, 105, 53, 0.22)', 'rgba(254, 215, 170, 0.12)', 'rgba(254, 215, 170, 0.01)', 'transparent']}
-                  style={StyleSheet.absoluteFill}
-                  start={{ x: 0.2, y: 0.2 }}
-                  end={{ x: 0.8, y: 0.8 }}
+                  colors={['#ffedd5', 'rgba(254, 215, 170, 0.5)', 'rgba(254, 215, 170, 0.2)', 'transparent']}
+                  style={[StyleSheet.absoluteFill, { borderRadius: 110 }]}
+                  start={{ x: 0.5, y: 0.5 }}
+                  end={{ x: 1, y: 1 }}
                 />
               </Animated.View>
-
-              {/* Layers 2-6: The Siri-style 3D Glass Sphere with rotated Sunset Ellipse blobs */}
-              <Animated.View style={[
-                styles.orbBase,
-                {
-                  transform: [
-                    { scale: orbScale },
-                    { rotate: orbRotation }
-                  ],
-                  opacity: orbOpacity,
-                }
-              ]}>
-                
-                {/* 1. Neon Sunset Orange Blob (Floating rotated Ellipse) */}
-                <Animated.View style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    transform: [
-                      { translateX: floatAnimX },
-                      { translateY: floatAnimY },
-                    ]
-                  }
-                ]}>
-                  <Svg width="180" height="180" viewBox="0 0 180 180">
-                    <Defs>
-                      <Filter id="siri-orange-glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <FeGaussianBlur stdDeviation="22" />
-                      </Filter>
-                    </Defs>
-                    <Ellipse cx="75" cy="80" rx="55" ry="35" fill="#e86935" opacity="0.8" filter="url(#siri-orange-glow)" transform="rotate(-15, 75, 80)" />
-                  </Svg>
-                </Animated.View>
-
-                {/* 2. Neon Sunset Pink/Coral Blob (Floating opposite rotated Ellipse) */}
-                <Animated.View style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    transform: [
-                      { translateX: Animated.multiply(floatAnimX, -1.2) },
-                      { translateY: Animated.multiply(floatAnimY, 0.8) },
-                    ]
-                  }
-                ]}>
-                  <Svg width="180" height="180" viewBox="0 0 180 180">
-                    <Defs>
-                      <Filter id="siri-pink-glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <FeGaussianBlur stdDeviation="22" />
-                      </Filter>
-                    </Defs>
-                    <Ellipse cx="110" cy="100" rx="50" ry="30" fill="#ff6b6b" opacity="0.8" filter="url(#siri-pink-glow)" transform="rotate(30, 110, 100)" />
-                  </Svg>
-                </Animated.View>
-
-                {/* 3. Neon Sunset Gold Blob (Floating cross rotated Ellipse) */}
-                <Animated.View style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    transform: [
-                      { translateX: Animated.multiply(floatAnimY, 0.6) },
-                      { translateY: Animated.multiply(floatAnimX, -1) },
-                    ]
-                  }
-                ]}>
-                  <Svg width="180" height="180" viewBox="0 0 180 180">
-                    <Defs>
-                      <Filter id="siri-gold-glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <FeGaussianBlur stdDeviation="22" />
-                      </Filter>
-                    </Defs>
-                    <Ellipse cx="80" cy="115" rx="45" ry="25" fill="#f59e0b" opacity="0.8" filter="url(#siri-gold-glow)" transform="rotate(-45, 80, 115)" />
-                  </Svg>
-                </Animated.View>
-
-                {/* 4. Neon Sunset Peach Blob (Floating staggered rotated Ellipse) */}
-                <Animated.View style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    transform: [
-                      { translateX: Animated.multiply(floatAnimX, 0.7) },
-                      { translateY: Animated.multiply(floatAnimY, -1.3) },
-                    ]
-                  }
-                ]}>
-                  <Svg width="180" height="180" viewBox="0 0 180 180">
-                    <Defs>
-                      <Filter id="siri-peach-glow" x="-50%" y="-50%" width="200%" height="200%">
-                        <FeGaussianBlur stdDeviation="22" />
-                      </Filter>
-                    </Defs>
-                    <Ellipse cx="105" cy="70" rx="40" ry="25" fill="#ffe8db" opacity="0.75" filter="url(#siri-peach-glow)" transform="rotate(15, 105, 70)" />
-                  </Svg>
-                </Animated.View>
-
-                {/* 5-7. Core, 3D Reflection and Gradient Glass Rim Stroke */}
-                <Svg width="180" height="180" viewBox="0 0 180 180" style={StyleSheet.absoluteFill}>
-                  <Defs>
-                    <Filter id="core-glow" x="-30%" y="-30%" width="160%" height="160%">
-                      <FeGaussianBlur stdDeviation="12" />
-                    </Filter>
-                    
-                    {/* Glass 3D reflection radial gradient */}
-                    <RadialGradient id="reflection-grad" cx="30%" cy="30%" rx="70%" ry="70%">
-                      <Stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
-                      <Stop offset="45%" stopColor="#ffffff" stopOpacity="0.08" />
-                      <Stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-                    </RadialGradient>
-
-                    {/* Gradient glass stroke rim for high-fidelity 3D aspect */}
-                    <SvgLinearGradient id="rim-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <Stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
-                      <Stop offset="50%" stopColor="#ffffff" stopOpacity="0.1" />
-                      <Stop offset="100%" stopColor="#ffffff" stopOpacity="0.3" />
-                    </SvgLinearGradient>
-                  </Defs>
-
-                  {/* Bright White Core Glows (Double-layered fusions) */}
-                  <Circle cx="90" cy="90" r="28" fill="#ffffff" opacity="0.65" filter="url(#core-glow)" />
-                  <Circle cx="90" cy="90" r="18" fill="#ffffff" opacity="0.85" filter="url(#core-glow)" />
-
-                  {/* Sharp White Core Center */}
-                  <Circle cx="90" cy="90" r="8" fill="#ffffff" opacity="1" />
-
-                  {/* Glass reflection overlay */}
-                  <Circle cx="90" cy="90" r="90" fill="url(#reflection-grad)" />
-
-                  {/* High-fidelity 3D glass stroke rim */}
-                  <Circle cx="90" cy="90" r="89" fill="none" stroke="url(#rim-grad)" strokeWidth="1.5" />
-                </Svg>
-              </Animated.View>
+              {/* Core sun */}
+              <View style={[styles.dashboardOrbCore, { justifyContent: 'center', alignItems: 'center' }]}>
+                {healingPlan && (
+                  <Text style={styles.orbPercentageText}>
+                    {progressPercent}%
+                  </Text>
+                )}
+              </View>
             </TouchableOpacity>
             
-            <Text style={[styles.brandTitleText, { color: '#ffffff' }]}>
+            <Text style={[styles.brandTitleText, { color: palette.textPrimary }]}>
               hopono AI
             </Text>
-
-            {healingPlan && (
-              <Text style={[styles.progressPercentLabel, { color: '#ffe8db' }]}>
-                personalized plan • {progressPercent}% completed
-              </Text>
-            )}
-
-            {/* 3-Step Progress Bar representing Morning, Midday, Evening */}
-            {healingPlan && (
-              <View style={styles.stepProgressBarContainer}>
-                {/* Step 1: Morning */}
-                <View style={styles.stepItem}>
-                  <View style={[
-                    styles.stepIndicator, 
-                    dailyProgress?.morningCompleted ? styles.stepIndicatorActive : styles.stepIndicatorInactive
-                  ]}>
-                    {dailyProgress?.morningCompleted && <Ionicons name="checkmark" size={10} color="#ffffff" />}
-                  </View>
-                  <Text style={[
-                    styles.stepLabel, 
-                    dailyProgress?.morningCompleted ? styles.stepLabelActive : styles.stepLabelInactive
-                  ]}>morning</Text>
-                </View>
-
-                {/* Progress line between step 1 & 2 */}
-                <View style={[
-                  styles.stepLine, 
-                  dailyProgress?.morningCompleted ? styles.stepLineActive : styles.stepLineInactive
-                ]} />
-
-                {/* Step 2: Midday */}
-                <View style={styles.stepItem}>
-                  <View style={[
-                    styles.stepIndicator, 
-                    dailyProgress?.middayCompleted ? styles.stepIndicatorActive : styles.stepIndicatorInactive
-                  ]}>
-                    {dailyProgress?.middayCompleted && <Ionicons name="checkmark" size={10} color="#ffffff" />}
-                  </View>
-                  <Text style={[
-                    styles.stepLabel, 
-                    dailyProgress?.middayCompleted ? styles.stepLabelActive : styles.stepLabelInactive
-                  ]}>midday</Text>
-                </View>
-
-                {/* Progress line between step 2 & 3 */}
-                <View style={[
-                  styles.stepLine, 
-                  dailyProgress?.middayCompleted ? styles.stepLineActive : styles.stepLineInactive
-                ]} />
-
-                {/* Step 3: Evening */}
-                <View style={styles.stepItem}>
-                  <View style={[
-                    styles.stepIndicator, 
-                    dailyProgress?.eveningCompleted ? styles.stepIndicatorActive : styles.stepIndicatorInactive
-                  ]}>
-                    {dailyProgress?.eveningCompleted && <Ionicons name="checkmark" size={10} color="#ffffff" />}
-                  </View>
-                  <Text style={[
-                    styles.stepLabel, 
-                    dailyProgress?.eveningCompleted ? styles.stepLabelActive : styles.stepLabelInactive
-                  ]}>evening</Text>
-                </View>
-              </View>
-            )}
             
             {healingPlan ? (
               <TouchableOpacity
@@ -553,16 +297,16 @@ export default function Home() {
                   styles.progressButton, 
                   { 
                     backgroundColor: nextSession ? palette.primary : 'rgba(255,255,255,0.06)', 
-                    borderColor: 'rgba(255,255,255,0.1)' 
+                    borderColor: palette.cardBorder 
                   }
                 ]}
               >
-                <Text style={[styles.progressButtonText, { color: nextSession ? '#ffffff' : 'rgba(255,255,255,0.4)' }]}>
+                <Text style={[styles.progressButtonText, { color: nextSession ? '#ffffff' : palette.textMuted }]}>
                   {progressText}
                 </Text>
               </TouchableOpacity>
             ) : (
-              <Text style={[styles.brandSubtitleText, { color: 'rgba(255, 255, 255, 0.5)' }]}>
+              <Text style={[styles.brandSubtitleText, { color: palette.textMuted }]}>
                 breathe in. clean inside. release.
               </Text>
             )}
@@ -629,7 +373,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 440,
+    height: 220,
     zIndex: 0,
   },
   scrollContainer: {
@@ -763,105 +507,42 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
   },
   borderlessOrbCard: {
-    paddingVertical: 24,
+    paddingVertical: 12,
     marginBottom: SPACING.section,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent', // Fully floating transparent container as requested
   },
   dashboardOrbContainer: {
     width: 240,
     height: 240,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
-  },
-  orbFloorShadow: {
-    position: 'absolute',
-    bottom: 12,
-    width: 80,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.95,
-    shadowRadius: 10,
-    elevation: 4,
-  },
-  orbOuterHalo: {
-    position: 'absolute',
-    width: 240,
-    height: 240,
-    borderRadius: 120,
-  },
-  orbBase: {
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    overflow: 'hidden',
-    position: 'relative',
-    backgroundColor: 'rgba(10, 15, 30, 0.85)', // Siri dark semi-transparent sphere base
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.28)', // Soft glass rim
-  },
-  progressPercentLabel: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 13,
-    marginTop: 2,
-    marginBottom: 8,
-    textTransform: 'lowercase',
-  },
-  stepProgressBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    marginTop: 12,
     marginBottom: 16,
   },
-  stepItem: {
-    alignItems: 'center',
-    width: 60,
-  },
-  stepIndicator: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    alignItems: 'center',
+  dashboardOrb: {
+    width: 220,
+    height: 220,
+    borderRadius: 110,
     justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
-  stepIndicatorActive: {
-    backgroundColor: '#e86935',
+  dashboardOrbCore: {
+    position: 'absolute',
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: '#ffedd5',
+    shadowColor: '#f97316',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
+    elevation: 10,
   },
-  stepIndicatorInactive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  stepLabel: {
-    fontFamily: 'Nunito_600SemiBold',
-    fontSize: 9,
-    marginTop: 6,
-    textTransform: 'lowercase',
-  },
-  stepLabelActive: {
-    color: '#ffffff',
-  },
-  stepLabelInactive: {
-    color: 'rgba(255, 255, 255, 0.45)',
-  },
-  stepLine: {
-    height: 2,
-    width: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    marginTop: -14, // Aligns line with the center of stepIndicator (which sits above the label)
-  },
-  stepLineActive: {
-    backgroundColor: '#e86935',
-  },
-  stepLineInactive: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+  orbPercentageText: {
+    fontFamily: 'Nunito_700Bold',
+    fontSize: 16,
+    color: '#e86935',
   },
   progressButton: {
     paddingVertical: 12,
